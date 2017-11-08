@@ -8,6 +8,8 @@ import android.graphics.Bitmap.Config;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -27,6 +29,13 @@ public abstract class AndroidGame extends Activity implements Game {
     Screen screen;
     WakeLock wakeLock;
 
+    private static final String TAG = "AndroidGame";
+
+    int screenWidth;
+    int screenHeight;
+
+    double scaleFactorX;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,12 +44,24 @@ public abstract class AndroidGame extends Activity implements Game {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        /*boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         int frameBufferWidth = isLandscape ? 480 : 320;
-        int frameBufferHeight = isLandscape ? 320 : 480;
+        int frameBufferHeight = isLandscape ? 320 : 480;*/
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        screenWidth = metrics.widthPixels;
+        screenHeight = metrics.heightPixels;
+
+        int frameBufferWidth = 1080;
+        int frameBufferHeight = 1920;
         Bitmap frameBuffer = Bitmap.createBitmap(frameBufferWidth,
                 frameBufferHeight, Config.RGB_565);
-        
+
+        scaleFactorX = frameBufferWidth / screenWidth;
+
+        Log.d(TAG,"screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " scaleFactorX: " + scaleFactorX);
+
         float scaleX = (float) frameBufferWidth
                 / getWindowManager().getDefaultDisplay().getWidth();
         float scaleY = (float) frameBufferHeight
@@ -111,5 +132,9 @@ public abstract class AndroidGame extends Activity implements Game {
     
     public Screen getCurrentScreen() {
         return screen;
+    }
+
+    public double getScaleFactorX(){
+        return scaleFactorX;
     }
 }

@@ -40,8 +40,11 @@ public class AndroidFastRenderView extends SurfaceView implements Runnable {
             game.getCurrentScreen().present(deltaTime);
             
             Canvas canvas = holder.lockCanvas();
-            canvas.getClipBounds(dstRect);
-            canvas.drawBitmap(framebuffer, null, dstRect, null);                           
+            /*canvas.getClipBounds(dstRect);
+            canvas.drawBitmap(framebuffer, null, dstRect, null);*/
+            //Nel modo seguente invece di stretchare allarghiamo mantenendo le proporzioni sulla x e tagliamo la parte in più sotto
+            canvas.scale((float)game.getScaleFactorX(),(float)game.getScaleFactorX());
+            canvas.drawBitmap(framebuffer,0,0,null);
             holder.unlockCanvasAndPost(canvas);
         }
     }

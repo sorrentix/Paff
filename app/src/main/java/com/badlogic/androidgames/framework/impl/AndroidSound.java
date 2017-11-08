@@ -5,12 +5,28 @@ import android.media.SoundPool;
 import com.badlogic.androidgames.framework.Sound;
 
 public class AndroidSound implements Sound {
-    int soundId;
+    final int soundId;
     SoundPool soundPool;
+    boolean loaded = false;
 
-    public AndroidSound(SoundPool soundPool, int soundId) {
+    public AndroidSound(SoundPool soundPool, final int soundId) {
         this.soundId = soundId;
         this.soundPool = soundPool;
+
+        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int i, int i1) {
+                System.out.println("onload complete listenere called---------------------------------------------for id"+ soundId + "input id"+ i);
+
+                loaded = true;
+            }
+        });
+    }
+
+
+
+    public boolean isLoaded(){
+        return loaded;
     }
 
     @Override

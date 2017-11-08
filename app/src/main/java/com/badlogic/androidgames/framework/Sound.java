@@ -4,4 +4,7 @@ public interface Sound {
     public void play(float volume);
 
     public void dispose();
+
+    public boolean isLoaded();
+
 }
