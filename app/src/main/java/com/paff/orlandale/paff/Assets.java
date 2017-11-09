@@ -15,8 +15,10 @@ public class Assets {
 
     /*GRAFICHE*/
     public static Pixmap logo;
+
     public static Pixmap menu_background;
     public static Pixmap btn_play;
     public static Pixmap btn_settings;
     public static Pixmap btn_help;
+
 }
