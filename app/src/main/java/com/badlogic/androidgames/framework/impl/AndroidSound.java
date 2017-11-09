@@ -1,8 +1,14 @@
 package com.badlogic.androidgames.framework.impl;
 
 import android.media.SoundPool;
+import android.support.annotation.NonNull;
 
 import com.badlogic.androidgames.framework.Sound;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class AndroidSound implements Sound {
     final int soundId;
@@ -13,18 +19,13 @@ public class AndroidSound implements Sound {
         this.soundId = soundId;
         this.soundPool = soundPool;
 
-        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int i, int i1) {
-                System.out.println("onload complete listenere called---------------------------------------------for id"+ soundId + "input id"+ i);
-
-                loaded = true;
-            }
-        });
+    }
+    @Override
+    public void setIsLoaded(){
+        loaded = true;
     }
 
-
-
+    @Override
     public boolean isLoaded(){
         return loaded;
     }

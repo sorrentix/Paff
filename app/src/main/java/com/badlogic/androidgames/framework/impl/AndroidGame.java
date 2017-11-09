@@ -58,7 +58,7 @@ public abstract class AndroidGame extends Activity implements Game {
         Bitmap frameBuffer = Bitmap.createBitmap(frameBufferWidth,
                 frameBufferHeight, Config.RGB_565);
 
-        scaleFactorX = frameBufferWidth / screenWidth;
+        scaleFactorX = (float)frameBufferWidth / (float)screenWidth;
 
         Log.d(TAG,"screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " scaleFactorX: " + scaleFactorX);
 

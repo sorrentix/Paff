@@ -1,6 +1,8 @@
 package com.badlogic.androidgames.framework.impl;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
@@ -15,6 +17,8 @@ import com.badlogic.androidgames.framework.Sound;
 public class AndroidAudio implements Audio {
     AssetManager assets;
     SoundPool soundPool;
+    Map<Integer, Sound> sounds = new HashMap<>();
+
 
     public AndroidAudio(Activity activity) {
         activity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -33,11 +37,27 @@ public class AndroidAudio implements Audio {
     }
 
     @Override
+    public Sound getSoundByID(int ID){
+        return sounds.get(ID);
+    }
+
+    @Override
     public Sound newSound(String filename) {
         try {
+
             AssetFileDescriptor assetDescriptor = assets.openFd(filename);
             int soundId = soundPool.load(assetDescriptor, 0);
-            return new AndroidSound(soundPool, soundId);
+            Sound s = new AndroidSound(soundPool, soundId);
+            sounds.put(soundId,s);
+
+            soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+                @Override
+                public void onLoadComplete(SoundPool soundPool, int i, int i1) {
+                    System.out.println("onload complete listenere called---------------------------------------------for sound"+ getSoundByID(i) + "input id"+ i);
+                    getSoundByID(i).setIsLoaded();
+                }
+            });
+            return s;
         } catch (IOException e) {
             throw new RuntimeException("Couldn't load sound '" + filename + "'");
         }

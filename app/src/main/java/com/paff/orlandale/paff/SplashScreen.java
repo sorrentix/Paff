@@ -46,18 +46,20 @@ class SplashScreen extends Screen {
 
         Assets.logo = g.newPixmap("logo.png", Graphics.PixmapFormat.ARGB4444);
         Assets.openBottle = a.newSound("openbottle.wav");
-        //Assets.bubbling = a.newSound("bubbling.wav");
+        Assets.bubbling = a.newSound("bubbling.wav");
 
         state = GameState.CompleteLoading;
     }
 
     private void updateAll(Graphics g, Audio a){
 
-        if(Assets.openBottle.isLoaded() ) {
+        if(Assets.openBottle.isLoaded() && Assets.bubbling.isLoaded() ) {
 
-            g.drawPixmap(Assets.logo, game.getGraphics().getWidth()/2 - 200,
-                    game.getGraphics().getHeight()/2 - 200 );
+
+            g.drawPixmap(Assets.logo, game.getGraphics().getWidth()/2 - Assets.logo.getWidth()/2,
+                    game.getGraphics().getHeight()/2 - Assets.logo.getHeight()/2 );
             Assets.openBottle.play(1);
+            Assets.bubbling.play(1);
 
             //load here all other assets
 //            Assets.bubbling = a.newSound("bubbling.wav");

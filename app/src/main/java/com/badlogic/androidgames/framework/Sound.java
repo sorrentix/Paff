@@ -7,4 +7,5 @@ public interface Sound {
 
     public boolean isLoaded();
 
+    public void setIsLoaded();
 }
