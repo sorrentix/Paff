@@ -3,6 +3,7 @@ package com.badlogic.androidgames.framework.impl;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -31,7 +32,7 @@ public class AndroidFastRenderView extends SurfaceView implements Runnable {
     public void run() {
         Rect dstRect = new Rect();
         long startTime = System.nanoTime();
-        while(running) {  
+        while(running) {
             if(!holder.getSurface().isValid())
                 continue;           
             
@@ -45,11 +46,17 @@ public class AndroidFastRenderView extends SurfaceView implements Runnable {
             /*canvas.getClipBounds(dstRect);
             canvas.drawBitmap(framebuffer, null, dstRect, null);*/
             //Nel modo seguente invece di stretchare allarghiamo mantenendo le proporzioni sulla x e tagliamo la parte in più sotto
+            float px = canvas.getWidth()/2.0f;
+            float py= canvas.getHeight()/2.0f;
+            System.out.println("metricx: "+game.getMetrics().widthPixels/2.0f+" metricy: "
+                    +game.getMetrics().heightPixels/2.0f
+                    +" canvasx: "+canvas.getWidth()/2.0f+ " canvasy: "+canvas.getHeight()/2.0f );
+            canvas.scale(1.0f/game.getScaleFactor(),1.0f/game.getScaleFactor());
 
-            canvas.scale(1.0f/(float)game.getScaleFactorX(),1.0f/(float)game.getScaleFactorX());
+
             canvas.drawARGB(150,0,200,0);
 
-            canvas.drawBitmap(framebuffer,0,Math.abs(framebuffer.getHeight()-canvas.getHeight())/2,null);
+            canvas.drawBitmap(framebuffer,-game.getOffset(),0,null);
             holder.unlockCanvasAndPost(canvas);
             while ((System.nanoTime()-startTime) / 1000000000.0f < 0.01667f/*x50 fps 0.02f*/ ){
                 //wait to make a new render

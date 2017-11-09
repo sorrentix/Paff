@@ -33,8 +33,9 @@ public abstract class AndroidGame extends Activity implements Game {
 
     int screenWidth;
     int screenHeight;
-
-    double scaleFactorX;
+    DisplayMetrics metrics = new DisplayMetrics();
+    float scaleFactor;
+    float offset;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public abstract class AndroidGame extends Activity implements Game {
         /*boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         int frameBufferWidth = isLandscape ? 480 : 320;
         int frameBufferHeight = isLandscape ? 320 : 480;*/
-        DisplayMetrics metrics = new DisplayMetrics();
+
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
         screenWidth = metrics.widthPixels;
@@ -58,7 +59,10 @@ public abstract class AndroidGame extends Activity implements Game {
         Bitmap frameBuffer = Bitmap.createBitmap(frameBufferWidth,
                 frameBufferHeight, Config.RGB_565);
 
-        scaleFactorX = (float)frameBufferWidth / (float)screenWidth;
+        float scaleFactorX = (float)frameBufferWidth / (float)screenWidth;
+        float scaleFactorY = (float)frameBufferHeight / (float)screenHeight;
+        scaleFactor = (scaleFactorX>scaleFactorY)? scaleFactorY:scaleFactorX;
+        offset = Math.abs(metrics.widthPixels - ((1.0f/scaleFactor)* frameBufferWidth))/2.0f;
 
         Log.d(TAG,"screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " scaleFactorX: " + scaleFactorX);
 
@@ -134,7 +138,15 @@ public abstract class AndroidGame extends Activity implements Game {
         return screen;
     }
 
-    public double getScaleFactorX(){
-        return scaleFactorX;
+    public float getScaleFactor(){
+        return scaleFactor;
+    }
+
+    public float getOffset(){
+        return offset;
+    }
+
+    public DisplayMetrics getMetrics(){
+        return metrics;
     }
 }
