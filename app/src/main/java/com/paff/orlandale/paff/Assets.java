@@ -15,4 +15,6 @@ public class Assets {
 
     /*GRAFICHE*/
     public static Pixmap logo;
+    public static Pixmap playBtn;
+
 }

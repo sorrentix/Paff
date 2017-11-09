@@ -62,6 +62,8 @@ class SplashScreen extends Screen {
             Assets.bubbling.play(1);
 
             //load here all other assets
+            Assets.playBtn = g.newPixmap("playBtn.png", Graphics.PixmapFormat.ARGB4444);
+
 //            Assets.bubbling = a.newSound("bubbling.wav");
 
             game.setScreen(new GameMenuScreen(game));
