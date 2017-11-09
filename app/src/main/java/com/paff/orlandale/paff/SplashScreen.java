@@ -12,12 +12,16 @@ class SplashScreen extends Screen {
 
     enum GameState{
         BasicLoading,
-        CompleteLoading
+        CompleteLoading,
+        CompleteAnimation
     }
     GameState state = GameState.BasicLoading;
+    long startTime;
+
 
     public SplashScreen(Game game) {
         super(game);
+        startTime = System.nanoTime();
     }
 
     @Override
@@ -32,6 +36,8 @@ class SplashScreen extends Screen {
             case CompleteLoading:
                 updateAll(g, a);
                 break;
+            case CompleteAnimation:
+                waitForAnimationComplete();
             default:
                     break;
         }
@@ -45,28 +51,40 @@ class SplashScreen extends Screen {
     private void updateBasics(Graphics g, Audio a){
 
         Assets.logo = g.newPixmap("logo.png", Graphics.PixmapFormat.ARGB4444);
-        Assets.openBottle = a.newSound("openbottle.wav");
-        Assets.bubbling = a.newSound("bubbling.wav");
+        Assets.splashsound = a.newSound("splashsound.ogg");
 
         state = GameState.CompleteLoading;
     }
 
     private void updateAll(Graphics g, Audio a){
 
-        if(Assets.openBottle.isLoaded() && Assets.bubbling.isLoaded() ) {
+        if(Assets.splashsound.isLoaded()) {
 
             g.clear(0xffffff);
             g.drawPixmap(Assets.logo, 262, 682);
-            Assets.openBottle.play(1);
-            Assets.bubbling.play(1);
+            Assets.splashsound.play(1);
 
             //load here all other assets
 
+            //Graphics
             Assets.menu_background = g.newPixmap("menu_background.jpg", Graphics.PixmapFormat.ARGB4444);
             Assets.btn_play = g.newPixmap("play.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_play_click =  g.newPixmap("play_click.png", Graphics.PixmapFormat.ARGB4444);
             Assets.btn_help = g.newPixmap("help.png", Graphics.PixmapFormat.ARGB4444);
             Assets.btn_settings = g.newPixmap("settings.png", Graphics.PixmapFormat.ARGB4444);
 
+            //Sounds
+            Assets.bubblexplosion = a.newSound("bubblexplosion.ogg");
+            Assets.gamesoundtheme = a.newSound("gamesoundtheme.ogg");
+
+            state = GameState.CompleteAnimation;
+
+        }
+    }
+
+    public void waitForAnimationComplete(){
+        float deltaTime = (System.nanoTime()-startTime) / 1000000000.0f;
+        if( deltaTime > 3.8){
             game.setScreen(new GameMenuScreen(game));
         }
     }

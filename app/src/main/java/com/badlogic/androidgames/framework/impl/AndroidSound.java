@@ -36,6 +36,11 @@ public class AndroidSound implements Sound {
     }
 
     @Override
+    public void playLoop(float volume) {
+        soundPool.play(soundId, volume, volume, 0, -1, 1);
+    }
+
+    @Override
     public void dispose() {
         soundPool.unload(soundId);
     }

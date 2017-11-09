@@ -15,10 +15,19 @@ import java.util.List;
 class GameMenuScreen extends Screen {
     Graphics g;
     Audio a;
+    GameState state = GameState.Waiting;
+
     public GameMenuScreen(Game game) {
         super(game);
         g = game.getGraphics();
         a = game.getAudio();
+        Assets.gamesoundtheme.playLoop(1);
+    }
+
+    enum GameState{
+        Waiting,
+        Play,
+        ChangeScreen
     }
 
     @Override
@@ -28,16 +37,8 @@ class GameMenuScreen extends Screen {
             TouchEvent event = touchEvents.get(i);
             if (event.type == TouchEvent.TOUCH_UP) {
 
-                System.out.println("touch happened at: x - "+ event.x+" y - "+event.y+ "\n" +
-                        " my button is at: x - "+ (game.getGraphics().getWidth()/2 - Assets.logo.getWidth()/2)+
-                        " y - "+(game.getGraphics().getHeight()/2 - Assets.logo.getHeight()/2)+" width: "+
-                        Assets.playBtn.getWidth()+
-                        " height: "+ Assets.playBtn.getHeight());
-
-                if (inBounds(event, game.getGraphics().getWidth()/2 - Assets.logo.getWidth()/2,
-                        game.getGraphics().getHeight()/2 - Assets.logo.getHeight()/2,
-                        Assets.playBtn.getWidth(), Assets.playBtn.getHeight())) {
-                        Assets.openBottle.play(1);
+                if (inBounds(event, 60, 760, Assets.btn_play.getWidth(), Assets.btn_play.getHeight())) {
+                    state = GameState.Play;
                 }
 
             }
@@ -48,11 +49,26 @@ class GameMenuScreen extends Screen {
     public void present(float deltaTime) {
 
 
-        g.drawPixmap(Assets.menu_background, 0, 0);
-        g.drawPixmap(Assets.logo, 262, 160);
-        g.drawPixmap(Assets.btn_play, 60, 760);
-        g.drawPixmap(Assets.btn_settings, 640, 960);
-        g.drawPixmap(Assets.btn_help, 240, 1360);
+        switch(state){
+            case Waiting:
+                g.drawPixmap(Assets.menu_background, 0, 0);
+                g.drawPixmap(Assets.logo, 262, 160);
+                g.drawPixmap(Assets.btn_play, 60, 760);
+                g.drawPixmap(Assets.btn_settings, 640, 960);
+                g.drawPixmap(Assets.btn_help, 240, 1360);
+                break;
+            case Play:
+                Assets.bubblexplosion.play(1);
+                g.drawPixmap(Assets.btn_play_click, 60, 760);
+                state = GameState.ChangeScreen;
+                break;
+            case ChangeScreen:
+                break;
+            default:
+                break;
+
+        }
+
 
 
     }

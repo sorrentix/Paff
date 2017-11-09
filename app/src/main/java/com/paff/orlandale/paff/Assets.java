@@ -10,14 +10,14 @@ import com.badlogic.androidgames.framework.Sound;
 
 public class Assets {
     /*AUDIO*/
-    public static Sound openBottle;
-    public static Sound bubbling;
-
+    public static Sound bubblexplosion;
+    public static Sound gamesoundtheme;
+    public static Sound splashsound;
     /*GRAFICHE*/
     public static Pixmap logo;
-
     public static Pixmap menu_background;
     public static Pixmap btn_play;
+    public static Pixmap btn_play_click;
     public static Pixmap btn_settings;
     public static Pixmap btn_help;
 
