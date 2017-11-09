@@ -46,8 +46,15 @@ class GameMenuScreen extends Screen {
 
     @Override
     public void present(float deltaTime) {
-        g.drawPixmap(Assets.playBtn, game.getGraphics().getWidth()/2 - Assets.logo.getWidth()/2,
-                game.getGraphics().getHeight()/2 - Assets.logo.getHeight()/2 );
+
+
+        g.drawPixmap(Assets.menu_background, 0, 0);
+        g.drawPixmap(Assets.logo, 262, 160);
+        g.drawPixmap(Assets.btn_play, 60, 760);
+        g.drawPixmap(Assets.btn_settings, 640, 960);
+        g.drawPixmap(Assets.btn_help, 240, 1360);
+
+
     }
 
     @Override

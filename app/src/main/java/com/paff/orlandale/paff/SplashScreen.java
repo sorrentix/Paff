@@ -55,16 +55,17 @@ class SplashScreen extends Screen {
 
         if(Assets.openBottle.isLoaded() && Assets.bubbling.isLoaded() ) {
 
-
-            g.drawPixmap(Assets.logo, game.getGraphics().getWidth()/2 - Assets.logo.getWidth()/2,
-                    game.getGraphics().getHeight()/2 - Assets.logo.getHeight()/2 );
+            g.clear(0xffffff);
+            g.drawPixmap(Assets.logo, 262, 682);
             Assets.openBottle.play(1);
             Assets.bubbling.play(1);
 
             //load here all other assets
-            Assets.playBtn = g.newPixmap("playBtn.png", Graphics.PixmapFormat.ARGB4444);
 
-//            Assets.bubbling = a.newSound("bubbling.wav");
+            Assets.menu_background = g.newPixmap("menu_background.jpg", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_play = g.newPixmap("play.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_help = g.newPixmap("help.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_settings = g.newPixmap("settings.png", Graphics.PixmapFormat.ARGB4444);
 
             game.setScreen(new GameMenuScreen(game));
         }
