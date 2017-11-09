@@ -3,10 +3,12 @@ package com.badlogic.androidgames.framework.impl;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class AndroidFastRenderView extends SurfaceView implements Runnable {
+    FPSCounter fpsCounter = new FPSCounter();
     AndroidGame game;
     Bitmap framebuffer;
     Thread renderThread = null;
@@ -38,7 +40,7 @@ public class AndroidFastRenderView extends SurfaceView implements Runnable {
 
             game.getCurrentScreen().update(deltaTime);
             game.getCurrentScreen().present(deltaTime);
-            
+            fpsCounter.logFrame();
             Canvas canvas = holder.lockCanvas();
             /*canvas.getClipBounds(dstRect);
             canvas.drawBitmap(framebuffer, null, dstRect, null);*/
@@ -46,6 +48,9 @@ public class AndroidFastRenderView extends SurfaceView implements Runnable {
             canvas.scale((float)game.getScaleFactorX(),(float)game.getScaleFactorX());
             canvas.drawBitmap(framebuffer,0,0,null);
             holder.unlockCanvasAndPost(canvas);
+            while ((System.nanoTime()-startTime) / 1000000000.0f < 0.02f ){
+                //wait to make a new render
+            }
         }
     }
 
@@ -60,4 +65,17 @@ public class AndroidFastRenderView extends SurfaceView implements Runnable {
             }
         }
     }        
+}
+
+class FPSCounter {
+    long startTime = System.nanoTime();
+    int frames = 0;
+    public void logFrame() {
+        frames++;
+        if(System.nanoTime() - startTime >= 1000000000) {
+            Log.d("FPSCounter", "fps: " + frames);
+            frames = 0;
+            startTime = System.nanoTime();
+        }
+    }
 }
