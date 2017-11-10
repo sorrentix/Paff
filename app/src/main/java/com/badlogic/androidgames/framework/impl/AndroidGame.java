@@ -22,6 +22,8 @@ import com.badlogic.androidgames.framework.Screen;
 import com.paff.orlandale.paff.Settings;
 
 public abstract class AndroidGame extends Activity implements Game {
+    private static final String TAG = "AndroidGame";
+
     AndroidFastRenderView renderView;
     Graphics graphics;
     Audio audio;
@@ -29,15 +31,16 @@ public abstract class AndroidGame extends Activity implements Game {
     FileIO fileIO;
     Screen screen;
     WakeLock wakeLock;
-
-    private static final String TAG = "AndroidGame";
+    Settings settings;
 
     int screenWidth;
     int screenHeight;
     DisplayMetrics metrics = new DisplayMetrics();
     float scaleFactor;
     float offset;
-    Settings settings;
+
+    Screen previousScreen = null;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -150,5 +153,13 @@ public abstract class AndroidGame extends Activity implements Game {
 
     public DisplayMetrics getMetrics(){
         return metrics;
+    }
+
+    public void setPreviousScreen(Screen screen){
+        previousScreen = screen;
+    }
+
+    public Screen getPreviousScreen(){
+        return previousScreen;
     }
 }

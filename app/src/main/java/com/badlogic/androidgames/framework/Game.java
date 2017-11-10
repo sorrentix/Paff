@@ -18,4 +18,8 @@ public interface Game {
     public Screen getStartScreen();
 
     public Settings getSettings();
+
+    public void setPreviousScreen(Screen screen);
+
+    public Screen getPreviousScreen();
 }

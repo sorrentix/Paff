@@ -82,7 +82,7 @@ class SplashScreen extends Screen {
             //Sounds
             Assets.bubblexplosion = a.newSound("bubblexplosion.ogg");
             Assets.gamesoundtheme = a.newSound("gamesoundtheme.ogg");
-
+            Assets.flagReady = true;
             state = GameState.CompleteAnimation;
 
         }

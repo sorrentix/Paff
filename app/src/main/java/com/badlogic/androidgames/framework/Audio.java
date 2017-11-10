@@ -7,4 +7,8 @@ public interface Audio {
 
     public Sound getSoundByID(int id);
 
+    public void pauseAll();
+
+    public void resumeAll();
+
 }

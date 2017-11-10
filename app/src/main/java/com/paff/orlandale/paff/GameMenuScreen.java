@@ -23,8 +23,9 @@ class GameMenuScreen extends Screen {
         g = game.getGraphics();
         a = game.getAudio();
         s=game.getSettings();
-        if(s.music)
-             Assets.gamesoundtheme.playLoop(1);
+        if(s.music && game.getPreviousScreen()==null)
+             Assets.gamesoundtheme.playLoop(0.2f);
+        game.setPreviousScreen(game.getCurrentScreen());
     }
 
     enum GameState{
@@ -88,11 +89,13 @@ class GameMenuScreen extends Screen {
                 break;
             case Help:
                 g.drawPixmap(Assets.btn_help_click, 240, 1360);
-                Assets.bubblexplosion.play(1);
+                if(s.sounds)
+                    Assets.bubblexplosion.play(1);
                 break;
             case Settings:
                 g.drawPixmap(Assets.btn_settings_click, 640, 960);
-                Assets.bubblexplosion.play(1);
+                if(s.sounds)
+                    Assets.bubblexplosion.play(1);
                 break;
             default:
                 break;

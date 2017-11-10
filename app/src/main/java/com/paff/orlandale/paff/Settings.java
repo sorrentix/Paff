@@ -22,11 +22,6 @@ public class Settings {
         save("sounds",flag);
     }
     public  void setMusic(boolean flag){
-        if(music)
-            Assets.gamesoundtheme.play(0.2f);
-        else
-            Assets.gamesoundtheme.stop();
-
         music=flag;
         save("music",flag);
     }

@@ -14,6 +14,7 @@ public class AndroidSound implements Sound {
     final int soundId;
     SoundPool soundPool;
     boolean loaded = false;
+    int streamId;
 
     public AndroidSound(SoundPool soundPool, final int soundId) {
         this.soundId = soundId;
@@ -32,12 +33,12 @@ public class AndroidSound implements Sound {
 
     @Override
     public void play(float volume) {
-        soundPool.play(soundId, volume, volume, 0, 0, 1);
+        streamId = soundPool.play(soundId, volume, volume, 0, 0, 1);
     }
 
     @Override
     public void playLoop(float volume) {
-        soundPool.play(soundId, volume, volume, 0, -1, 1);
+        streamId = soundPool.play(soundId, volume, volume, 0, -1, 1);
     }
 
     @Override
@@ -46,5 +47,5 @@ public class AndroidSound implements Sound {
     }
 
     @Override
-    public void stop() {soundPool.stop(soundId);}
+    public void stop() {soundPool.stop(streamId);}
 }
