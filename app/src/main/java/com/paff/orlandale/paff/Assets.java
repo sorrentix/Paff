@@ -19,6 +19,12 @@ public class Assets {
     public static Pixmap btn_play;
     public static Pixmap btn_play_click;
     public static Pixmap btn_settings;
+    public static Pixmap btn_settings_click;
     public static Pixmap btn_help;
+    public static Pixmap btn_help_click;
+    public static Pixmap btn_on;
+    public static Pixmap btn_off;
+    public static Pixmap sounds_text;
+    public static Pixmap music_text;
 
 }
