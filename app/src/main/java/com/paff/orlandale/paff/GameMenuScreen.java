@@ -15,13 +15,16 @@ import java.util.List;
 class GameMenuScreen extends Screen {
     Graphics g;
     Audio a;
+    Settings s;
     GameState state = GameState.Waiting;
 
     public GameMenuScreen(Game game) {
         super(game);
         g = game.getGraphics();
         a = game.getAudio();
-        Assets.gamesoundtheme.playLoop(0.2f);
+        s=game.getSettings();
+        if(s.music)
+             Assets.gamesoundtheme.playLoop(1);
     }
 
     enum GameState{
@@ -78,6 +81,8 @@ class GameMenuScreen extends Screen {
                 g.drawPixmap(Assets.btn_help, 240, 1360);
                 break;
             case Play:
+                if(s.sounds)
+                    Assets.bubblexplosion.play(1);
                 g.drawPixmap(Assets.btn_play_click, 60, 760);
                 Assets.bubblexplosion.play(1);
                 break;

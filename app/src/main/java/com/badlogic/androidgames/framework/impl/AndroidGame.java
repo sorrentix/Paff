@@ -19,6 +19,7 @@ import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
+import com.paff.orlandale.paff.Settings;
 
 public abstract class AndroidGame extends Activity implements Game {
     AndroidFastRenderView renderView;
@@ -36,6 +37,7 @@ public abstract class AndroidGame extends Activity implements Game {
     DisplayMetrics metrics = new DisplayMetrics();
     float scaleFactor;
     float offset;
+    Settings settings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,10 +66,10 @@ public abstract class AndroidGame extends Activity implements Game {
         scaleFactor = (scaleFactorX>scaleFactorY)? scaleFactorY:scaleFactorX;
         offset = Math.abs(metrics.widthPixels - ((1.0f/scaleFactor)* frameBufferWidth))/2.0f;
 
-        Log.d(TAG,"screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " scaleFactorX: " + scaleFactorX);
+        Log.e(TAG,"screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " scaleFactorX: " + scaleFactorX+ " scaleFactorY: " + scaleFactorY+"ScaleFactor: "+scaleFactor);
 
 
-
+        settings = new Settings(getApplicationContext());
         renderView = new AndroidFastRenderView(this, frameBuffer);
         graphics = new AndroidGraphics(getAssets(), frameBuffer);
         fileIO = new AndroidFileIO(getAssets());
@@ -118,6 +120,9 @@ public abstract class AndroidGame extends Activity implements Game {
     public Audio getAudio() {
         return audio;
     }
+
+    @Override
+    public Settings getSettings() {return settings;}
 
     @Override
     public void setScreen(Screen screen) {
