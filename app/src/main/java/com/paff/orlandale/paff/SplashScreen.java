@@ -64,10 +64,11 @@ class SplashScreen extends Screen {
     private void updateAll(Graphics g, Audio a, AnimationPool animationPool){
 
         if(Assets.splashsound.isLoaded()) {
-
+            Settings s=game.getSettings();
             g.clear(0xffffff);
             g.drawPixmap(Assets.logo, 262, 682);
-            Assets.splashsound.play(1);
+            if(s.sounds)
+                Assets.splashsound.play(1);
 
             //load here all other assets
 
@@ -76,7 +77,13 @@ class SplashScreen extends Screen {
             Assets.btn_play = g.newPixmap("play.png", Graphics.PixmapFormat.ARGB4444);
             Assets.btn_play_click =  g.newPixmap("play_click.png", Graphics.PixmapFormat.ARGB4444);
             Assets.btn_help = g.newPixmap("help.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_help_click =  g.newPixmap("help_click.png", Graphics.PixmapFormat.ARGB4444);
             Assets.btn_settings = g.newPixmap("settings.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_settings_click =  g.newPixmap("settings_click.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_on = g.newPixmap("on.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_off = g.newPixmap("off.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.sounds_text = g.newPixmap("sounds.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.music_text = g.newPixmap("music.png", Graphics.PixmapFormat.ARGB4444);
 
             //Animations
             Pixmap images[] = new Pixmap[]{Assets.btn_play,
@@ -96,10 +103,11 @@ class SplashScreen extends Screen {
             });
             animationPool.loadAnimation(anim);
 
+
             //Sounds
             Assets.bubblexplosion = a.newSound("bubblexplosion.ogg");
             Assets.gamesoundtheme = a.newSound("gamesoundtheme.ogg");
-
+            Assets.flagReady = true;
             state = GameState.CompleteAnimation;
 
         }

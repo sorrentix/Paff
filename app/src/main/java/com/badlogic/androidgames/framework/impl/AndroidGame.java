@@ -19,9 +19,14 @@ import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
+
 import com.paff.orlandale.paff.AnimationPool;
+import com.paff.orlandale.paff.Settings;
+
 
 public abstract class AndroidGame extends Activity implements Game {
+    private static final String TAG = "AndroidGame";
+
     AndroidFastRenderView renderView;
     Graphics graphics;
     Audio audio;
@@ -30,14 +35,16 @@ public abstract class AndroidGame extends Activity implements Game {
     FileIO fileIO;
     Screen screen;
     WakeLock wakeLock;
-
-    private static final String TAG = "AndroidGame";
+    Settings settings;
 
     int screenWidth;
     int screenHeight;
     DisplayMetrics metrics = new DisplayMetrics();
     float scaleFactor;
     float offset;
+
+    Screen previousScreen = null;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,10 +73,10 @@ public abstract class AndroidGame extends Activity implements Game {
         scaleFactor = (scaleFactorX>scaleFactorY)? scaleFactorY:scaleFactorX;
         offset = Math.abs(metrics.widthPixels - ((1.0f/scaleFactor)* frameBufferWidth))/2.0f;
 
-        Log.d(TAG,"screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " scaleFactorX: " + scaleFactorX);
+        Log.e(TAG,"screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " scaleFactorX: " + scaleFactorX+ " scaleFactorY: " + scaleFactorY+"ScaleFactor: "+scaleFactor);
 
 
-
+        settings = new Settings(getApplicationContext());
         renderView = new AndroidFastRenderView(this, frameBuffer);
         graphics = new AndroidGraphics(getAssets(), frameBuffer);
         animationPool = new AnimationPool();
@@ -126,6 +133,9 @@ public abstract class AndroidGame extends Activity implements Game {
     }
 
     @Override
+    public Settings getSettings() {return settings;}
+
+    @Override
     public void setScreen(Screen screen) {
         if (screen == null)
             throw new IllegalArgumentException("Screen must not be null");
@@ -151,5 +161,13 @@ public abstract class AndroidGame extends Activity implements Game {
 
     public DisplayMetrics getMetrics(){
         return metrics;
+    }
+
+    public void setPreviousScreen(Screen screen){
+        previousScreen = screen;
+    }
+
+    public Screen getPreviousScreen(){
+        return previousScreen;
     }
 }
