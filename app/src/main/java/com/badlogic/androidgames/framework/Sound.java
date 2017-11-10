@@ -11,4 +11,6 @@ public interface Sound {
 
     public void setIsLoaded();
 
+    public void stop();
+
 }

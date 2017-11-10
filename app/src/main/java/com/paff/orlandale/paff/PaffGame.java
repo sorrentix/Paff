@@ -9,4 +9,5 @@ public class PaffGame extends AndroidGame {
     public Screen getStartScreen() {
         return new SplashScreen(this);
     }
+
 }

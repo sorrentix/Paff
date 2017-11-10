@@ -59,10 +59,11 @@ class SplashScreen extends Screen {
     private void updateAll(Graphics g, Audio a){
 
         if(Assets.splashsound.isLoaded()) {
-
+            Settings s=game.getSettings();
             g.clear(0xffffff);
             g.drawPixmap(Assets.logo, 262, 682);
-            Assets.splashsound.play(1);
+            if(s.sounds)
+                Assets.splashsound.play(1);
 
             //load here all other assets
 
