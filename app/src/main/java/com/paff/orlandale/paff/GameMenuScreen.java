@@ -1,9 +1,12 @@
 package com.paff.orlandale.paff;
 
+import android.graphics.Rect;
+
 import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input.TouchEvent;
+import com.badlogic.androidgames.framework.Pixmap;
 import com.badlogic.androidgames.framework.Screen;
 
 import java.util.List;
@@ -15,17 +18,23 @@ import java.util.List;
 class GameMenuScreen extends Screen {
     Graphics g;
     Audio a;
+    AnimationPool animationPool;
     Settings s;
+
     GameState state = GameState.Waiting;
+
 
     public GameMenuScreen(Game game) {
         super(game);
         g = game.getGraphics();
         a = game.getAudio();
+
+        animationPool = game.getAnimationPool();
         s=game.getSettings();
         if(s.music && game.getPreviousScreen()==null)
              Assets.gamesoundtheme.playLoop(0.2f);
         game.setPreviousScreen(game.getCurrentScreen());
+
     }
 
     enum GameState{
@@ -68,6 +77,7 @@ class GameMenuScreen extends Screen {
 
             }
         }
+
     }
 
     @Override
@@ -84,8 +94,7 @@ class GameMenuScreen extends Screen {
             case Play:
                 if(s.sounds)
                     Assets.bubblexplosion.play(1);
-                g.drawPixmap(Assets.btn_play_click, 60, 760);
-                Assets.bubblexplosion.play(1);
+                animationPool.getAnimationByID(1).executeAnimation();
                 break;
             case Help:
                 g.drawPixmap(Assets.btn_help_click, 240, 1360);

@@ -1,6 +1,9 @@
 package com.badlogic.androidgames.framework;
 
+
+import com.paff.orlandale.paff.AnimationPool;
 import com.paff.orlandale.paff.Settings;
+
 
 public interface Game {
     public Input getInput();
@@ -10,6 +13,8 @@ public interface Game {
     public Graphics getGraphics();
 
     public Audio getAudio();
+
+    public AnimationPool getAnimationPool();
 
     public void setScreen(Screen screen);
 

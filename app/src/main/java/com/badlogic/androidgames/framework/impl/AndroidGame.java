@@ -19,7 +19,10 @@ import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
+
+import com.paff.orlandale.paff.AnimationPool;
 import com.paff.orlandale.paff.Settings;
+
 
 public abstract class AndroidGame extends Activity implements Game {
     private static final String TAG = "AndroidGame";
@@ -28,6 +31,7 @@ public abstract class AndroidGame extends Activity implements Game {
     Graphics graphics;
     Audio audio;
     Input input;
+    AnimationPool animationPool;
     FileIO fileIO;
     Screen screen;
     WakeLock wakeLock;
@@ -75,6 +79,7 @@ public abstract class AndroidGame extends Activity implements Game {
         settings = new Settings(getApplicationContext());
         renderView = new AndroidFastRenderView(this, frameBuffer);
         graphics = new AndroidGraphics(getAssets(), frameBuffer);
+        animationPool = new AnimationPool();
         fileIO = new AndroidFileIO(getAssets());
         audio = new AndroidAudio(this);
         input = new AndroidInput(this, renderView, scaleFactor, scaleFactor);
@@ -118,6 +123,9 @@ public abstract class AndroidGame extends Activity implements Game {
     public Graphics getGraphics() {
         return graphics;
     }
+
+    @Override
+    public AnimationPool getAnimationPool(){ return animationPool; }
 
     @Override
     public Audio getAudio() {
