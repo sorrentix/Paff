@@ -68,11 +68,11 @@ class GameMenuScreen extends Screen {
             case Play:
                 Assets.bubblexplosion.play(1);
                 //g.drawPixmap(Assets.btn_play_click, 60, 760);
-                animationPool.getAnimationByID(1).executeAnimation();
+
                 state = GameState.ChangeScreen;
                 break;
             case ChangeScreen:
-
+                animationPool.getAnimationByID(1).executeAnimation();
                 break;
             default:
                 break;
