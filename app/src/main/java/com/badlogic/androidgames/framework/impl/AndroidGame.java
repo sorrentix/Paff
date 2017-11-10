@@ -20,22 +20,31 @@ import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
 
+import com.paff.orlandale.paff.AnimationPool;
+import com.paff.orlandale.paff.Settings;
+
+
 public abstract class AndroidGame extends Activity implements Game {
+    private static final String TAG = "AndroidGame";
+
     AndroidFastRenderView renderView;
     Graphics graphics;
     Audio audio;
     Input input;
+    AnimationPool animationPool;
     FileIO fileIO;
     Screen screen;
     WakeLock wakeLock;
-
-    private static final String TAG = "AndroidGame";
+    Settings settings;
 
     int screenWidth;
     int screenHeight;
     DisplayMetrics metrics = new DisplayMetrics();
     float scaleFactor;
     float offset;
+
+    Screen previousScreen = null;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,12 +73,13 @@ public abstract class AndroidGame extends Activity implements Game {
         scaleFactor = (scaleFactorX>scaleFactorY)? scaleFactorY:scaleFactorX;
         offset = Math.abs(metrics.widthPixels - ((1.0f/scaleFactor)* frameBufferWidth))/2.0f;
 
-        Log.d(TAG,"screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " scaleFactorX: " + scaleFactorX);
+        Log.e(TAG,"screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " scaleFactorX: " + scaleFactorX+ " scaleFactorY: " + scaleFactorY+"ScaleFactor: "+scaleFactor);
 
 
-
+        settings = new Settings(getApplicationContext());
         renderView = new AndroidFastRenderView(this, frameBuffer);
         graphics = new AndroidGraphics(getAssets(), frameBuffer);
+        animationPool = new AnimationPool();
         fileIO = new AndroidFileIO(getAssets());
         audio = new AndroidAudio(this);
         input = new AndroidInput(this, renderView, scaleFactor, scaleFactor);
@@ -115,9 +125,15 @@ public abstract class AndroidGame extends Activity implements Game {
     }
 
     @Override
+    public AnimationPool getAnimationPool(){ return animationPool; }
+
+    @Override
     public Audio getAudio() {
         return audio;
     }
+
+    @Override
+    public Settings getSettings() {return settings;}
 
     @Override
     public void setScreen(Screen screen) {
@@ -145,5 +161,13 @@ public abstract class AndroidGame extends Activity implements Game {
 
     public DisplayMetrics getMetrics(){
         return metrics;
+    }
+
+    public void setPreviousScreen(Screen screen){
+        previousScreen = screen;
+    }
+
+    public Screen getPreviousScreen(){
+        return previousScreen;
     }
 }

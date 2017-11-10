@@ -62,4 +62,14 @@ public class AndroidAudio implements Audio {
             throw new RuntimeException("Couldn't load sound '" + filename + "'");
         }
     }
+
+    @Override
+    public void pauseAll(){
+        soundPool.autoPause();
+    }
+
+    @Override
+    public void resumeAll(){
+        soundPool.autoResume();
+    }
 }

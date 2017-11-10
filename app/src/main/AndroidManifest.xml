@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data android:name="android.max_aspect" android:value="2.1" />
         <activity android:name=".PaffGame"
                   android:screenOrientation="portrait">
             <intent-filter>

@@ -48,9 +48,7 @@ public class AndroidFastRenderView extends SurfaceView implements Runnable {
             //Nel modo seguente invece di stretchare allarghiamo mantenendo le proporzioni sulla x e tagliamo la parte in più sotto
             float px = canvas.getWidth()/2.0f;
             float py= canvas.getHeight()/2.0f;
-            System.out.println("metricx: "+game.getMetrics().widthPixels/2.0f+" metricy: "
-                    +game.getMetrics().heightPixels/2.0f
-                    +" canvasx: "+canvas.getWidth()/2.0f+ " canvasy: "+canvas.getHeight()/2.0f );
+
             canvas.scale(1.0f/game.getScaleFactor(),1.0f/game.getScaleFactor());
 
 
