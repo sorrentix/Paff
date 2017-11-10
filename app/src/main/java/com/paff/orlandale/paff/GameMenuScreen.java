@@ -51,7 +51,7 @@ class GameMenuScreen extends Screen {
             case Waiting:
                 break;
             case Play:
-                game.setScreen(new SettingsScreen(game));//TODO CAMBIARE IN GAMESCREEN
+               //TODO CAMBIARE IN GAMESCREEN
                 break;
             case Help:
                 game.setScreen(new SettingsScreen(game));//TODO CAMBIARE IN HELPSCREEN

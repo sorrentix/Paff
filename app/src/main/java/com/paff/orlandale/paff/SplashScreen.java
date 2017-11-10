@@ -98,6 +98,8 @@ class SplashScreen extends Screen {
                 @Override
                 public void onAnimationComplete(Animation anim) {
                     //fai qualcos quando l'animazione a è completa
+
+                    game.setScreen(new SettingsScreen(game));
                     System.out.println("animation complete mammt!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 }
             });
