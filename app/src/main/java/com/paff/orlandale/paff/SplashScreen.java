@@ -84,6 +84,7 @@ class SplashScreen extends Screen {
             Assets.btn_off = g.newPixmap("off.png", Graphics.PixmapFormat.ARGB4444);
             Assets.sounds_text = g.newPixmap("sounds.png", Graphics.PixmapFormat.ARGB4444);
             Assets.music_text = g.newPixmap("music.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.help_screen = g.newPixmap("help_screen.png", Graphics.PixmapFormat.ARGB4444);
 
             //Animations
             Pixmap images[] = new Pixmap[]{Assets.btn_play,

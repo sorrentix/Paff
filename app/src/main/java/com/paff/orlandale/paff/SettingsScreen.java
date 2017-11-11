@@ -89,9 +89,9 @@ public class SettingsScreen extends Screen {
             case Setup:
                 g.drawPixmap(Assets.menu_background, 0, 0);
                 g.drawPixmap(Assets.logo, 262, 160);
-                g.drawPixmap(Assets.sounds_text, 100, 905);
+                g.drawPixmap(Assets.sounds_text, 100, 900);
                 g.drawPixmap((s.sounds)?Assets.btn_on:Assets.btn_off, 600, 800);
-                g.drawPixmap(Assets.music_text, 100, 1305);
+                g.drawPixmap(Assets.music_text, 100, 1300);
                 g.drawPixmap((s.music)?Assets.btn_on:Assets.btn_off, 600, 1200);
                 break;
             case Sounds_on:

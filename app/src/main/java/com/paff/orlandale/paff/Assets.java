@@ -31,6 +31,7 @@ public class Assets {
     public static Pixmap btn_off;
     public static Pixmap sounds_text;
     public static Pixmap music_text;
+    public static Pixmap help_screen;
 
     public static boolean flagReady=false;
 
