@@ -2,7 +2,6 @@ package com.badlogic.androidgames.framework.impl;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.os.Bundle;
@@ -20,7 +19,11 @@ import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
 
+import com.google.fpl.liquidfun.Vec2;
 import com.paff.orlandale.paff.AnimationPool;
+import com.paff.orlandale.paff.Box;
+import com.paff.orlandale.paff.PhysicToPixel;
+import com.paff.orlandale.paff.PhysicWorld;
 import com.paff.orlandale.paff.Settings;
 
 
@@ -36,12 +39,16 @@ public abstract class AndroidGame extends Activity implements Game {
     Screen screen;
     WakeLock wakeLock;
     Settings settings;
+    PhysicWorld physicWorld;
+
 
     int screenWidth;
     int screenHeight;
     DisplayMetrics metrics = new DisplayMetrics();
     float scaleFactor;
     float offset;
+
+
 
     Screen previousScreen = null;
 
@@ -50,13 +57,13 @@ public abstract class AndroidGame extends Activity implements Game {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        System.loadLibrary("liquidfun");
+        System.loadLibrary("liquidfun_jni");
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        /*boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        int frameBufferWidth = isLandscape ? 480 : 320;
-        int frameBufferHeight = isLandscape ? 320 : 480;*/
 
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
@@ -75,6 +82,10 @@ public abstract class AndroidGame extends Activity implements Game {
 
         Log.e(TAG,"screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " scaleFactorX: " + scaleFactorX+ " scaleFactorY: " + scaleFactorY+"ScaleFactor: "+scaleFactor);
 
+        PhysicToPixel.physicalSize = new Box(-10,-15,10,15);//new Box(-10,-15,10,15);
+        PhysicToPixel.framebufferWidth = frameBufferWidth;
+        PhysicToPixel.framebufferHeight = frameBufferHeight;
+        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,new Box(0,0,frameBufferWidth,frameBufferHeight),new Vec2(0,-10),frameBufferWidth,frameBufferHeight);
 
         settings = new Settings(getApplicationContext());
         renderView = new AndroidFastRenderView(this, frameBuffer);
@@ -136,6 +147,9 @@ public abstract class AndroidGame extends Activity implements Game {
     public Settings getSettings() {return settings;}
 
     @Override
+    public PhysicWorld getPhysicWorld() {return physicWorld;}
+
+    @Override
     public void setScreen(Screen screen) {
         if (screen == null)
             throw new IllegalArgumentException("Screen must not be null");
@@ -170,4 +184,5 @@ public abstract class AndroidGame extends Activity implements Game {
     public Screen getPreviousScreen(){
         return previousScreen;
     }
+
 }

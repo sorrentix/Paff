@@ -1,6 +1,7 @@
 package com.badlogic.androidgames.framework;
 
 public interface Graphics {
+
     public static enum PixmapFormat {
         ARGB8888, ARGB4444, RGB565
     }
@@ -23,4 +24,6 @@ public interface Graphics {
     public int getWidth();
 
     public int getHeight();
+
+    public void drawCircle(int x, int y, float radius, int color, int alpha);
 }

@@ -2,6 +2,7 @@ package com.badlogic.androidgames.framework;
 
 
 import com.paff.orlandale.paff.AnimationPool;
+import com.paff.orlandale.paff.PhysicWorld;
 import com.paff.orlandale.paff.Settings;
 
 
@@ -15,6 +16,8 @@ public interface Game {
     public Audio getAudio();
 
     public AnimationPool getAnimationPool();
+
+    PhysicWorld getPhysicWorld();
 
     public void setScreen(Screen screen);
 

@@ -118,7 +118,7 @@ class SplashScreen extends Screen {
 
     public void waitForAnimationComplete(){
         float deltaTime = (System.nanoTime()-startTime) / 1000000000.0f;
-        if( deltaTime > 3.8){
+        if( deltaTime > 0.1/*3.8*/){
             game.setScreen(new GameMenuScreen(game));
         }
     }

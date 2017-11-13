@@ -9,6 +9,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
@@ -129,5 +130,18 @@ public class AndroidGraphics implements Graphics {
     @Override
     public int getHeight() {
         return frameBuffer.getHeight();
+    }
+
+    @Override
+    public void drawCircle(int x, int y, float radius, int color, int alpha){
+        paint.setColor(color);
+        paint.setAlpha(alpha/2);
+        paint.setStyle(Style.FILL);
+        canvas.drawCircle(x,y,radius,paint);
+        paint.setColor(color);
+        paint.setAlpha(alpha);
+        paint.setStyle(Style.STROKE);
+        paint.setStrokeWidth(20);
+        canvas.drawCircle(x,y,radius,paint);
     }
 }
