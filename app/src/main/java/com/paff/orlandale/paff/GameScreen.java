@@ -1,12 +1,10 @@
 package com.paff.orlandale.paff;
 
-import android.graphics.Color;
-
 import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Screen;
-import com.google.fpl.liquidfun.Vec2;
+import java.util.List;
 
 /**
  * Created by sorrentix on 13/11/2017.
@@ -20,7 +18,7 @@ public class GameScreen extends Screen {
     Settings settings;
     PhysicWorld physicWorld;
 
-    Bubble bubble;
+    List<Bubble> bubbles;
 
     public GameScreen(Game game) {
         super(game);
@@ -31,7 +29,7 @@ public class GameScreen extends Screen {
         physicWorld = game.getPhysicWorld();
 
         //CORPO
-        bubble = new Bubble(physicWorld, new Vec2(0,0),2);
+        bubbles = physicWorld.getBubbles();
     }
 
     @Override
@@ -44,11 +42,12 @@ public class GameScreen extends Screen {
     public void present(float deltaTime) {
         graphics.drawPixmap(Assets.menu_background, 0, 0);
 
-        graphics.drawCircle(PhysicToPixel.X(bubble.getX()),
-                            PhysicToPixel.Y(bubble.getY()),
-                            PhysicToPixel.XLength(bubble.getRadius()),
-                            0x3498db,255);
-
+        for(int i = 0; i<bubbles.size(); i++) {
+            graphics.drawCircle(PhysicToPixel.X(bubbles.get(i).getX()),
+                    PhysicToPixel.Y(bubbles.get(i).getY()),
+                    PhysicToPixel.XLength(bubbles.get(i).getRadius()),
+                    0x3498db, 255);
+        }
     }
 
     @Override

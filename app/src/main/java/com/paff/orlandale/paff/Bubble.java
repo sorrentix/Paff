@@ -11,7 +11,7 @@ import com.google.fpl.liquidfun.Vec2;
  * Created by sorrentix on 13/11/2017.
  */
 
-public class Bubble {
+public class Bubble{
 
     Body body;
     float radius;
