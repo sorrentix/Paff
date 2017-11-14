@@ -39,6 +39,14 @@ public class PhysicWorld{
     Joint revoluteJoint;
     AccelerometerHandler accelerometerHandler;
 
+    enum GameState{
+        Waiting,
+        Spara,
+        Ruota
+    }
+
+    GameState gameState = GameState.Ruota;
+
     public PhysicWorld(Box physicalSize, Box screenSize, Vec2 gravity, AccelerometerHandler accelerometerHandler){
         this.physicalSize = physicalSize;
         this.screenSize = screenSize;
@@ -66,6 +74,9 @@ public class PhysicWorld{
 
         revoluteJointDef.delete();
     }
+    public GameState getGameState(){
+        return gameState;
+    }
 
     public synchronized void update() {
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
@@ -77,39 +88,45 @@ public class PhysicWorld{
 
         // paff.getBody().applyForce(new Vec2(0,-accelerometerHandler.getAccelX()),new Vec2(paff.getX(),paff.getY()),false);
 
-        if (spara) {
-            //CALCOLA VETTORE
-            //RIMUOVI JOINT
-            //APPLICA LA FORZA NELLA DIREZIONE DEL VETTORE (SPARA)
-            Vec2 vec =new Vec2(paff.getX()-bubbles[bubbles.length-1].getX(),paff.getY()-bubbles[bubbles.length-1].getY());
-           world.destroyJoint(revoluteJoint);
-           paff.getBody().applyLinearImpulse(vec,new Vec2(paff.getX(),paff.getY()),false);
-           setSpara(false);
 
-        } else {
-            float torque = paff.getBody().getAngularVelocity();
-            Log.e("TORQUE", "" + torque);
-            if (Math.abs(torque) > 3)
-                paff.getBody().applyTorque(-3 * torque, false);
-
-
-            if (((int) accelerometerHandler.getAccelX()) > 0) // FLAG = TRUE
-
-                paff.getBody().applyTorque(13, false);
-
-            else if ((((int) accelerometerHandler.getAccelX()) < 0)) // FLAG = FALSE
-                paff.getBody().applyTorque(-13, false);
-            else {
-                if (torque != 0) {
-                    torque = paff.getBody().getAngularVelocity();
-                    paff.getBody().applyTorque(-torque, false);
-                } else
-                    paff.getBody().applyTorque(0, false);
+        switch (gameState){
+            case Spara:
+                Vec2 vec =new Vec2(paff.getX()-bubbles[bubbles.length-1].getX(),paff.getY()-bubbles[bubbles.length-1].getY());
+                world.destroyJoint(revoluteJoint);
+                paff.getBody().setAngularVelocity(0);
+                paff.getBody().setLinearVelocity(new Vec2(paff.getX(),paff.getY()));
+                paff.getBody().applyLinearImpulse(vec,new Vec2(paff.getX(),paff.getY()),false);
+                gameState = GameState.Waiting;
+                break;
+            case Ruota:
+                float torque = paff.getBody().getAngularVelocity();
+                Log.e("TORQUE", "" + torque);
+                if (Math.abs(torque) > 3)
+                    paff.getBody().applyTorque(-3 * torque, false);
 
 
-            }
-            Log.e("DATI ACCELEROMETRO : ", "X=" + accelerometerHandler.getAccelX() + "\n Y=" + accelerometerHandler.getAccelY());
+                if (((int) accelerometerHandler.getAccelX()) > 0) // FLAG = TRUE
+
+                    paff.getBody().applyTorque(13, false);
+
+                else if ((((int) accelerometerHandler.getAccelX()) < 0)) // FLAG = FALSE
+                    paff.getBody().applyTorque(-13, false);
+                else {
+                    if (torque != 0) {
+                        torque = paff.getBody().getAngularVelocity();
+                        paff.getBody().applyTorque(-torque, false);
+                    } else
+                        paff.getBody().applyTorque(0, false);
+                }
+                Log.e("DATI ACCELEROMETRO : ", "X=" + accelerometerHandler.getAccelX() + "\n Y=" + accelerometerHandler.getAccelY());
+                break;
+            case Waiting:
+                break;
+            default:
+                break;
         }
+
+
     }
     public synchronized void setGravity(float x, float y)
     {
@@ -128,5 +145,5 @@ public class PhysicWorld{
 
     public Bubble getPaff() { return paff; }
 
-    public void setSpara(boolean flag) { spara=flag;}
+    public void setSpara(GameState state) { gameState = state;}
 }

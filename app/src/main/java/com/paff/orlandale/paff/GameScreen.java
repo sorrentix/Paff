@@ -5,6 +5,9 @@ import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
+import com.badlogic.androidgames.framework.impl.AndroidGame;
+import com.google.fpl.liquidfun.Vec2;
+
 import java.util.List;
 
 /**
@@ -33,6 +36,7 @@ public class GameScreen extends Screen {
         //CORPO
         bubbles = physicWorld.getBubbles();
         paff = physicWorld.getPaff();
+
     }
 
     @Override
@@ -43,7 +47,8 @@ public class GameScreen extends Screen {
         for (int i = 0; i < touchEvents.size(); ++i) {
             Input.TouchEvent event = touchEvents.get(i);
             if (event.type == Input.TouchEvent.TOUCH_UP) {
-                physicWorld.setSpara(true);
+                if (physicWorld.getGameState() != PhysicWorld.GameState.Spara)
+                    physicWorld.setSpara(PhysicWorld.GameState.Spara);
             }
         }
 
