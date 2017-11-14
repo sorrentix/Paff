@@ -47,7 +47,7 @@ public class GameScreen extends Screen {
         for (int i = 0; i < touchEvents.size(); ++i) {
             Input.TouchEvent event = touchEvents.get(i);
             if (event.type == Input.TouchEvent.TOUCH_UP) {
-                if (physicWorld.getGameState() != PhysicWorld.GameState.Spara)
+                if (physicWorld.getGameState() == PhysicWorld.GameState.Ruota)
                     physicWorld.setSpara(PhysicWorld.GameState.Spara);
             }
         }
@@ -70,9 +70,10 @@ public class GameScreen extends Screen {
                 0x3498db, 255);
 
         graphics.drawCircle(PhysicToPixel.X(paff.getX()),PhysicToPixel.Y(paff.getY()),PhysicToPixel.YLength(paff.getRadius()),0xe74c3c,255);
-       // graphics.drawLine((int)paff.getX(),(int)paff.getY(),(int)(paff.getX()-physicWorld.accelerometerHandler.getAccelX()*10),(int)(paff.getY()+physicWorld.accelerometerHandler.getAccelY()*10),0xe74c3c);
-            graphics.drawLine(0,0,100,100,0xe74c3c
-            );
+        graphics.drawLine(PhysicToPixel.X(bubbles[bubbles.length-1].getX()),
+                          PhysicToPixel.Y(bubbles[bubbles.length-1].getY()),
+                          PhysicToPixel.X(paff.getX()),
+                          PhysicToPixel.Y(paff.getY()),0xffffff);
     }
 
     @Override

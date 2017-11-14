@@ -59,5 +59,9 @@ public class Bubble{
         return radius;
     }
 
+    public Vec2 getCenter(){
+        return this.getBody().getPosition();
+    }
+
 
 }
