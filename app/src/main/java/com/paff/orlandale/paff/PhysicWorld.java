@@ -2,6 +2,7 @@ package com.paff.orlandale.paff;
 
 import android.graphics.RectF;
 
+import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Pool;
 import com.google.fpl.liquidfun.Vec2;
 import com.google.fpl.liquidfun.World;
@@ -33,20 +34,13 @@ public class PhysicWorld{
     private float framebufferWidth;
     private float framebufferHeight;
 
-    List<Bubble> bubbles;
-    private static final int POS_ALLOWED = 20;
-    Vec2 []bubbleStartingPositions = new Vec2[POS_ALLOWED];
+    List<Bubble> bubbles = new ArrayList<Bubble>();
+    private static final int POS_ALLOWED = 17;
+    Random generator;
 
-    private void setStartingBubblesPositions(){
-        bubbles.add(new Bubble(this,new Vec2(((float)generator.nextInt(160)/10.0f)-8.0f,);
-        float x,y;
-        for( int i = -8; i<9; i++){
-            final float x = (float)generator.nextInt(160)/10.0f);
-        }
-        y = Y_MAX + 4.0f;
+    Vec2 []bubbleUsableStartingPositions = new Vec2[POS_ALLOWED];
+    boolean [] isUsablePosition = new boolean[POS_ALLOWED];
 
-
-    }
 
     public PhysicWorld(Box physicalSize, Box screenSize, Vec2 gravity, float framebufferWidth,float framebufferHeight){
         this.physicalSize = physicalSize;
@@ -58,22 +52,71 @@ public class PhysicWorld{
         this.world = new World(gravity.getX(),gravity.getY());
 
         this.setStartingBubblesPositions();
-        Random generator = new Random();
+        generator = new Random();
 
-        bubbles = new ArrayList<>();
+        for (int i = 0; i < isUsablePosition.length; i++){
+            isUsablePosition[i]=true;
+        }
         for (int i = 0; i < 5; i++){
-            bubbles.add(new Bubble(this,new Vec2(((float)generator.nextInt(160)/10.0f)-8.0f,((float)generator.nextInt(150)/10.0f)+15.0f),(generator.nextFloat()%4)+1));
-        }// int randomNum = rand.nextInt((max - min) + 1) + min;
+            int posIndex = generator.nextInt(bubbleUsableStartingPositions.length-1);
+            while(isUsablePosition[posIndex] == false){
+                System.out.println("mammt2");
+
+                posIndex++;
+                if (posIndex >= POS_ALLOWED)
+                    posIndex = 0;
+            }
+            Vec2 pos = bubbleUsableStartingPositions[posIndex];
+            isUsablePosition[posIndex] = false;
+
+            bubbles.add(new Bubble(this, pos ,(generator.nextFloat()%2)+2, posIndex));
+        }
 
     }
 
     public synchronized void update(){
         world.step(TIME_STEP,VELOCITY_ITERATIONS,POSITION_ITERATIONS,PARTICLE_ITERATIONS);
+        checkBubblesPosition();
 
 /*        for (int i = 0; i < 5; i++){
             if (bubbles.get(i).getY()+bubbles.get(i).getRadius()<=physicalSize.ymin)
                 bubbles.get(i).getBody().
         }*/
+    }
+
+    private void checkBubblesPosition(){
+        for( Bubble bubble: bubbles){
+            if ( bubble.body.getPositionY() + bubble.getRadius() < Y_MIN ){
+                isUsablePosition[bubble.id]=true;
+
+                int posIndex = generator.nextInt(bubbleUsableStartingPositions.length-1);
+                while(isUsablePosition[posIndex] == false){
+                    System.out.println("mammt1");
+                    posIndex++;
+                    if (posIndex >= POS_ALLOWED)
+                        posIndex = 0;
+                }
+
+                Vec2 pos = bubbleUsableStartingPositions[posIndex];
+                isUsablePosition[posIndex] = false;
+
+                bubble.id = posIndex;
+                bubble.body.setTransform(bubbleUsableStartingPositions[posIndex].getX(),bubbleUsableStartingPositions[posIndex].getY(),0);
+
+            }
+        }
+    }
+
+    private void setStartingBubblesPositions(){
+
+        Random generator = new Random();
+        float x,y;
+
+        y = Y_MAX + 4.0f;
+        for( int i = -8; i < 9; i++){
+            x = generator.nextFloat()/2.0f + i;
+            bubbleUsableStartingPositions[i+8]= new Vec2(x,y);
+        }
     }
 
     public synchronized void setGravity(float x, float y)

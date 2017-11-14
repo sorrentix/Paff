@@ -14,6 +14,7 @@ public class PhysicPosition {
     private Vec2 position;
     BodyDef bdef;
     CircleShape circleShape;
+
     public PhysicPosition(Vec2 position){
         this.position = position;
 

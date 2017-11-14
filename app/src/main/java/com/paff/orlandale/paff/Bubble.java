@@ -15,10 +15,11 @@ public class Bubble{
 
     Body body;
     float radius;
-    PhysicPosition pos;
+    public PhysicPosition pos;
+    public int id;
 
-    public Bubble(PhysicWorld physicWorld, Vec2 position, float radius) {
-
+    public Bubble(PhysicWorld physicWorld, Vec2 position, float radius, int id) {
+        this.id = id;
         pos = new PhysicPosition(position);
 
         BodyDef bdef = new BodyDef();

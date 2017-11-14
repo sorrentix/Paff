@@ -85,7 +85,7 @@ public abstract class AndroidGame extends Activity implements Game {
         PhysicToPixel.physicalSize = new Box(-10,-15,10,15);//new Box(-10,-15,10,15);
         PhysicToPixel.framebufferWidth = frameBufferWidth;
         PhysicToPixel.framebufferHeight = frameBufferHeight;
-        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,new Box(0,0,frameBufferWidth,frameBufferHeight),new Vec2(0,-10),frameBufferWidth,frameBufferHeight);
+        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,new Box(0,0,frameBufferWidth,frameBufferHeight),new Vec2(0,-0.2f),frameBufferWidth,frameBufferHeight);
 
         settings = new Settings(getApplicationContext());
         renderView = new AndroidFastRenderView(this, frameBuffer);

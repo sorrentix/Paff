@@ -16,7 +16,9 @@ public class Pool<T> {
         this.factory = factory;
         this.maxSize = maxSize;
         this.freeObjects = new ArrayList<T>(maxSize);
+
     }
+
 
     public T newObject() {
         T object = null;
