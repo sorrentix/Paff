@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -24,6 +26,7 @@ import com.paff.orlandale.paff.AnimationPool;
 import com.paff.orlandale.paff.Box;
 import com.paff.orlandale.paff.PhysicToPixel;
 import com.paff.orlandale.paff.PhysicWorld;
+import com.paff.orlandale.paff.R;
 import com.paff.orlandale.paff.Settings;
 
 
@@ -40,7 +43,7 @@ public abstract class AndroidGame extends Activity implements Game {
     WakeLock wakeLock;
     Settings settings;
     PhysicWorld physicWorld;
-
+    AccelerometerHandler accelerometerHandler;
 
     int screenWidth;
     int screenHeight;
@@ -85,7 +88,8 @@ public abstract class AndroidGame extends Activity implements Game {
         PhysicToPixel.physicalSize = new Box(-10,-15,10,15);//new Box(-10,-15,10,15);
         PhysicToPixel.framebufferWidth = frameBufferWidth;
         PhysicToPixel.framebufferHeight = frameBufferHeight;
-        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,new Box(0,0,frameBufferWidth,frameBufferHeight),new Vec2(0,-10),frameBufferWidth,frameBufferHeight);
+        accelerometerHandler = new AccelerometerHandler(this);
+        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,new Box(0,0,frameBufferWidth,frameBufferHeight),new Vec2(0,0),accelerometerHandler);
 
         settings = new Settings(getApplicationContext());
         renderView = new AndroidFastRenderView(this, frameBuffer);
@@ -99,6 +103,9 @@ public abstract class AndroidGame extends Activity implements Game {
         
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "GLGame");
+
+
+
     }
 
     @Override
@@ -184,5 +191,7 @@ public abstract class AndroidGame extends Activity implements Game {
     public Screen getPreviousScreen(){
         return previousScreen;
     }
+
+    public AccelerometerHandler getAccelerometerHandler() { return accelerometerHandler;}
 
 }
