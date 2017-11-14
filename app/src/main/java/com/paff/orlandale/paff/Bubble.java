@@ -15,18 +15,21 @@ public class Bubble{
 
     Body body;
     float radius;
+    PhysicPosition pos;
 
     public Bubble(PhysicWorld physicWorld, Vec2 position, float radius) {
 
+        pos = new PhysicPosition(position);
+
         BodyDef bdef = new BodyDef();
-        bdef.setPosition(position);
+        pos.setBodyDef(bdef);
         bdef.setType(BodyType.dynamicBody);
         this.body = physicWorld.world.createBody(bdef);
         this.body.setSleepingAllowed(false);
         this.body.setUserData(this);
 
         CircleShape circleshape = new CircleShape();
-        circleshape.setPosition(position.getX(),position.getY());
+        pos.setCircleShape(circleshape);
         circleshape.setRadius(radius);
         this.radius = radius;
 

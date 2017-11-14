@@ -24,11 +24,29 @@ public class PhysicWorld{
     private static final int POSITION_ITERATIONS = 3;
     private static final int PARTICLE_ITERATIONS = 3;
 
+    private static final float X_MIN = -10.0f;
+    private static final float X_MAX = 10.0f;
+    private static final float Y_MIN = -15.0f;
+    private static final float Y_MAX = 15.0f;
+
     private Vec2 gravity;
     private float framebufferWidth;
     private float framebufferHeight;
 
     List<Bubble> bubbles;
+    private static final int POS_ALLOWED = 20;
+    Vec2 []bubbleStartingPositions = new Vec2[POS_ALLOWED];
+
+    private void setStartingBubblesPositions(){
+        bubbles.add(new Bubble(this,new Vec2(((float)generator.nextInt(160)/10.0f)-8.0f,);
+        float x,y;
+        for( int i = -8; i<9; i++){
+            final float x = (float)generator.nextInt(160)/10.0f);
+        }
+        y = Y_MAX + 4.0f;
+
+
+    }
 
     public PhysicWorld(Box physicalSize, Box screenSize, Vec2 gravity, float framebufferWidth,float framebufferHeight){
         this.physicalSize = physicalSize;
@@ -39,6 +57,7 @@ public class PhysicWorld{
 
         this.world = new World(gravity.getX(),gravity.getY());
 
+        this.setStartingBubblesPositions();
         Random generator = new Random();
 
         bubbles = new ArrayList<>();
