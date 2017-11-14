@@ -96,6 +96,8 @@ public class SettingsScreen extends Screen {
                 break;
             case Sounds_on:
                 g.drawPixmap(Assets.btn_on, 600, 800);
+               // if (s.sounds)
+                    Assets.bubblexplosion.play(1);
                 break;
             case Sounds_off:
                 g.drawPixmap(Assets.btn_off, 600, 800);
