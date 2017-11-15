@@ -10,20 +10,20 @@ public class PhysicToPixel {
     public static float framebufferWidth;
     public static float framebufferHeight;
 
-    public static int X(float x) {
-        return (int)((x-physicalSize.xmin)/physicalSize.width*framebufferWidth);
+    public static float X(float x) {
+        return (x-physicalSize.xmin)/physicalSize.width*framebufferWidth;
     }
 
-    public static int Y(float y) {
-        return (int)((-1*((y-physicalSize.ymin)/physicalSize.height*framebufferHeight))+framebufferHeight);
+    public static float Y(float y) {
+        return (y-physicalSize.ymin)/physicalSize.height*framebufferHeight;
     }
 
-    public static int XLength(float x) {
-        return (int)(x/physicalSize.width*framebufferWidth);
+    public static float XLength(float x) {
+        return (x/physicalSize.width*framebufferWidth);
     }
 
-    public static int YLength(float y) {
-        return (int)(y/physicalSize.height*framebufferHeight);
+    public static float YLength(float y) {
+        return (y/physicalSize.height*framebufferHeight);
     }
 
 

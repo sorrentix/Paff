@@ -16,7 +16,7 @@ public class Bubble{
     Body body;
     float radius;
 
-    public Bubble(PhysicWorld physicWorld, Vec2 position, float radius) {
+    public Bubble(PhysicWorld physicWorld, Vec2 position, float radius,float density) {
 
         BodyDef bdef = new BodyDef();
         bdef.setPosition(position);
@@ -24,6 +24,7 @@ public class Bubble{
         this.body = physicWorld.world.createBody(bdef);
         this.body.setSleepingAllowed(false);
         this.body.setUserData(this);
+        this.body.setBullet(true);
 
         CircleShape circleshape = new CircleShape();
         circleshape.setPosition(position.getX(),position.getY());
@@ -33,7 +34,7 @@ public class Bubble{
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.setShape(circleshape);
         fixtureDef.setFriction(0.1f);
-        fixtureDef.setDensity(0.5f);
+        fixtureDef.setDensity(density);
 
         this.body.createFixture(fixtureDef);
 

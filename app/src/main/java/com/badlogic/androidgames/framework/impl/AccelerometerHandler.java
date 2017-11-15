@@ -45,4 +45,9 @@ public class AccelerometerHandler implements SensorEventListener {
     public float getAccelZ() {
         return accelZ;
     }
+
+    public boolean isAccelXOpposite(int accel) {
+        return (accel>0 && accelX <=0) || (accel<0 && accelX >=0);
+
+    }
 }

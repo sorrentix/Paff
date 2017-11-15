@@ -23,7 +23,7 @@ public class GameScreen extends Screen {
     PhysicWorld physicWorld;
 
     Bubble bubbles[];
-    Bubble paff;
+    Bubble paff, provaBubble;
 
     public GameScreen(Game game) {
         super(game);
@@ -34,8 +34,9 @@ public class GameScreen extends Screen {
         physicWorld = game.getPhysicWorld();
 
         //CORPO
-        bubbles = physicWorld.getBubbles();
+        //bubbles = physicWorld.getBubbles();
         paff = physicWorld.getPaff();
+        provaBubble = physicWorld.provaBubble;
 
     }
 
@@ -64,14 +65,15 @@ public class GameScreen extends Screen {
                     PhysicToPixel.XLength(bubbles.get(i).getRadius()),
                     0x3498db, 255);
         }*/
-        graphics.drawCircle(PhysicToPixel.X(bubbles[bubbles.length-1].getX()),
-                PhysicToPixel.Y(bubbles[bubbles.length-1].getY()),
-                PhysicToPixel.XLength(bubbles[bubbles.length-1].getRadius()),
+        graphics.drawCircle(PhysicToPixel.X(provaBubble.getX()),
+                PhysicToPixel.Y(provaBubble.getY()),
+                PhysicToPixel.YLength(provaBubble.getRadius()),
                 0x3498db, 255);
 
         graphics.drawCircle(PhysicToPixel.X(paff.getX()),PhysicToPixel.Y(paff.getY()),PhysicToPixel.YLength(paff.getRadius()),0xe74c3c,255);
-        graphics.drawLine(PhysicToPixel.X(bubbles[bubbles.length-1].getX()),
-                          PhysicToPixel.Y(bubbles[bubbles.length-1].getY()),
+
+        graphics.drawLine(PhysicToPixel.X(provaBubble.getX()),
+                          PhysicToPixel.Y(provaBubble.getY()),
                           PhysicToPixel.X(paff.getX()),
                           PhysicToPixel.Y(paff.getY()),0xffffff);
     }
