@@ -100,7 +100,8 @@ public class AndroidGraphics implements Graphics {
     @Override
     public void drawRect(float x, float y, float width, float height, int color) {
         paint.setColor(color);
-        paint.setStyle(Style.FILL);
+        paint.setAlpha(255);
+        paint.setStyle(Style.FILL_AND_STROKE);
         canvas.drawRect(x, y, x + width - 1, y + width - 1, paint);
     }
 

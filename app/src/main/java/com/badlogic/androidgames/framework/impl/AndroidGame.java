@@ -73,10 +73,10 @@ public abstract class AndroidGame extends Activity implements Game {
         screenWidth = metrics.widthPixels;
         screenHeight = metrics.heightPixels;
 
-        int frameBufferWidth = 1080;
-        int frameBufferHeight = 1920;
-        Bitmap frameBuffer = Bitmap.createBitmap(frameBufferWidth,
-                frameBufferHeight, Config.RGB_565);
+        float frameBufferWidth = 1080.0f;
+        float frameBufferHeight = 1920.0f;
+        Bitmap frameBuffer = Bitmap.createBitmap((int)frameBufferWidth,
+                (int)frameBufferHeight, Config.RGB_565);
 
         float scaleFactorX = (float)frameBufferWidth / (float)screenWidth;
         float scaleFactorY = (float)frameBufferHeight / (float)screenHeight;
@@ -85,11 +85,11 @@ public abstract class AndroidGame extends Activity implements Game {
 
         Log.e(TAG,"screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " scaleFactorX: " + scaleFactorX+ " scaleFactorY: " + scaleFactorY+"ScaleFactor: "+scaleFactor);
 
-        PhysicToPixel.physicalSize = new Box(-10,-15,10,15);//new Box(-10,-15,10,15);
+        PhysicToPixel.physicalSize = new Box(-10.0f,-15.0f,10.0f,15.0f);//new Box(-10,-15,10,15);
         PhysicToPixel.framebufferWidth = frameBufferWidth;
         PhysicToPixel.framebufferHeight = frameBufferHeight;
         accelerometerHandler = new AccelerometerHandler(this);
-        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,new Box(0,0,frameBufferWidth,frameBufferHeight),new Vec2(0,0),accelerometerHandler);
+        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,new Box(0.0f,0.0f,frameBufferWidth,frameBufferHeight),new Vec2(0.0f,10.0f),accelerometerHandler);
 
         settings = new Settings(getApplicationContext());
         renderView = new AndroidFastRenderView(this, frameBuffer);

@@ -1,5 +1,7 @@
 package com.paff.orlandale.paff;
 
+import android.util.Log;
+
 import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -24,6 +26,7 @@ public class GameScreen extends Screen {
 
     Bubble bubbles[];
     Bubble paff, provaBubble;
+    Rettangolo rettangolo;
 
     public GameScreen(Game game) {
         super(game);
@@ -36,8 +39,14 @@ public class GameScreen extends Screen {
         //CORPO
         //bubbles = physicWorld.getBubbles();
         paff = physicWorld.getPaff();
-        provaBubble = physicWorld.provaBubble;
-
+        //provaBubble = physicWorld.provaBubble;
+        rettangolo = physicWorld.rettangolo;
+        Log.e("PROVALUNGHEZZE","0 usando X: "+PhysicToPixel.X(0)+" - 0 usando Y: "+PhysicToPixel.Y(0)+
+                                          "\n10 usando X: "+PhysicToPixel.X(10)+" - 10 usando Y: "+PhysicToPixel.Y(10)+
+                                          "\n15 usando X: "+PhysicToPixel.X(15)+" - 15 usando Y: "+PhysicToPixel.Y(15)+
+                                        "\n-10 usando X: "+PhysicToPixel.X(-10)+" - -10 usando Y: "+PhysicToPixel.Y(-10)+
+                                        "\n-15 usando X: "+PhysicToPixel.X(-15)+" - -15 usando Y: "+PhysicToPixel.Y(-15)+
+                                        "\n10 usando XLength: "+PhysicToPixel.XLength(10)+" - 10 usando YLength: "+PhysicToPixel.YLength(10));
     }
 
     @Override
@@ -65,17 +74,22 @@ public class GameScreen extends Screen {
                     PhysicToPixel.XLength(bubbles.get(i).getRadius()),
                     0x3498db, 255);
         }*/
-        graphics.drawCircle(PhysicToPixel.X(provaBubble.getX()),
+        graphics.drawRect(PhysicToPixel.X(rettangolo.getX()),
+                          PhysicToPixel.Y(rettangolo.getY()),
+                            PhysicToPixel.XLength(rettangolo.getW()),
+                        PhysicToPixel.YLength(rettangolo.getH()),0x3498db);
+
+/*        graphics.drawCircle(PhysicToPixel.X(provaBubble.getX()),
                 PhysicToPixel.Y(provaBubble.getY()),
                 PhysicToPixel.YLength(provaBubble.getRadius()),
                 0x3498db, 255);
-
+*/
         graphics.drawCircle(PhysicToPixel.X(paff.getX()),PhysicToPixel.Y(paff.getY()),PhysicToPixel.YLength(paff.getRadius()),0xe74c3c,255);
 
-        graphics.drawLine(PhysicToPixel.X(provaBubble.getX()),
+        /*graphics.drawLine(PhysicToPixel.X(provaBubble.getX()),
                           PhysicToPixel.Y(provaBubble.getY()),
                           PhysicToPixel.X(paff.getX()),
-                          PhysicToPixel.Y(paff.getY()),0xffffff);
+                          PhysicToPixel.Y(paff.getY()),0xffffff);*/
     }
 
     @Override
