@@ -26,19 +26,21 @@ public class Rettangolo {
         this.body.setUserData(this);
 
         PolygonShape polygonShape = new PolygonShape();
-        polygonShape.setAsBox(w,h);
+        polygonShape.setAsBox(w/2, h/2); // last is rotation angle
+        //body.createFixture(polygonShape, 0); // no density needed
+        //polygonShape.setAsBox(w,h);
         this.w = w;
         this.h = h;
 
-        FixtureDef fixtureDef = new FixtureDef();
+/*        FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.setShape(polygonShape);
         fixtureDef.setDensity(5.0f);
-
-        this.body.createFixture(fixtureDef);
+*/
+        this.body.createFixture(polygonShape,0);
 
         bdef.delete();
         polygonShape.delete();
-        fixtureDef.delete();
+        //fixtureDef.delete();
 
     }
 

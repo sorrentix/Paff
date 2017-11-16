@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -26,7 +24,6 @@ import com.paff.orlandale.paff.AnimationPool;
 import com.paff.orlandale.paff.Box;
 import com.paff.orlandale.paff.PhysicToPixel;
 import com.paff.orlandale.paff.PhysicWorld;
-import com.paff.orlandale.paff.R;
 import com.paff.orlandale.paff.Settings;
 
 
@@ -90,6 +87,7 @@ public abstract class AndroidGame extends Activity implements Game {
         PhysicToPixel.framebufferHeight = frameBufferHeight;
         accelerometerHandler = new AccelerometerHandler(this);
         physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,new Box(0.0f,0.0f,frameBufferWidth,frameBufferHeight),new Vec2(0.0f,10.0f),accelerometerHandler);
+
 
         settings = new Settings(getApplicationContext());
         renderView = new AndroidFastRenderView(this, frameBuffer);

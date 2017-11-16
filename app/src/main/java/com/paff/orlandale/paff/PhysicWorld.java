@@ -6,7 +6,9 @@ import android.util.Log;
 import com.badlogic.androidgames.framework.Pool;
 import com.badlogic.androidgames.framework.impl.AccelerometerHandler;
 import com.google.fpl.liquidfun.Body;
+import com.google.fpl.liquidfun.BodyType;
 import com.google.fpl.liquidfun.DistanceJointDef;
+import com.google.fpl.liquidfun.Draw;
 import com.google.fpl.liquidfun.Joint;
 import com.google.fpl.liquidfun.RevoluteJoint;
 import com.google.fpl.liquidfun.RevoluteJointDef;
@@ -26,7 +28,7 @@ public class PhysicWorld {
 
     final Box physicalSize, screenSize;
 
-    private static final float TIME_STEP = 1 / 60f; //60 fps
+    private static final float TIME_STEP = 1.0f / 60.0f; //60 fps
     private static final int VELOCITY_ITERATIONS = 8;
     private static final int POSITION_ITERATIONS = 3;
     private static final int PARTICLE_ITERATIONS = 3;
@@ -65,21 +67,12 @@ public class PhysicWorld {
         this.accelerometerHandler = accelerometerHandler;
 
         this.world = new World(gravity.getX(), gravity.getY());
-  //      provaBubble =new Bubble(this, new Vec2(3.0f, -10.0f), 2.0f,5.0f);
-        paff = new Bubble(this, new Vec2(-3.0f, -10.0f), 1.0f,5.0f);
+        //provaBubble =new Bubble(this, new Vec2(7.0f, 0.0f), 2.0f,500.0f, BodyType.staticBody);
+        paff = new Bubble(this, new Vec2(0f, -9.0f), 1.0f,1.0f,BodyType.dynamicBody);
 
-        rettangolo = new Rettangolo(this,new Vec2(0.0f,2.0f),7.0f,7.0f);
-/*
-        DistanceJointDef distanceJointDef = new DistanceJointDef();
-        distanceJointDef.setBodyA(paff.getBody());
-        distanceJointDef.setBodyB(provaBubble.getBody());
-        //distanceJointDef.setLocalAnchorA(paff.getX(), paff.getY());
-        //distanceJointDef.setLocalAnchorB(provaBubble.getX(), provaBubble.getY());
-        distanceJointDef.setFrequencyHz(0);
-        distanceJointDef.setLength(paff.getRadius()+provaBubble.getRadius());
-        distanceJoint = world.createJoint(distanceJointDef);
+        rettangolo = new Rettangolo(this,new Vec2(0.0f,3.5f),7.0f,7.0f);
 
-        distanceJointDef.delete();*/
+        //world.setDebugDraw(new Draw());
 
         paffContactListener = new PaffContactListener(this);
         world.setContactListener(paffContactListener);
@@ -91,7 +84,7 @@ public class PhysicWorld {
 
     public synchronized void update() {
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
-
+        //world.drawDebugData();
     }
 
     public synchronized void setGravity(float x, float y) {
