@@ -67,10 +67,10 @@ public class GameScreen extends Screen {
         }*/
         graphics.drawCircle(PhysicToPixel.X(provaBubble.getX()),
                 PhysicToPixel.Y(provaBubble.getY()),
-                PhysicToPixel.YLength(provaBubble.getRadius()),
+                PhysicToPixel.XLength(provaBubble.getRadius()),
                 0x3498db, 255);
 
-        graphics.drawCircle(PhysicToPixel.X(paff.getX()),PhysicToPixel.Y(paff.getY()),PhysicToPixel.YLength(paff.getRadius()),0xe74c3c,255);
+        graphics.drawCircle(PhysicToPixel.X(paff.getX()),PhysicToPixel.Y(paff.getY()),PhysicToPixel.XLength(paff.getRadius()),0xe74c3c,255);
 
         graphics.drawLine(PhysicToPixel.X(provaBubble.getX()),
                           PhysicToPixel.Y(provaBubble.getY()),

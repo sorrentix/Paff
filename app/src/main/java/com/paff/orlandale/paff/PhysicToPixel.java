@@ -26,5 +26,10 @@ public class PhysicToPixel {
         return (y/physicalSize.height*framebufferHeight);
     }
 
+    public static float Length(float r){
+        float xr = XLength(r);
+        float yr = YLength(r);
+        return (float)Math.sqrt((xr*xr)+(yr*yr));
+    }
 
 }
