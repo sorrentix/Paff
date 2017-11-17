@@ -14,12 +14,8 @@ import com.badlogic.androidgames.framework.Screen;
 
 class SplashScreen extends Screen {
 
-    enum GameState{
-        BasicLoading,
-        CompleteLoading,
-        CompleteAnimation
-    }
-    GameState state = GameState.BasicLoading;
+
+    GameState state = GameState.BASIC_LOADING;
     long startTime;
 
 
@@ -36,13 +32,13 @@ class SplashScreen extends Screen {
         Audio a = game.getAudio();
 
         switch (state){
-            case BasicLoading:
+            case BASIC_LOADING:
                 updateBasics(g, a);
                 break;
-            case CompleteLoading:
+            case COMPLETE_LOADING:
                 updateAll(g, a, animationPool);
                 break;
-            case CompleteAnimation:
+            case COMPLETE_ANIMATION:
                 waitForAnimationComplete();
             default:
                     break;
@@ -59,7 +55,7 @@ class SplashScreen extends Screen {
         Assets.logo = g.newPixmap("logo.png", Graphics.PixmapFormat.ARGB4444);
         Assets.splashsound = a.newSound("splashsound.ogg");
 
-        state = GameState.CompleteLoading;
+        state = GameState.COMPLETE_LOADING;
     }
 
     private void updateAll(Graphics g, Audio a, AnimationPool animationPool){
@@ -102,7 +98,7 @@ class SplashScreen extends Screen {
                     //fai qualcos quando l'animazione a è completa
 
                     game.setScreen(new SettingsScreen(game));
-                    System.out.println("animation complete mammt!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    System.out.println("animation complete !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 }
             });
             animationPool.loadAnimation(anim);
@@ -112,7 +108,7 @@ class SplashScreen extends Screen {
             Assets.bubblexplosion = a.newSound("bubblexplosion.ogg");
             Assets.gamesoundtheme = a.newSound("gamesoundtheme.ogg");
             Assets.flagReady = true;
-            state = GameState.CompleteAnimation;
+            state = GameState.COMPLETE_ANIMATION;
 
         }
     }

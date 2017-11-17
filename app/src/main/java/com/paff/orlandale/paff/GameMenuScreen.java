@@ -21,7 +21,7 @@ class GameMenuScreen extends Screen {
     AnimationPool animationPool;
     Settings s;
 
-    GameState state = GameState.Waiting;
+    GameState state = GameState.WAITING;
 
 
     public GameMenuScreen(Game game) {
@@ -37,26 +37,20 @@ class GameMenuScreen extends Screen {
 
     }
 
-    enum GameState{
-        Waiting,
-        Play,
-        Help,
-        Settings,
-    }
 
     @Override
     public void update(float deltaTime) {
         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
         switch(state){
-            case Waiting:
+            case WAITING:
                 break;
-            case Play:
+            case PLAY:
                 game.setScreen(new GameScreen(game));
                 break;
-            case Help:
+            case HELP:
                 game.setScreen(new HelpScreen(game));
                 break;
-            case Settings:
+            case SETTINGS:
                 game.setScreen(new SettingsScreen(game));
                 break;
             default:
@@ -69,11 +63,11 @@ class GameMenuScreen extends Screen {
             TouchEvent event = touchEvents.get(i);
             if (event.type == TouchEvent.TOUCH_UP) {
                 if (inBounds(event, 60, 760, Assets.btn_play.getWidth(), Assets.btn_play.getHeight()))
-                    state = GameState.Play;
+                    state = GameState.PLAY;
                 else if (inBounds(event, 640, 960, Assets.btn_settings.getWidth(), Assets.btn_settings.getHeight()))
-                    state = GameState.Settings;
+                    state = GameState.SETTINGS;
                 else if (inBounds(event, 240, 1360, Assets.btn_help.getWidth(), Assets.btn_help.getHeight()))
-                    state = GameState.Help;
+                    state = GameState.HELP;
 
             }
         }
@@ -84,24 +78,24 @@ class GameMenuScreen extends Screen {
     public void present(float deltaTime) {
 
         switch(state){
-            case Waiting:
+            case WAITING:
                 g.drawPixmap(Assets.menu_background, 0, 0);
                 g.drawPixmap(Assets.logo, 262, 160);
                 g.drawPixmap(Assets.btn_play, 60, 760);
                 g.drawPixmap(Assets.btn_settings, 640, 960);
                 g.drawPixmap(Assets.btn_help, 240, 1360);
                 break;
-            case Play:
+            case PLAY:
                 if(s.sounds)
                     Assets.bubblexplosion.play(1);
                 animationPool.getAnimationByID(1).executeAnimation();
                 break;
-            case Help:
+            case HELP:
                 g.drawPixmap(Assets.btn_help_click, 240, 1360);
                 if(s.sounds)
                     Assets.bubblexplosion.play(1);
                 break;
-            case Settings:
+            case SETTINGS:
                 g.drawPixmap(Assets.btn_settings_click, 640, 960);
                 if(s.sounds)
                     Assets.bubblexplosion.play(1);

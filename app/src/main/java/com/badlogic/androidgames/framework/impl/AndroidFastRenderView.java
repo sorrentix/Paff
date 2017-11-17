@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.paff.orlandale.paff.GlobalConstants;
+
 public class AndroidFastRenderView extends SurfaceView implements Runnable {
     FPSCounter fpsCounter = new FPSCounter();
     AndroidGame game;
@@ -56,7 +58,7 @@ public class AndroidFastRenderView extends SurfaceView implements Runnable {
 
             canvas.drawBitmap(framebuffer,-game.getOffset(),0,null);
             holder.unlockCanvasAndPost(canvas);
-            while ((System.nanoTime()-startTime) / 1000000000.0f < 0.01667f/*x50 fps 0.02f*/ ){
+            while ((System.nanoTime()-startTime) / 1000000000.0f < GlobalConstants.FPS/*x50 fps 0.02f*/ ){
                 //wait to make a new render
             }
         }

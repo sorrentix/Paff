@@ -24,6 +24,7 @@ import com.badlogic.androidgames.framework.Screen;
 import com.google.fpl.liquidfun.Vec2;
 import com.paff.orlandale.paff.AnimationPool;
 import com.paff.orlandale.paff.Box;
+import com.paff.orlandale.paff.GlobalConstants;
 import com.paff.orlandale.paff.PhysicToPixel;
 import com.paff.orlandale.paff.PhysicWorld;
 import com.paff.orlandale.paff.R;
@@ -73,23 +74,22 @@ public abstract class AndroidGame extends Activity implements Game {
         screenWidth = metrics.widthPixels;
         screenHeight = metrics.heightPixels;
 
-        int frameBufferWidth = 1080;
-        int frameBufferHeight = 1920;
-        Bitmap frameBuffer = Bitmap.createBitmap(frameBufferWidth,
-                frameBufferHeight, Config.RGB_565);
 
-        float scaleFactorX = (float)frameBufferWidth / (float)screenWidth;
-        float scaleFactorY = (float)frameBufferHeight / (float)screenHeight;
+        Bitmap frameBuffer = Bitmap.createBitmap(GlobalConstants.FRAME_BUFFER_WIDTH,
+                GlobalConstants.FRAME_BUFFER_HEIGHT, Config.RGB_565);
+
+        float scaleFactorX = (float)GlobalConstants.FRAME_BUFFER_WIDTH / (float)screenWidth;
+        float scaleFactorY = (float)GlobalConstants.FRAME_BUFFER_HEIGHT / (float)screenHeight;
         scaleFactor = (scaleFactorX>scaleFactorY)? scaleFactorY:scaleFactorX;
-        offset = Math.abs(metrics.widthPixels - ((1.0f/scaleFactor)* frameBufferWidth))/2.0f;
+        offset = Math.abs(metrics.widthPixels - ((1.0f/scaleFactor)* GlobalConstants.FRAME_BUFFER_WIDTH))/2.0f;
 
         Log.e(TAG,"screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " scaleFactorX: " + scaleFactorX+ " scaleFactorY: " + scaleFactorY+"ScaleFactor: "+scaleFactor);
 
-        PhysicToPixel.physicalSize = new Box(-9,-16f,9,16f);//new Box(-10,-15,10,15);
-        PhysicToPixel.framebufferWidth = frameBufferWidth;
-        PhysicToPixel.framebufferHeight = frameBufferHeight;
+        PhysicToPixel.physicalSize = new Box(GlobalConstants.Physics.X_MIN,GlobalConstants.Physics.Y_MIN,GlobalConstants.Physics.X_MAX,GlobalConstants.Physics.Y_MAX);//new Box(-10,-15,10,15);
+        PhysicToPixel.framebufferWidth = GlobalConstants.FRAME_BUFFER_WIDTH;
+        PhysicToPixel.framebufferHeight = GlobalConstants.FRAME_BUFFER_HEIGHT;
         accelerometerHandler = new AccelerometerHandler(this);
-        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,new Box(0,0,frameBufferWidth,frameBufferHeight),new Vec2(0,0),accelerometerHandler);
+        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,new Box(0,0,GlobalConstants.FRAME_BUFFER_WIDTH,GlobalConstants.FRAME_BUFFER_HEIGHT),new Vec2(0,0),accelerometerHandler);
 
         settings = new Settings(getApplicationContext());
         renderView = new AndroidFastRenderView(this, frameBuffer);

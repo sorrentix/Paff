@@ -49,8 +49,8 @@ public class GameScreen extends Screen {
         for (int i = 0; i < touchEvents.size(); ++i) {
             Input.TouchEvent event = touchEvents.get(i);
             if (event.type == Input.TouchEvent.TOUCH_UP) {
-                if (physicWorld.getGameState() == PhysicWorld.GameState.Ruota)
-                    physicWorld.setSpara(PhysicWorld.GameState.Spara);
+                if (physicWorld.getGameState() == GameState.ROTATE)
+                    physicWorld.setSpara(GameState.SHOT);
             }
         }
 
