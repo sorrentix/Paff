@@ -63,4 +63,12 @@ public class Vec2 {
     return liquidfunJNI.Vec2_y_get(swigCPtr, this);
   }
 
+  public void rotate(float angle){
+    float cosa = (float) Math.cos(Math.toRadians(angle));
+    float sena = (float) Math.sin(Math.toRadians(angle));
+    float rx = this.getX()*cosa-this.getY()*sena;
+    this.setY(this.getX()*sena+this.getY()*cosa);
+    this.setX(rx);
+  }
+
 }

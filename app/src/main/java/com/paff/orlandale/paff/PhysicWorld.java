@@ -56,6 +56,7 @@ public class PhysicWorld {
     GameState gameState = GameState.Ruota;
 
     public Bubble provaBubble;
+    public Bubble provaBubble2;
 
     public PhysicWorld(Box physicalSize, Box screenSize, Vec2 gravity, AccelerometerHandler accelerometerHandler) {
         this.physicalSize = physicalSize;
@@ -68,11 +69,12 @@ public class PhysicWorld {
         this.world = new World(gravity.getX(), gravity.getY());
         Random generator = new Random();
         paffContactListener = new PaffContactListener(this);
-       // world.setContactListener(paffContactListener);
+        world.setContactListener(paffContactListener);
         /* for (int i = 0; i < 5; i++) {
             bubbles[i] = new Bubble(this, new Vec2(((float) generator.nextInt(160) / 10.0f) - 8.0f, ((float) generator.nextInt(150) / 10.0f) + 15.0f), (generator.nextFloat() % 4) + 1);
         }*/// int randomNum = rand.nextInt((max - min) + 1) + min;
         provaBubble =new Bubble(this, new Vec2(0, 4), 2,1.0f, BodyType.staticBody);
+        provaBubble2 =new Bubble(this, new Vec2(1, -8), 2,1.0f, BodyType.staticBody);
         paff = new Bubble(this, new Vec2(0, -4), 1,1.0f,BodyType.dynamicBody);
 
 
@@ -82,7 +84,7 @@ public class PhysicWorld {
                                             "\nx:"+provaBubble.getX()+
                                             "\ny:"+provaBubble.getY());
 
-/*
+
         DistanceJointDef distanceJointDef = new DistanceJointDef();
         distanceJointDef.setBodyA(paff.getBody());
         distanceJointDef.setBodyB(provaBubble.getBody());
@@ -93,14 +95,25 @@ public class PhysicWorld {
         distanceJointDef.setLength(paff.getRadius()+provaBubble.getRadius());
         distanceJoint = world.createJoint(distanceJointDef);
 
-        distanceJointDef.delete();*/
+        distanceJointDef.delete();
 
+/*
         RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
         revoluteJointDef.setBodyA(paff.getBody());
         revoluteJointDef.setBodyB(provaBubble.getBody());
-        revoluteJointDef.setLocalAnchorA(provaBubble.getX(),provaBubble.getY());
+        float tempX, tempY;
+        if (paff.getX()<provaBubble.getX())
+            tempX = provaBubble.getX() - paff.getX();
+        else
+            tempX = paff.getX() - provaBubble.getX();
+        if (paff.getY()<provaBubble.getY())
+            tempY = paff.getX() - provaBubble.getY();
+        else
+            tempY = provaBubble.getX() - provaBubble.getY();
+            revoluteJointDef.setLocalAnchorA(tempX,tempY);
         revoluteJointDef.setLocalAnchorB(0,0);
         revoluteJoint = world.createJoint(revoluteJointDef);
+        revoluteJointDef.delete();*/
 
     }
 
@@ -128,9 +141,9 @@ public class PhysicWorld {
         switch (gameState) {
             case Spara:
                 Log.e("SPARA", "SPARA");
-                Vec2 vec = new Vec2(paff.getX() - provaBubble.getX(), paff.getY() - provaBubble.getY());
-                //world.destroyJoint(distanceJoint);
-                world.destroyJoint(revoluteJoint);
+                Vec2 vec = new Vec2(paff.getX() - provaBubble.getX(), (paff.getY() - provaBubble.getY())*10);
+                world.destroyJoint(distanceJoint);
+                //world.destroyJoint(revoluteJoint);
                 paff.getBody().setAngularVelocity(0);
                 paff.getBody().setLinearVelocity(new Vec2(paff.getX(), paff.getY()));
                 paff.getBody().applyLinearImpulse(vec, new Vec2(paff.getX(), paff.getY()), false);
@@ -139,49 +152,48 @@ public class PhysicWorld {
             case Ruota:
                 Log.e("RUOTA", "RUOTA");
                 currentAcceleration = (int) accelerometerHandler.getAccelX();
-                float torque = paff.getBody().getAngularVelocity();
-                 Log.e("TORQUE", "" + torque);
-                if (Math.abs(torque) > 2)
-                    paff.getBody().applyTorque(-2 * torque, false);
+                Vec2 vec2 = new Vec2(paff.getX() - provaBubble.getX(), (paff.getY() - provaBubble.getY())*10);
 
-
-                if (currentAcceleration > 0) { // FLAG = TRUE
-                    //paff.getBody().applyForceToCenter(new Vec2(10f,1f),true);
-
-                    paff.getBody().applyTorque(135, false);
-                } else if (currentAcceleration < 0) { // FLAG = FALSE
-                    //paff.getBody().applyForceToCenter(new Vec2(-10f,1f),true);
-                    paff.getBody().applyTorque(-135, false);
-                } else {
-                    if (torque != 0) {
-                        torque = paff.getBody().getAngularVelocity();
-                        paff.getBody().applyTorque(-torque, false);
-                    } else
-                        paff.getBody().applyTorque(0, false);
+                if(currentAcceleration > 0) {
+                    vec2.rotate(-90);
+                    paff.getBody().applyForceToCenter(vec2, false);
                 }
-                if (accelerometerHandler.isAccelXOpposite(previousAcceleration) /*&& Math.abs(torque) > 3*/) {
-                Log.e("CAMBIOO", " OK ");
-            paff.getBody().applyTorque(-200 * torque, false);
-
-        }
-
-        previousAcceleration = currentAcceleration;
-         Log.e("DATI ACCELEROMETRO : ", "X=" + accelerometerHandler.getAccelX() + "\n Y=" + accelerometerHandler.getAccelY());
-
-        break;
+                    else if(currentAcceleration < 0) {
+                    vec2.rotate(90);
+                    paff.getBody().applyForceToCenter(vec2,false);
+                }
+                if(accelerometerHandler.isAccelXOpposite(previousAcceleration)){
+                    float inertia = paff.getBody().getInertia();
+                    paff.getBody().applyForceToCenter(new Vec2(vec2.getX()*inertia,vec2.getY()*inertia),false);
+                }
+                previousAcceleration = currentAcceleration;
+                Log.e("DATI ACCELEROMETRO : ", "X=" + accelerometerHandler.getAccelX() + "\n Y=" + accelerometerHandler.getAccelY());
+                break;
         case Waiting:
           Log.e("WAITING", "WAITING");
         break;
         case JOINT:
-            //Log.e("JOINT", "JOINT");
+            Log.e("JOINT", "JOINT");
             DistanceJointDef distanceJointDef = new DistanceJointDef();
             distanceJointDef.setBodyA(paff.getBody());
             distanceJointDef.setBodyB(collidedBubble);
-            distanceJointDef.setLocalAnchorA(paff.getX(), paff.getY());
-            distanceJointDef.setLocalAnchorB(collidedBubble.getPositionX(), collidedBubble.getPositionY());
+            distanceJointDef.setFrequencyHz(0);
+            distanceJointDef.setDampingRatio(0);
+            Bubble collidedCuccleobj = (Bubble) collidedBubble.getUserData();
+            distanceJointDef.setLength(paff.getRadius()+collidedCuccleobj.getRadius());
+           // distanceJointDef.setLocalAnchorA(paff.getX(), paff.getY());
+            //distanceJointDef.setLocalAnchorB(collidedBubble.getPositionX(), collidedBubble.getPositionY());
             Joint distanceJoint2 = world.createJoint(distanceJointDef);
 
             distanceJointDef.delete();
+           /* RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
+            revoluteJointDef.setBodyA(paff.getBody());
+            revoluteJointDef.setBodyB(provaBubble2.getBody());
+            revoluteJointDef.setLocalAnchorA(provaBubble2.getX(),provaBubble2.getY());
+            revoluteJointDef.setLocalAnchorB(0,0);
+            revoluteJoint = world.createJoint(revoluteJointDef);
+
+            revoluteJointDef.delete();*/
             gameState = GameState.Ruota;
             break;
         default:
@@ -215,7 +227,9 @@ public class PhysicWorld {
             collidedBubble = bb;
         else
             collidedBubble = ba;
-        if(!(collidedBubble.equals(bubbles[bubbles.length-1])))
-                gameState = GameState.JOINT;
+        //if(collidedBubble.equals(provaBubble2.getBody())){
+            Log.e("CONTATTO", "entrato in collided");
+            gameState = GameState.JOINT;
+        //}
     }
 }

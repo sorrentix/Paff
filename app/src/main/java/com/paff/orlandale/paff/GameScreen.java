@@ -23,7 +23,7 @@ public class GameScreen extends Screen {
     PhysicWorld physicWorld;
 
     Bubble bubbles[];
-    Bubble paff, provaBubble;
+    Bubble paff, provaBubble,provaBubble2;
 
     public GameScreen(Game game) {
         super(game);
@@ -37,6 +37,7 @@ public class GameScreen extends Screen {
         //bubbles = physicWorld.getBubbles();
         paff = physicWorld.getPaff();
         provaBubble = physicWorld.provaBubble;
+        provaBubble2 = physicWorld.provaBubble2;
 
     }
 
@@ -70,12 +71,17 @@ public class GameScreen extends Screen {
                 PhysicToPixel.XLength(provaBubble.getRadius()),
                 0x3498db, 255);
 
+        graphics.drawCircle(PhysicToPixel.X(provaBubble2.getX()),
+                PhysicToPixel.Y(provaBubble2.getY()),
+                PhysicToPixel.XLength(provaBubble2.getRadius()),
+                0x3498db, 255);
+
         graphics.drawCircle(PhysicToPixel.X(paff.getX()),PhysicToPixel.Y(paff.getY()),PhysicToPixel.XLength(paff.getRadius()),0xe74c3c,255);
 
-        graphics.drawLine(PhysicToPixel.X(provaBubble.getX()),
+        /*graphics.drawLine(PhysicToPixel.X(provaBubble.getX()),
                           PhysicToPixel.Y(provaBubble.getY()),
                           PhysicToPixel.X(paff.getX()),
-                          PhysicToPixel.Y(paff.getY()),0xffffff);
+                          PhysicToPixel.Y(paff.getY()),0xffffff);*/
     }
 
     @Override

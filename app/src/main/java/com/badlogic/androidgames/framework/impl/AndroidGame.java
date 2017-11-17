@@ -89,7 +89,7 @@ public abstract class AndroidGame extends Activity implements Game {
         PhysicToPixel.framebufferWidth = frameBufferWidth;
         PhysicToPixel.framebufferHeight = frameBufferHeight;
         accelerometerHandler = new AccelerometerHandler(this);
-        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,new Box(0,0,frameBufferWidth,frameBufferHeight),new Vec2(0,10),accelerometerHandler);
+        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,new Box(0,0,frameBufferWidth,frameBufferHeight),new Vec2(0,0),accelerometerHandler);
 
         settings = new Settings(getApplicationContext());
         renderView = new AndroidFastRenderView(this, frameBuffer);
