@@ -12,8 +12,8 @@ public class AndroidMusic implements Music, OnCompletionListener {
     MediaPlayer mediaPlayer;
     public boolean isPrepared = false;
 
-    public AndroidMusic(AssetFileDescriptor assetDescriptor) {
-        mediaPlayer = new MediaPlayer();
+    public AndroidMusic(AssetFileDescriptor assetDescriptor, MediaPlayer mediaPlayer) {
+        this.mediaPlayer = mediaPlayer;
         try {
             mediaPlayer.setDataSource(assetDescriptor.getFileDescriptor(),
                     assetDescriptor.getStartOffset(),
