@@ -10,7 +10,7 @@ import com.badlogic.androidgames.framework.Music;
 
 public class AndroidMusic implements Music, OnCompletionListener {
     MediaPlayer mediaPlayer;
-    boolean isPrepared = false;
+    public boolean isPrepared = false;
 
     public AndroidMusic(AssetFileDescriptor assetDescriptor) {
         mediaPlayer = new MediaPlayer();
@@ -96,4 +96,5 @@ public class AndroidMusic implements Music, OnCompletionListener {
             isPrepared = false;
         }
     }
+
 }

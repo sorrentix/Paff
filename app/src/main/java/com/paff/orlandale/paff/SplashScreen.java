@@ -53,19 +53,17 @@ class SplashScreen extends Screen {
     private void updateBasics(Graphics g, Audio a){
 
         Assets.logo = g.newPixmap("logo.png", Graphics.PixmapFormat.ARGB4444);
-        Assets.splashsound = a.newSound("splashsound.ogg");
+        Assets.splashsound = a.newMusic("splashsound.ogg");
 
         state = GameState.COMPLETE_LOADING;
     }
 
     private void updateAll(Graphics g, Audio a, AnimationPool animationPool){
-
-        if(Assets.splashsound.isLoaded()) {
             Settings s=game.getSettings();
             g.clear(0xffffff);
             g.drawPixmap(Assets.logo, 262, 682);
             if(s.sounds)
-                Assets.splashsound.play(1);
+                Assets.splashsound.play();
 
             //load here all other assets
 
@@ -106,16 +104,15 @@ class SplashScreen extends Screen {
 
             //Sounds
             Assets.bubblexplosion = a.newSound("bubblexplosion.ogg");
-            Assets.gamesoundtheme = a.newSound("gamesoundtheme.ogg");
+            Assets.gamesoundtheme = a.newMusic("gamesoundtheme.ogg");
             Assets.flagReady = true;
             state = GameState.COMPLETE_ANIMATION;
 
-        }
+
     }
 
     public void waitForAnimationComplete(){
-        float deltaTime = (System.nanoTime()-startTime) / 1000000000.0f;
-        if( deltaTime > 0.1 /*3.8*/){
+        if(!Assets.splashsound.isPlaying()){
             game.setScreen(new GameMenuScreen(game));
         }
     }

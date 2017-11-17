@@ -31,8 +31,10 @@ class GameMenuScreen extends Screen {
 
         animationPool = game.getAnimationPool();
         s=game.getSettings();
-        if(s.music && game.getPreviousScreen()==null)
-             Assets.gamesoundtheme.playLoop(0.2f);
+        if(s.music && game.getPreviousScreen()==null) {
+            Assets.gamesoundtheme.setLooping(true);
+            Assets.gamesoundtheme.play();
+        }
         game.setPreviousScreen(game.getCurrentScreen());
 
     }
