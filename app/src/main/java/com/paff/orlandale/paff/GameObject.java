@@ -1,6 +1,5 @@
 package com.paff.orlandale.paff;
 
-import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Pixmap;
 import com.badlogic.androidgames.framework.Sound;
 
@@ -9,12 +8,7 @@ import java.lang.reflect.Field;
 /**
  * Created by Yoshi on 18/11/2017.
  */
-/* se exaple
-        GameObject g = new GameObject();
-        g.addComponent(new Text());
-        System.out.println("dadasdssssdsd_____________"+g.text.c);
-        Text a = (Text) g.removeComponent(Text.class);
-        */
+
 public class GameObject {
 
     public Physic physic = null;

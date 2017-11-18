@@ -6,9 +6,7 @@ import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.BodyDef;
 import com.google.fpl.liquidfun.BodyType;
 import com.google.fpl.liquidfun.CircleShape;
-import com.google.fpl.liquidfun.ContactListener;
 import com.google.fpl.liquidfun.DistanceJointDef;
-import com.google.fpl.liquidfun.Fixture;
 import com.google.fpl.liquidfun.FixtureDef;
 import com.google.fpl.liquidfun.Joint;
 import com.google.fpl.liquidfun.Shape;
@@ -21,7 +19,8 @@ public class Physic implements Component{
     public Body body;
     public Joint joint;
     public Vec2 force;
-
+    private Vec2 nullForce = new Vec2(0,0);
+    private Vec2 toroidalMovement = new Vec2(0,0);
     private float radius;
 
 
@@ -61,7 +60,6 @@ public class Physic implements Component{
     public void PolygonShape(){}
 
     public void Body( Vec2 physicPosition, float density, BodyType bodyType){
-
         BodyDef bdef = new BodyDef();
         bdef.setPosition(physicPosition);
         bdef.setType(bodyType);
@@ -70,15 +68,12 @@ public class Physic implements Component{
         this.body.setUserData(this);
         this.body.setBullet(true);
 
-
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.setShape(shape);
         fixtureDef.setFriction(0.1f);
         fixtureDef.setDensity(density);
-
         this.body.createFixture(fixtureDef);
 
-        System.out.println("physic fixture id: "+this);
         fixtureDef.delete();
         bdef.delete();
         shape.delete();
@@ -98,14 +93,22 @@ public class Physic implements Component{
 
     public void computeForce(float powerMultiplier){
         if(joint != null) {
-            Physic other = ((Physic) joint.getBodyA().getUserData() == this) ?
-                    (Physic) joint.getBodyB().getUserData() : (Physic) joint.getBodyA().getUserData();
-            System.out.println("verify paff:"+this+" corpoA"+joint.getBodyA().getUserData()+" corpoB:"+joint.getBodyB().getUserData());
-            System.out.println("verify paff x:"+this.getPosX()+" y:"+this.getPosY());
-            System.out.println("verify other x:"+(other.getPosX()) + " y:" + (other.getPosY()));
-            System.out.println("verify force x:"+ force.getX()+ " y:"+force.getY());
-            force.setX( (this.getPosX() - other.getPosX() ) * powerMultiplier);
-            force.setY( (this.getPosY() - other.getPosY() ) * powerMultiplier);
+            Physic elementJoined = ((Physic) joint.getBodyA().getUserData() == this) ?
+                                    (Physic) joint.getBodyB().getUserData() : (Physic) joint.getBodyA().getUserData();
+
+            float x = (this.getPosX() - elementJoined.getPosX() );
+            float y = (this.getPosY() - elementJoined.getPosY() );
+
+            float ratio = Math.abs(x/y);
+            if( ratio < 1.0f ){
+                x = x * ratio * powerMultiplier;
+                y = y * powerMultiplier;
+            } else {
+                x = x * powerMultiplier;
+                y = y * (1/ratio) * powerMultiplier;
+            }
+            force.setX( x );
+            force.setY( y );
 
         }else{
             Log.e("RUOTA", "stai tentando di far ruotare paff anche se non è agganciato ad una bolla");
@@ -120,22 +123,36 @@ public class Physic implements Component{
     }
 
     public  void applyForce(){
-        this.body.applyLinearImpulse(force,this.body.getPosition(),false);
-    }
-    public void nullifyResidualVelocity(){
-        this.body.setAngularVelocity(0);
-        this.body.setLinearVelocity(new Vec2(this.getPosX(), this.getPosY()));
+        this.body.applyForce(force,this.body.getPosition(),false);
     }
 
-    public  void applyForceWithInertia(){
-        float inertia = this.body.getInertia();
-        force.setX(force.getX()+inertia);
-        force.setY(force.getY()+inertia);
-        this.body.applyLinearImpulse(force,this.body.getPosition(),false);
+    public void nullifyResidualVelocity(){
+        this.body.setAngularVelocity(0);
+        this.body.setLinearVelocity(nullForce);
+    }
+
+    public  void applyExtraBrakingForce(){
+        this.body.setAngularVelocity(this.body.getAngularVelocity()/10.0f);
+        force.setX(force.getX());
+        force.setY(force.getY());
+        this.body.applyForce(force,this.body.getPosition(),false);
     }
 
     public void breakJoint(){
         world.world.destroyJoint(joint);
         joint = null;
+    }
+
+    public void checkToroidalWorld(){
+
+        if (this.getPosX() > world.physicalSize.xmax + radius) {
+            toroidalMovement.setX(world.physicalSize.xmin - radius + 0.1f);
+            toroidalMovement.setY(this.getPosY());
+            this.body.setTransform(toroidalMovement,0);
+        }else if (this.getPosX() < world.physicalSize.xmin - radius){
+            toroidalMovement.setX(world.physicalSize.xmax + radius - 0.1f);
+            toroidalMovement.setY(this.getPosY());
+            this.body.setTransform(toroidalMovement,0);
+        }
     }
 }

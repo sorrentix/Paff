@@ -6,7 +6,6 @@ import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Pixmap;
-import com.badlogic.androidgames.framework.Pool;
 import com.badlogic.androidgames.framework.Screen;
 /**
  * Created by sorrentix on 08/11/2017.
@@ -92,7 +91,7 @@ class SplashScreen extends Screen {
             anim.addListener(new AnimationPool.onAnimationCompleteListener() {
                 @Override
                 public void onAnimationComplete(Animation anim) {
-                    //fai qualcos quando l'animazione a è completa
+                    //execute something when the animation is complete
 
                     game.setScreen(new SettingsScreen(game));
                     System.out.println("animation complete !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");

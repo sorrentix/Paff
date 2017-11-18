@@ -2,7 +2,6 @@ package com.paff.orlandale.paff;
 
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Paint;
 
 import com.badlogic.androidgames.framework.impl.AndroidGraphics;

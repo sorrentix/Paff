@@ -10,6 +10,7 @@ public class EventManager implements Component {
     public EventManager(Position p, Size s, Input i){
         this.p = p;
         this.s = s;
+        this.i = i;
     }
 
     public boolean inBounds(Input.TouchEvent event) {

@@ -13,7 +13,8 @@ public class GlobalConstants {
 
     public static final float VOLUME = 1.0f;
 
-    public static final Vec2 gravity = new Vec2(0,0);
+    public static final Vec2 GRAVITY = new Vec2(0,9.81f);
+    public static final float PAFF_RADIUS = 1.0f;
 
     public class Physics {
         public static final float X_MIN = -9.0f;

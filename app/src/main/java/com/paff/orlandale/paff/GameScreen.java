@@ -6,9 +6,6 @@ import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
 import com.badlogic.androidgames.framework.impl.AccelerometerHandler;
-import com.badlogic.androidgames.framework.impl.AndroidGame;
-import com.google.fpl.liquidfun.BodyType;
-import com.google.fpl.liquidfun.Vec2;
 
 import java.util.List;
 
@@ -37,7 +34,7 @@ public class GameScreen extends Screen {
         animationPool = game.getAnimationPool();
 
         physicWorld = new PhysicWorld( PhysicToPixel.physicalSize,new Box(0,0,GlobalConstants.FRAME_BUFFER_WIDTH,GlobalConstants.FRAME_BUFFER_HEIGHT),
-                                       GlobalConstants.gravity,
+                                       GlobalConstants.GRAVITY,
                                        input);
         paff       = physicWorld.paff;
         bubbles    = physicWorld.bubbles;

@@ -4,10 +4,7 @@ import android.util.Log;
 
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
-import com.badlogic.androidgames.framework.impl.AccelerometerHandler;
-import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.BodyType;
-import com.google.fpl.liquidfun.DistanceJointDef;
 import com.google.fpl.liquidfun.Joint;
 import com.google.fpl.liquidfun.Vec2;
 import com.google.fpl.liquidfun.World;
@@ -56,7 +53,7 @@ public class PhysicWorld {
         Random generator = new Random();
 
 
-        paff       = Screen.setBubble(this,1.0f,new Vec2(2.5f, 3.9f),BodyType.dynamicBody, input);
+        paff       = Screen.setBubble(this,GlobalConstants.PAFF_RADIUS,new Vec2(2.5f, 3.9f),BodyType.dynamicBody, input);
         bubbles[0] = Screen.setBubble(this,2.0f,new Vec2(2.5f, 2),BodyType.staticBody, input);
         bubbles[1] = Screen.setBubble(this,1.8f,new Vec2(7, -7),BodyType.staticBody, input);
         bubbles[2] = Screen.setBubble(this,2.0f,new Vec2(-3.5f, 8),BodyType.staticBody, input);
@@ -73,24 +70,25 @@ public class PhysicWorld {
     }
 
     public synchronized void update() {
-        world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
 
         switch (gameState) {
             case SHOT:
                 Log.e("SPARA", "SPARA");
                 paff.physic.nullifyResidualVelocity();
-                paff.physic.computeForce(1);
+                paff.physic.computeForce(1000);
                 paff.physic.breakJoint();
                 paff.physic.applyForce();
 
                 gameState = GameState.WAITING;
                 break;
             case ROTATE:
-                paff.physic.computeForce(0.1f);
+                paff.physic.computeForce(20);
                 paff.physic.computeForceDirection(input.getAccelX());
-                paff.physic.applyForce();
                 if(paff.evtManager.isAccelXOpposite(previousAcceleration))
-                    paff.physic.applyForceWithInertia();
+                    paff.physic.applyExtraBrakingForce();
+                else
+                    paff.physic.applyForce();
+
                 previousAcceleration = currentAcceleration;
 
                 Log.e("DATI ACCELEROMETRO : ", "X=" + input.getAccelX() + "\n Y=" + input.getAccelY());
@@ -106,7 +104,9 @@ public class PhysicWorld {
             break;
             default:
             break;
-    }
+        }
+        paff.physic.checkToroidalWorld();
+        world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
     }
 
     public synchronized void setGravity(float x, float y) {

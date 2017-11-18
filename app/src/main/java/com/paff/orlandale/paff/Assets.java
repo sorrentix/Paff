@@ -1,14 +1,9 @@
 package com.paff.orlandale.paff;
 
-import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Music;
 import com.badlogic.androidgames.framework.Pixmap;
 import com.badlogic.androidgames.framework.Sound;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by sorrentix on 08/11/2017.
