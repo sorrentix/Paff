@@ -1,5 +1,9 @@
 package com.paff.orlandale.paff;
 
+import android.util.Log;
+
+import com.badlogic.androidgames.framework.Game;
+import com.badlogic.androidgames.framework.Graphics;
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.BodyDef;
 import com.google.fpl.liquidfun.BodyType;
@@ -11,17 +15,22 @@ import com.google.fpl.liquidfun.Vec2;
  * Created by sorrentix on 13/11/2017.
  */
 
-public class Bubble{
+public class Bubble extends GameObject{
 
-    Body body;
+    private static final String TAG = "Bubble";
+
     float radius;
+    int color;
 
-    public Bubble(PhysicWorld physicWorld, Vec2 position, float radius,float density,BodyType bodyType) {
+    Graphics graphics;
+
+    public Bubble(Game game, Vec2 position, float radius, float density, BodyType bodyType, int color) {
+        super(game);
 
         BodyDef bdef = new BodyDef();
         bdef.setPosition(position);
         bdef.setType(bodyType);
-        this.body = physicWorld.world.createBody(bdef);
+        this.body = game.getPhysicWorld().world.createBody(bdef);
         this.body.setSleepingAllowed(false);
         this.body.setUserData(this);
         this.body.setBullet(true);
@@ -42,27 +51,21 @@ public class Bubble{
         bdef.delete();
         circleshape.delete();
 
-    }
+        graphics = game.getGraphics();
 
-    public Body getBody(){
-        return body;
-    }
-
-    public float getX(){
-        return this.getBody().getPositionX();
-    }
-
-    public float getY(){
-        return this.getBody().getPositionY();
+        this.color = color;
     }
 
     public float getRadius(){
         return radius;
     }
 
-    public Vec2 getCenter(){
-        return this.getBody().getPosition();
+    @Override
+    public void draw() {
+        graphics.drawCircle(PhysicToPixel.X(this.getX()),
+                            PhysicToPixel.Y(this.getY()),
+                            PhysicToPixel.XLength(this.getRadius()),
+                            color, 255);
+
     }
-
-
 }

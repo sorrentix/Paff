@@ -1,12 +1,12 @@
 package com.paff.orlandale.paff;
 
+import android.util.Log;
+
 import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
-import com.badlogic.androidgames.framework.impl.AndroidGame;
-import com.google.fpl.liquidfun.Vec2;
 
 import java.util.List;
 
@@ -16,14 +16,16 @@ import java.util.List;
 
 public class GameScreen extends Screen {
 
+    private static final String TAG = "GameScreen";
+
     Graphics graphics;
     Audio audio;
     AnimationPool animationPool;
     Settings settings;
     PhysicWorld physicWorld;
 
-    Bubble bubbles[];
-    Bubble paff, provaBubble,provaBubble2;
+    List<GameObject> gameObjects;
+    GameObject paff;
 
     public GameScreen(Game game) {
         super(game);
@@ -33,12 +35,8 @@ public class GameScreen extends Screen {
         settings = game.getSettings();
         physicWorld = game.getPhysicWorld();
 
-        //CORPO
-        //bubbles = physicWorld.getBubbles();
+        gameObjects = physicWorld.getGameObjects();
         paff = physicWorld.getPaff();
-        provaBubble = physicWorld.provaBubble;
-        provaBubble2 = physicWorld.provaBubble2;
-
     }
 
     @Override
@@ -60,28 +58,11 @@ public class GameScreen extends Screen {
     public void present(float deltaTime) {
         graphics.drawPixmap(Assets.menu_background, 0, 0);
 
-     /*   for(int i = 0; i<bubbles.size(); i++) {
-            graphics.drawCircle(PhysicToPixel.X(bubbles.get(i).getX()),
-                    PhysicToPixel.Y(bubbles.get(i).getY()),
-                    PhysicToPixel.XLength(bubbles.get(i).getRadius()),
-                    0x3498db, 255);
-        }*/
-        graphics.drawCircle(PhysicToPixel.X(provaBubble.getX()),
-                PhysicToPixel.Y(provaBubble.getY()),
-                PhysicToPixel.XLength(provaBubble.getRadius()),
-                0x3498db, 255);
-
-        graphics.drawCircle(PhysicToPixel.X(provaBubble2.getX()),
-                PhysicToPixel.Y(provaBubble2.getY()),
-                PhysicToPixel.XLength(provaBubble2.getRadius()),
-                0x3498db, 255);
-
-        graphics.drawCircle(PhysicToPixel.X(paff.getX()),PhysicToPixel.Y(paff.getY()),PhysicToPixel.XLength(paff.getRadius()),0xe74c3c,255);
-
-        /*graphics.drawLine(PhysicToPixel.X(provaBubble.getX()),
-                          PhysicToPixel.Y(provaBubble.getY()),
-                          PhysicToPixel.X(paff.getX()),
-                          PhysicToPixel.Y(paff.getY()),0xffffff);*/
+        //Oggetti del mondo
+        for (int i = 0; i < gameObjects.size(); i++){
+            gameObjects.get(i).draw();
+        }
+        paff.draw();
     }
 
     @Override

@@ -52,8 +52,6 @@ public abstract class AndroidGame extends Activity implements Game {
     float scaleFactor;
     float offset;
 
-
-
     Screen previousScreen = null;
 
 
@@ -89,7 +87,7 @@ public abstract class AndroidGame extends Activity implements Game {
         PhysicToPixel.framebufferWidth = GlobalConstants.FRAME_BUFFER_WIDTH;
         PhysicToPixel.framebufferHeight = GlobalConstants.FRAME_BUFFER_HEIGHT;
         accelerometerHandler = new AccelerometerHandler(this);
-        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,new Box(0,0,GlobalConstants.FRAME_BUFFER_WIDTH,GlobalConstants.FRAME_BUFFER_HEIGHT),new Vec2(0,0),accelerometerHandler);
+        physicWorld = new PhysicWorld(new Vec2(0,0),accelerometerHandler);
 
         settings = new Settings(getApplicationContext());
         renderView = new AndroidFastRenderView(this, frameBuffer);
@@ -103,9 +101,6 @@ public abstract class AndroidGame extends Activity implements Game {
         
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "GLGame");
-
-
-
     }
 
     @Override

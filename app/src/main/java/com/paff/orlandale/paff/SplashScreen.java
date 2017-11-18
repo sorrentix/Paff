@@ -6,8 +6,12 @@ import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Pixmap;
-import com.badlogic.androidgames.framework.Pool;
 import com.badlogic.androidgames.framework.Screen;
+import com.google.fpl.liquidfun.BodyType;
+import com.google.fpl.liquidfun.Vec2;
+
+import java.util.List;
+
 /**
  * Created by sorrentix on 08/11/2017.
  */
@@ -16,27 +20,30 @@ class SplashScreen extends Screen {
 
 
     GameState state = GameState.BASIC_LOADING;
-    long startTime;
 
+    AnimationPool animationPool;
+    Graphics graphics;
+    Audio audio;
+    PhysicWorld physicWorld;
 
     public SplashScreen(Game game) {
         super(game);
-        startTime = System.nanoTime();
     }
 
     @Override
     public void update(float deltaTime) {
 
-        AnimationPool animationPool = game.getAnimationPool();
-        Graphics g = game.getGraphics();
-        Audio a = game.getAudio();
+        animationPool = game.getAnimationPool();
+        graphics = game.getGraphics();
+        audio = game.getAudio();
+        physicWorld = game.getPhysicWorld();
 
         switch (state){
             case BASIC_LOADING:
-                updateBasics(g, a);
+                updateBasics();
                 break;
             case COMPLETE_LOADING:
-                updateAll(g, a, animationPool);
+                updateAll();
                 break;
             case COMPLETE_ANIMATION:
                 waitForAnimationComplete();
@@ -50,36 +57,48 @@ class SplashScreen extends Screen {
     public void present(float deltaTime) {
     }
 
-    private void updateBasics(Graphics g, Audio a){
+    private void updateBasics(){
 
-        Assets.logo = g.newPixmap("logo.png", Graphics.PixmapFormat.ARGB4444);
-        Assets.splashsound = a.newMusic("splashsound.ogg");
+        Assets.logo = graphics.newPixmap("logo.png", Graphics.PixmapFormat.ARGB4444);
+        Assets.splashsound = audio.newMusic("splashsound.ogg");
 
         state = GameState.COMPLETE_LOADING;
     }
 
-    private void updateAll(Graphics g, Audio a, AnimationPool animationPool){
+    private void updateAll(){
             Settings s=game.getSettings();
-            g.clear(0xffffff);
-            g.drawPixmap(Assets.logo, 262, 682);
+            graphics.clear(0xffffff);
+            graphics.drawPixmap(Assets.logo, 262, 682);
             if(s.sounds)
                 Assets.splashsound.play();
 
             //load here all other assets
 
             //Graphics
-            Assets.menu_background = g.newPixmap("menu_background.jpg", Graphics.PixmapFormat.ARGB4444);
-            Assets.btn_play = g.newPixmap("play.png", Graphics.PixmapFormat.ARGB4444);
-            Assets.btn_play_click =  g.newPixmap("play_click.png", Graphics.PixmapFormat.ARGB4444);
-            Assets.btn_help = g.newPixmap("help.png", Graphics.PixmapFormat.ARGB4444);
-            Assets.btn_help_click =  g.newPixmap("help_click.png", Graphics.PixmapFormat.ARGB4444);
-            Assets.btn_settings = g.newPixmap("settings.png", Graphics.PixmapFormat.ARGB4444);
-            Assets.btn_settings_click =  g.newPixmap("settings_click.png", Graphics.PixmapFormat.ARGB4444);
-            Assets.btn_on = g.newPixmap("on.png", Graphics.PixmapFormat.ARGB4444);
-            Assets.btn_off = g.newPixmap("off.png", Graphics.PixmapFormat.ARGB4444);
-            Assets.sounds_text = g.newPixmap("sounds.png", Graphics.PixmapFormat.ARGB4444);
-            Assets.music_text = g.newPixmap("music.png", Graphics.PixmapFormat.ARGB4444);
-            Assets.help_screen = g.newPixmap("help_screen.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.menu_background = graphics.newPixmap("menu_background.jpg", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_play = graphics.newPixmap("play.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_play_click =  graphics.newPixmap("play_click.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_help = graphics.newPixmap("help.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_help_click =  graphics.newPixmap("help_click.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_settings = graphics.newPixmap("settings.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_settings_click =  graphics.newPixmap("settings_click.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_on = graphics.newPixmap("on.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_off = graphics.newPixmap("off.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.sounds_text = graphics.newPixmap("sounds.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.music_text = graphics.newPixmap("music.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.help_screen = graphics.newPixmap("help_screen.png", Graphics.PixmapFormat.ARGB4444);
+
+            //Physic World Objects
+            List<GameObject> gameObjects = physicWorld.getGameObjects();
+            gameObjects.add(new Bubble(game,new Vec2(0f,0f),2f,1, BodyType.staticBody,GlobalConstants.Colors.BLUE));
+            gameObjects.add(new Bubble(game,new Vec2(0f,-9f),2f,1, BodyType.staticBody,GlobalConstants.Colors.BLUE));
+            gameObjects.add(new Bubble(game,new Vec2(-8f,-3f),2f,1, BodyType.staticBody,GlobalConstants.Colors.BLUE));
+            gameObjects.add(new Bubble(game,new Vec2(-6f,4f),1f,1, BodyType.staticBody,GlobalConstants.Colors.BLUE));
+            gameObjects.add(new Bubble(game,new Vec2(-8f,-15f),1f,1, BodyType.staticBody,GlobalConstants.Colors.BLUE));
+            gameObjects.add(new Bubble(game,new Vec2(6f,-12f),2f,1, BodyType.staticBody,GlobalConstants.Colors.BLUE));
+            gameObjects.add(new Bubble(game,new Vec2(6f,12f),2f,1, BodyType.staticBody,GlobalConstants.Colors.BLUE));
+            gameObjects.add(new Bubble(game,new Vec2(-6f,12f),1f,1, BodyType.staticBody,GlobalConstants.Colors.BLUE));
+            physicWorld.setPaff(new Bubble(game,new Vec2(3f,0f),1f,1, BodyType.dynamicBody,GlobalConstants.Colors.RED));
 
             //Animations
             Pixmap images[] = new Pixmap[]{Assets.btn_play,
@@ -89,7 +108,7 @@ class SplashScreen extends Screen {
             Rect btn = new Rect(60, 760, 60+Assets.btn_play.getWidth(), 760+Assets.btn_play.getHeight());
             Rect positions[] = new Rect[]{ btn, btn, btn, btn, btn, btn, btn, btn, btn };
 
-            Animation anim = new Animation(g, images, positions,1);
+            Animation anim = new Animation(graphics, images, positions,1);
             anim.addListener(new AnimationPool.onAnimationCompleteListener() {
                 @Override
                 public void onAnimationComplete(Animation anim) {
@@ -103,8 +122,8 @@ class SplashScreen extends Screen {
 
 
             //Sounds
-            Assets.bubblexplosion = a.newSound("bubblexplosion.ogg");
-            Assets.gamesoundtheme = a.newMusic("gamesoundtheme.ogg");
+            Assets.bubblexplosion = audio.newSound("bubblexplosion.ogg");
+            Assets.gamesoundtheme = audio.newMusic("gamesoundtheme.ogg");
             Assets.flagReady = true;
             state = GameState.COMPLETE_ANIMATION;
 
