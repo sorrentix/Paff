@@ -100,9 +100,13 @@ public class Physic implements Component{
         if(joint != null) {
             Physic other = ((Physic) joint.getBodyA().getUserData() == this) ?
                     (Physic) joint.getBodyB().getUserData() : (Physic) joint.getBodyA().getUserData();
+            System.out.println("verify paff:"+this+" corpoA"+joint.getBodyA().getUserData()+" corpoB:"+joint.getBodyB().getUserData());
+            System.out.println("verify paff x:"+this.getPosX()+" y:"+this.getPosY());
+            System.out.println("verify other x:"+(other.getPosX()) + " y:" + (other.getPosY()));
+            System.out.println("verify force x:"+ force.getX()+ " y:"+force.getY());
+            force.setX( (this.getPosX() - other.getPosX() ) * powerMultiplier);
+            force.setY( (this.getPosY() - other.getPosY() ) * powerMultiplier);
 
-            force.setX((this.getPosX() - other.getPosX())* powerMultiplier);
-            force.setY((this.getPosY() - other.getPosY() )* 7 * powerMultiplier);
         }else{
             Log.e("RUOTA", "stai tentando di far ruotare paff anche se non è agganciato ad una bolla");
         }
@@ -116,7 +120,7 @@ public class Physic implements Component{
     }
 
     public  void applyForce(){
-        this.body.applyForceToCenter(force, false);
+        this.body.applyLinearImpulse(force,this.body.getPosition(),false);
     }
     public void nullifyResidualVelocity(){
         this.body.setAngularVelocity(0);
@@ -127,7 +131,7 @@ public class Physic implements Component{
         float inertia = this.body.getInertia();
         force.setX(force.getX()+inertia);
         force.setY(force.getY()+inertia);
-        this.body.applyForceToCenter(force, false);
+        this.body.applyLinearImpulse(force,this.body.getPosition(),false);
     }
 
     public void breakJoint(){

@@ -56,7 +56,7 @@ public class PhysicWorld {
         Random generator = new Random();
 
 
-        paff       = Screen.setBubble(this,1.0f,new Vec2(0, -4),BodyType.dynamicBody, input);
+        paff       = Screen.setBubble(this,1.0f,new Vec2(2.5f, 3.9f),BodyType.dynamicBody, input);
         bubbles[0] = Screen.setBubble(this,2.0f,new Vec2(2.5f, 2),BodyType.staticBody, input);
         bubbles[1] = Screen.setBubble(this,1.8f,new Vec2(7, -7),BodyType.staticBody, input);
         bubbles[2] = Screen.setBubble(this,2.0f,new Vec2(-3.5f, 8),BodyType.staticBody, input);
@@ -79,14 +79,14 @@ public class PhysicWorld {
             case SHOT:
                 Log.e("SPARA", "SPARA");
                 paff.physic.nullifyResidualVelocity();
-                paff.physic.computeForce(100);
+                paff.physic.computeForce(1);
                 paff.physic.breakJoint();
                 paff.physic.applyForce();
 
                 gameState = GameState.WAITING;
                 break;
             case ROTATE:
-                paff.physic.computeForce(4);
+                paff.physic.computeForce(0.1f);
                 paff.physic.computeForceDirection(input.getAccelX());
                 paff.physic.applyForce();
                 if(paff.evtManager.isAccelXOpposite(previousAcceleration))
