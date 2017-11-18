@@ -1,9 +1,11 @@
 package com.badlogic.androidgames.framework;
 
-public interface Sound {
-    public void play(float volume);
+import com.paff.orlandale.paff.Component;
 
-    public void playLoop(float volume);
+public interface Sound  extends Component {
+    public void play();
+
+    public void playLoop();
 
     public void dispose();
 

@@ -32,7 +32,7 @@ public class PaffGame extends AndroidGame {
             Log.e(TAG, "onResume: entrato in areReady");
             getStartScreen();
         }
-        else if(super.getSettings().music)//TODO SOSTITUIRE CON RESUME TOTALE DEL GIOCO
+        else if(Settings.music)//TODO SOSTITUIRE CON RESUME TOTALE DEL GIOCO
         {
             Log.e(TAG, "onResume: entrato in musicaaaaaa");
             super.getAudio().resumeAll();

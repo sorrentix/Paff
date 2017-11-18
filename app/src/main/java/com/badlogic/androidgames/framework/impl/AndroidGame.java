@@ -25,6 +25,7 @@ import com.google.fpl.liquidfun.Vec2;
 import com.paff.orlandale.paff.AnimationPool;
 import com.paff.orlandale.paff.Box;
 import com.paff.orlandale.paff.GlobalConstants;
+import com.paff.orlandale.paff.PaffGraphics;
 import com.paff.orlandale.paff.PhysicToPixel;
 import com.paff.orlandale.paff.PhysicWorld;
 import com.paff.orlandale.paff.R;
@@ -42,7 +43,6 @@ public abstract class AndroidGame extends Activity implements Game {
     FileIO fileIO;
     Screen screen;
     WakeLock wakeLock;
-    Settings settings;
     PhysicWorld physicWorld;
     AccelerometerHandler accelerometerHandler;
 
@@ -88,12 +88,10 @@ public abstract class AndroidGame extends Activity implements Game {
         PhysicToPixel.physicalSize = new Box(GlobalConstants.Physics.X_MIN,GlobalConstants.Physics.Y_MIN,GlobalConstants.Physics.X_MAX,GlobalConstants.Physics.Y_MAX);//new Box(-10,-15,10,15);
         PhysicToPixel.framebufferWidth = GlobalConstants.FRAME_BUFFER_WIDTH;
         PhysicToPixel.framebufferHeight = GlobalConstants.FRAME_BUFFER_HEIGHT;
-        accelerometerHandler = new AccelerometerHandler(this);
-        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,new Box(0,0,GlobalConstants.FRAME_BUFFER_WIDTH,GlobalConstants.FRAME_BUFFER_HEIGHT),new Vec2(0,0),accelerometerHandler);
 
-        settings = new Settings(getApplicationContext());
+        Settings.load(this);
         renderView = new AndroidFastRenderView(this, frameBuffer);
-        graphics = new AndroidGraphics(getAssets(), frameBuffer);
+        graphics = new PaffGraphics(getAssets(), frameBuffer);
         animationPool = new AnimationPool();
         fileIO = new AndroidFileIO(getAssets());
         audio = new AndroidAudio(this);
@@ -150,8 +148,6 @@ public abstract class AndroidGame extends Activity implements Game {
         return audio;
     }
 
-    @Override
-    public Settings getSettings() {return settings;}
 
     @Override
     public PhysicWorld getPhysicWorld() {return physicWorld;}
@@ -191,7 +187,5 @@ public abstract class AndroidGame extends Activity implements Game {
     public Screen getPreviousScreen(){
         return previousScreen;
     }
-
-    public AccelerometerHandler getAccelerometerHandler() { return accelerometerHandler;}
 
 }

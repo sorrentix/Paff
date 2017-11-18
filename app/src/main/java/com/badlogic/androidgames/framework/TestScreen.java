@@ -83,7 +83,7 @@ class TestScreen extends Screen {
         for(int i = 0; i < len; i++) {
             Log.d("MrNom", touchEvents.get(i).toString());
             if(touchEvents.get(i).type == TouchEvent.TOUCH_UP)
-                sound.play(1);
+                sound.play();
         }
         
         frames++;

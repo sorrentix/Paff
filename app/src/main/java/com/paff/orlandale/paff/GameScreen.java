@@ -5,7 +5,9 @@ import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
+import com.badlogic.androidgames.framework.impl.AccelerometerHandler;
 import com.badlogic.androidgames.framework.impl.AndroidGame;
+import com.google.fpl.liquidfun.BodyType;
 import com.google.fpl.liquidfun.Vec2;
 
 import java.util.List;
@@ -18,27 +20,28 @@ public class GameScreen extends Screen {
 
     Graphics graphics;
     Audio audio;
+    Input input;
     AnimationPool animationPool;
-    Settings settings;
     PhysicWorld physicWorld;
+    AccelerometerHandler accelerometerHandler;
 
-    Bubble bubbles[];
-    Bubble paff, provaBubble,provaBubble2;
+    GameObject paff;
+    GameObject []bubbles;
+    GameObject background;
 
     public GameScreen(Game game) {
         super(game);
         graphics= game.getGraphics();
         audio = game.getAudio();
+        input = game.getInput();
         animationPool = game.getAnimationPool();
-        settings = game.getSettings();
-        physicWorld = game.getPhysicWorld();
 
-        //CORPO
-        //bubbles = physicWorld.getBubbles();
-        paff = physicWorld.getPaff();
-        provaBubble = physicWorld.provaBubble;
-        provaBubble2 = physicWorld.provaBubble2;
-
+        physicWorld = new PhysicWorld( PhysicToPixel.physicalSize,new Box(0,0,GlobalConstants.FRAME_BUFFER_WIDTH,GlobalConstants.FRAME_BUFFER_HEIGHT),
+                                       GlobalConstants.gravity,
+                                       input);
+        paff       = physicWorld.paff;
+        bubbles    = physicWorld.bubbles;
+        background = setSimpleImage(new Position(0, 0), Assets.menu_background);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class GameScreen extends Screen {
             Input.TouchEvent event = touchEvents.get(i);
             if (event.type == Input.TouchEvent.TOUCH_UP) {
                 if (physicWorld.getGameState() == GameState.ROTATE)
-                    physicWorld.setSpara(GameState.SHOT);
+                    physicWorld.gameState = GameState.SHOT;
             }
         }
 
@@ -58,30 +61,13 @@ public class GameScreen extends Screen {
 
     @Override
     public void present(float deltaTime) {
-        graphics.drawPixmap(Assets.menu_background, 0, 0);
+        graphics.drawGameObject(background);
 
-     /*   for(int i = 0; i<bubbles.size(); i++) {
-            graphics.drawCircle(PhysicToPixel.X(bubbles.get(i).getX()),
-                    PhysicToPixel.Y(bubbles.get(i).getY()),
-                    PhysicToPixel.XLength(bubbles.get(i).getRadius()),
-                    0x3498db, 255);
-        }*/
-        graphics.drawCircle(PhysicToPixel.X(provaBubble.getX()),
-                PhysicToPixel.Y(provaBubble.getY()),
-                PhysicToPixel.XLength(provaBubble.getRadius()),
-                0x3498db, 255);
+        for (GameObject bubble : bubbles) {
+            ((PaffGraphics)graphics).drawBubble(bubble,GlobalConstants.Colors.BLUE,GlobalConstants.ALPHA);
+        }
+        ((PaffGraphics)graphics).drawBubble(paff,GlobalConstants.Colors.RED,GlobalConstants.ALPHA);
 
-        graphics.drawCircle(PhysicToPixel.X(provaBubble2.getX()),
-                PhysicToPixel.Y(provaBubble2.getY()),
-                PhysicToPixel.XLength(provaBubble2.getRadius()),
-                0x3498db, 255);
-
-        graphics.drawCircle(PhysicToPixel.X(paff.getX()),PhysicToPixel.Y(paff.getY()),PhysicToPixel.XLength(paff.getRadius()),0xe74c3c,255);
-
-        /*graphics.drawLine(PhysicToPixel.X(provaBubble.getX()),
-                          PhysicToPixel.Y(provaBubble.getY()),
-                          PhysicToPixel.X(paff.getX()),
-                          PhysicToPixel.Y(paff.getY()),0xffffff);*/
     }
 
     @Override

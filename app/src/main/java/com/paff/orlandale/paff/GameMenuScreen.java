@@ -1,12 +1,11 @@
 package com.paff.orlandale.paff;
 
-import android.graphics.Rect;
 
 import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
+import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Input.TouchEvent;
-import com.badlogic.androidgames.framework.Pixmap;
 import com.badlogic.androidgames.framework.Screen;
 
 import java.util.List;
@@ -21,23 +20,36 @@ class GameMenuScreen extends Screen {
     AnimationPool animationPool;
     Settings s;
 
+
+    GameObject playBtn;
+    GameObject settingsBtn;
+    GameObject helpBtn;
+    GameObject background;
+    GameObject logo;
+
     GameState state = GameState.WAITING;
 
 
     public GameMenuScreen(Game game) {
         super(game);
+        Input i = game.getInput();
+        playBtn     = setButton(new Position(60, 760), Assets.btn_play, Assets.bubblexplosion, i);
+        settingsBtn = setButton(new Position(640, 960), Assets.btn_settings, Assets.bubblexplosion, i);
+        helpBtn     = setButton(new Position(240, 1360), Assets.btn_help, Assets.bubblexplosion, i);
+        logo        = setSimpleImage(new Position(262, 160), Assets.logo);
+        background  = setSimpleImage(new Position(0, 0), Assets.menu_background);
+
         g = game.getGraphics();
         a = game.getAudio();
-
         animationPool = game.getAnimationPool();
-        s=game.getSettings();
-        if(s.music && game.getPreviousScreen()==null) {
+
+        if (s.music && game.getPreviousScreen() == null) {
             Assets.gamesoundtheme.setLooping(true);
             Assets.gamesoundtheme.play();
         }
         game.setPreviousScreen(game.getCurrentScreen());
-
     }
+
 
 
     @Override
@@ -60,17 +72,16 @@ class GameMenuScreen extends Screen {
 
         }
 
-
         for (int i = 0; i < touchEvents.size(); ++i) {
             TouchEvent event = touchEvents.get(i);
-            if (event.type == TouchEvent.TOUCH_UP) {
-                if (inBounds(event, 60, 760, Assets.btn_play.getWidth(), Assets.btn_play.getHeight()))
-                    state = GameState.PLAY;
-                else if (inBounds(event, 640, 960, Assets.btn_settings.getWidth(), Assets.btn_settings.getHeight()))
-                    state = GameState.SETTINGS;
-                else if (inBounds(event, 240, 1360, Assets.btn_help.getWidth(), Assets.btn_help.getHeight()))
-                    state = GameState.HELP;
 
+            if (event.type == TouchEvent.TOUCH_UP) {
+                if (playBtn.evtManager.inBounds(event)) {
+                    state = GameState.PLAY;
+                } else if (settingsBtn.evtManager.inBounds(event))
+                    state = GameState.SETTINGS;
+                else if (helpBtn.evtManager.inBounds(event))
+                    state = GameState.HELP;
             }
         }
 
@@ -81,26 +92,21 @@ class GameMenuScreen extends Screen {
 
         switch(state){
             case WAITING:
-                g.drawPixmap(Assets.menu_background, 0, 0);
-                g.drawPixmap(Assets.logo, 262, 160);
-                g.drawPixmap(Assets.btn_play, 60, 760);
-                g.drawPixmap(Assets.btn_settings, 640, 960);
-                g.drawPixmap(Assets.btn_help, 240, 1360);
+                g.drawGameObject(background);
+                g.drawGameObject(logo);
+                g.drawGameObject(playBtn);
+                g.drawGameObject(settingsBtn);
+                g.drawGameObject(helpBtn);
                 break;
             case PLAY:
-                if(s.sounds)
-                    Assets.bubblexplosion.play(1);
+                playBtn.sound.play();
                 animationPool.getAnimationByID(1).executeAnimation();
                 break;
             case HELP:
-                g.drawPixmap(Assets.btn_help_click, 240, 1360);
-                if(s.sounds)
-                    Assets.bubblexplosion.play(1);
+                helpBtn.sound.play();
                 break;
             case SETTINGS:
-                g.drawPixmap(Assets.btn_settings_click, 640, 960);
-                if(s.sounds)
-                    Assets.bubblexplosion.play(1);
+                settingsBtn.sound.play();
                 break;
             default:
                 break;

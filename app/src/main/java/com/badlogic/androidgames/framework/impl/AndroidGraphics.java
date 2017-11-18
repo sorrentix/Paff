@@ -17,14 +17,16 @@ import android.graphics.RectF;
 
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Pixmap;
+import com.paff.orlandale.paff.GameObject;
+import com.paff.orlandale.paff.PhysicToPixel;
 
 public class AndroidGraphics implements Graphics {
-    AssetManager assets;
-    Bitmap frameBuffer;
-    Canvas canvas;
-    Paint paint;
-    Rect srcRect = new Rect();
-    Rect dstRect = new Rect();
+    protected AssetManager assets;
+    protected Bitmap frameBuffer;
+    protected Canvas canvas;
+    protected Paint paint;
+    protected Rect srcRect = new Rect();
+    protected Rect dstRect = new Rect();
 
     public AndroidGraphics(AssetManager assets, Bitmap frameBuffer) {
         this.assets = assets;
@@ -118,6 +120,11 @@ public class AndroidGraphics implements Graphics {
         dstRect.bottom = y + srcHeight - 1;
 
         canvas.drawBitmap(((AndroidPixmap) pixmap).bitmap, srcRect, dstRect,null);
+    }
+
+    @Override
+    public void drawGameObject(GameObject g){
+        canvas.drawBitmap(((AndroidPixmap) g.image).bitmap, g.position.x, g.position.y, null);
     }
     
     @Override

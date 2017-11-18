@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 
 import com.badlogic.androidgames.framework.Music;
+import com.paff.orlandale.paff.Settings;
 
 public class AndroidMusic implements Music, OnCompletionListener {
     MediaPlayer mediaPlayer;
@@ -63,7 +64,8 @@ public class AndroidMusic implements Music, OnCompletionListener {
             synchronized (this) {
                 if (!isPrepared)
                     mediaPlayer.prepare();
-                mediaPlayer.start();
+                if(Settings.music)
+                    mediaPlayer.start();
             }
         } catch (IllegalStateException e) {
             e.printStackTrace();

@@ -15,16 +15,32 @@ import java.util.List;
 public class SettingsScreen extends Screen {
     Graphics g;
     Audio a;
+
     GameState state = GameState.SETUP;
-    Settings s;
 
-
+    GameObject soundsBtn;
+    GameObject musicBtn;
+    GameObject logo;
+    GameObject background;
+    GameObject soundText;
+    GameObject musicText;
 
     public SettingsScreen(Game game) {
         super(game);
+        Input i = game.getInput();
+        soundsBtn   = setButton( new Position(600, 800),
+                                 Settings.sounds ? Assets.btn_on : Assets.btn_off,
+                                 Assets.bubblexplosion, i);
+        musicBtn    = setButton( new Position(600, 1200),
+                                 Settings.music ? Assets.btn_on : Assets.btn_off,
+                                 Assets.bubblexplosion, i);
+        logo        = setSimpleImage(new Position(262, 160), Assets.logo);
+        background  = setSimpleImage(new Position(0, 0), Assets.menu_background);
+        soundText   = setSimpleImage(new Position( 100, 900), Assets.sounds_text);
+        musicText   = setSimpleImage(new Position( 100, 1300), Assets.music_text);
+
         g = game.getGraphics();
         a = game.getAudio();
-        s = game.getSettings();
     }
 
     @Override
@@ -32,23 +48,20 @@ public class SettingsScreen extends Screen {
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
         switch(state){
-            case SETUP:
-
-                break;
             case SOUND_ON:
-                s.setSounds(true);
+                Settings.sounds = true;
                 state = GameState.WAITING;
                 break;
             case SOUND_OFF:
-                s.setSounds(false);
+                Settings.sounds = false;
                 state = GameState.WAITING;
                 break;
             case MUSIC_ON:
-                s.setMusic(true);
+                Settings.music = true;
                 state = GameState.WAITING;
                 break;
             case MUSIC_OFF:
-                s.setMusic(false);
+                Settings.music = false;
                 state = GameState.WAITING;
                 break;
             case WAITING:
@@ -60,17 +73,25 @@ public class SettingsScreen extends Screen {
         for (int i = 0; i < touchEvents.size(); ++i) {
             Input.TouchEvent event = touchEvents.get(i);
             if (event.type == Input.TouchEvent.TOUCH_UP) {
-                if (inBounds(event, 600, 1200, Assets.btn_on.getWidth(), Assets.btn_on.getHeight())){
-                    if (s.music)
+                if (musicBtn.evtManager.inBounds(event)){
+                    if (Settings.music) {
                         state = GameState.MUSIC_OFF;
-                    else
+                        musicBtn.image = Assets.btn_off;
+                    } else{
                         state = GameState.MUSIC_ON;
+                        musicBtn.image = Assets.btn_on;
+                    }
+                    Settings.setMusic(!Settings.music);
                 }
-                else if (inBounds(event, 600, 800, Assets.btn_on.getWidth(), Assets.btn_on.getHeight())){
-                    if (s.sounds)
+                else if (soundsBtn.evtManager.inBounds(event)){
+                    if (Settings.sounds) {
                         state = GameState.SOUND_OFF;
-                    else
+                        soundsBtn.image = Assets.btn_off;
+                    } else {
                         state = GameState.SOUND_ON;
+                        soundsBtn.image = Assets.btn_on;
+                    }
+                    Settings.setSounds(!Settings.sounds);
                 }
             }
         }
@@ -78,35 +99,27 @@ public class SettingsScreen extends Screen {
 
     @Override
     public void present(float deltaTime) {
+        g.drawGameObject(background);
+        g.drawGameObject(logo);
+
+        g.drawGameObject(soundText);
+        g.drawGameObject(soundsBtn);
+
+        g.drawGameObject(musicBtn);
+        g.drawGameObject(musicText);
+
         switch(state){
-            case SETUP:
-                g.drawPixmap(Assets.menu_background, 0, 0);
-                g.drawPixmap(Assets.logo, 262, 160);
-                g.drawPixmap(Assets.sounds_text, 100, 900);
-                g.drawPixmap((s.sounds)?Assets.btn_on:Assets.btn_off, 600, 800);
-                g.drawPixmap(Assets.music_text, 100, 1300);
-                g.drawPixmap((s.music)?Assets.btn_on:Assets.btn_off, 600, 1200);
-                break;
             case SOUND_ON:
-                g.drawPixmap(Assets.btn_on, 600, 800);
-               // if (s.sounds)
-                    Assets.bubblexplosion.play(1);
-                break;
-            case SOUND_OFF:
-                g.drawPixmap(Assets.btn_off, 600, 800);
+                soundsBtn.sound.play();
                 break;
             case MUSIC_ON:
-                g.drawPixmap(Assets.btn_on, 600, 1200);
                 Assets.gamesoundtheme.setLooping(true);
                 Assets.gamesoundtheme.play();
-                if (s.sounds)
-                    Assets.bubblexplosion.play(1);
+                musicBtn.sound.play();
                 break;
             case MUSIC_OFF:
-                g.drawPixmap(Assets.btn_off, 600, 1200);
-                Assets.gamesoundtheme.stop();
-                if (s.sounds)
-                    Assets.bubblexplosion.play(1);
+                Assets.gamesoundtheme.pause();
+                musicBtn.sound.play();
                 break;
             case WAITING:
                 break;

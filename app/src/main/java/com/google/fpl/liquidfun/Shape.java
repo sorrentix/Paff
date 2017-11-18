@@ -8,6 +8,7 @@
 
 package com.google.fpl.liquidfun;
 
+
 public class Shape {
   private transient long swigCPtr;
   protected transient boolean swigCMemOwn;

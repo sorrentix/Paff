@@ -19,10 +19,11 @@ public class PaffContactListener extends ContactListener {
     }
     @Override
     public void beginContact(Contact contact) {
+
         Fixture fa = contact.getFixtureA(),
                 fb = contact.getFixtureB();
-        Body ba = fa.getBody(), bb = fb.getBody();
-        Log.e("CONTATTO", "beginContact: CONTATTO AVVENUTO");
+        Physic ba = (Physic) fa.getBody().getUserData(), bb = (Physic) fb.getBody().getUserData();
+        Log.e("CONTATTO", "body beginContact: CONTATTO AVVENUTO tra"+ba+"  e tra "+bb);
         physicWorld.collisionDetected(ba,bb);
 
 

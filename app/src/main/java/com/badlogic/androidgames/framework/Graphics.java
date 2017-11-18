@@ -1,5 +1,7 @@
 package com.badlogic.androidgames.framework;
 
+import com.paff.orlandale.paff.GameObject;
+
 public interface Graphics {
 
     public static enum PixmapFormat {
@@ -20,6 +22,8 @@ public interface Graphics {
             int srcWidth, int srcHeight);
 
     public void drawPixmap(Pixmap pixmap, float x, float y);
+
+    public void drawGameObject(GameObject g);
 
     public int getWidth();
 
