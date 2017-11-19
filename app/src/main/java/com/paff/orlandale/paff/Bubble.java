@@ -11,6 +11,8 @@ import com.google.fpl.liquidfun.CircleShape;
 import com.google.fpl.liquidfun.FixtureDef;
 import com.google.fpl.liquidfun.Vec2;
 
+import java.util.Random;
+
 /**
  * Created by sorrentix on 13/11/2017.
  */
@@ -23,6 +25,7 @@ public class Bubble extends GameObject{
     int color;
 
     Graphics graphics;
+    static Random generator = new Random();
 
     public Bubble(Game game, Vec2 position, float radius, float density, BodyType bodyType, int color) {
         super(game);
@@ -54,6 +57,8 @@ public class Bubble extends GameObject{
         graphics = game.getGraphics();
 
         this.color = color;
+        this.oldPos = position.getX();
+        this.perlinSeed = generator.nextInt()*100;
     }
 
     public float getRadius(){

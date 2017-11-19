@@ -1,8 +1,11 @@
 package com.paff.orlandale.paff;
 
+import android.graphics.Color;
 import android.graphics.RectF;
+import android.support.v4.math.MathUtils;
 import android.util.Log;
 
+import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Pool;
 import com.badlogic.androidgames.framework.impl.AccelerometerHandler;
 import com.google.fpl.liquidfun.Body;
@@ -43,6 +46,9 @@ public class PhysicWorld {
     private List<GameObject> gameObjects;
     private GameObject paff;
     private Body collidedBubble;
+    private Random generator;
+
+    private double t = 0;
 
     public PhysicWorld(Vec2 gravity, AccelerometerHandler accelerometerHandler) {
         this.gravity = gravity;
@@ -55,7 +61,7 @@ public class PhysicWorld {
         world.setContactListener(paffContactListener);
 
         gameObjects = new ArrayList<>();
-
+        generator = new Random();
     }
 
     public GameState getGameState() {
@@ -65,44 +71,59 @@ public class PhysicWorld {
     public synchronized void update() {
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
 
+
+        for (int i = 0; i < gameObjects.size(); i++){
+            if (gameObjects.get(i).getY()>GlobalConstants.Physics.Y_MAX){
+                gameObjects.get(i).getBody().setTransform(generator.nextInt(15) -7,GlobalConstants.Physics.Y_MIN-4,0);//TODO - getRadius
+            }
+            else {
+                //Log.e("PERLIN NOISE", "getX: "+gameObjects.get(0).getX()+"  perlin:"+ImprovedNoise.map((float)ImprovedNoise.noise(t,0,0),(float)-Math.sqrt(0.25),(float)Math.sqrt(0.25),-2f,2f)+"  somma: "+(ImprovedNoise.map((float)ImprovedNoise.noise(t,0,0),(float)-Math.sqrt(0.25),(float)Math.sqrt(0.25),-2f,2f) + gameObjects.get(0).getX()));
+                getGameObjects().get(i).perlinSeed+=0.01;
+                gameObjects.get(i).getBody().setTransform(gameObjects.get(i).oldPos+ImprovedNoise.map((float)ImprovedNoise.noise(getGameObjects().get(i).perlinSeed,0,0),(float)-Math.sqrt(0.25),(float)Math.sqrt(0.25),-2f,2f), gameObjects.get(i).getY() + 0.05f, 0);
+            }
+        }
+
         switch (gameState) {
             case SHOT:
                 Log.e("SPARA", "SPARA");
-                Vec2 vec = new Vec2(paff.getX() - collidedBubble.getPositionX()*10, (paff.getY() - collidedBubble.getPositionY())*10);
+                Vec2 vec = new Vec2((paff.getX() - collidedBubble.getPositionX())*15, (paff.getY() - collidedBubble.getPositionY())*15);
                 world.destroyJoint(distanceJoint);
                 paff.getBody().setAngularVelocity(0);
-                //paff.getBody().setLinearVelocity(new Vec2(paff.getX(), paff.getY()));
-                paff.getBody().applyLinearImpulse(vec, new Vec2(paff.getX(), paff.getY()), false);
+                paff.getBody().applyLinearImpulse(vec, paff.getCenter(), false);
+                world.setGravity(0,10);
                 gameState = GameState.WAITING;
                 break;
             case ROTATE:
                 //Log.e("RUOTA", "RUOTA");
                 currentAcceleration = (int) accelerometerHandler.getAccelX();
-                Vec2 vec2 = new Vec2(paff.getX() - collidedBubble.getPositionX()*10, (paff.getY() - collidedBubble.getPositionY())*10);
-
+                Vec2 velocity = new Vec2( (paff.getX() - collidedBubble.getPositionX())*10*Math.abs(currentAcceleration), (paff.getY() - collidedBubble.getPositionY())*10*Math.abs(currentAcceleration));
                 if(currentAcceleration > 0) {
-                    vec2.rotate(-90);
-                    paff.getBody().applyForceToCenter(vec2, false);
+                    velocity.rotate(-90);
+                    paff.getBody().applyForce(velocity, paff.getCenter(), false);
                 }
                     else if(currentAcceleration < 0) {
-                    vec2.rotate(90);
-                    paff.getBody().applyForceToCenter(vec2,false);
+                    velocity.rotate(90);
+                    paff.getBody().applyForce(velocity,paff.getCenter(),false);
                 }
                 if(accelerometerHandler.isAccelXOpposite(previousAcceleration)){
-                    float inertia = paff.getBody().getInertia();
-                    paff.getBody().applyForceToCenter(new Vec2(vec2.getX()*inertia,vec2.getY()*inertia),false);
+                    paff.getBody().applyForce(new Vec2(velocity.getX()*25,velocity.getY()*25),paff.getCenter(),false);
                 }
+
                 previousAcceleration = currentAcceleration;
                 //Log.e("DATI ACCELEROMETRO : ", "X=" + accelerometerHandler.getAccelX() + "\n Y=" + accelerometerHandler.getAccelY());
                 break;
             case WAITING:
                 //Log.e("WAITING", "WAITING");
+                if (paff.getX()>GlobalConstants.Physics.X_MAX)
+                    paff.getBody().setTransform(new Vec2(GlobalConstants.Physics.X_MIN,paff.getY()),0);
+                else if (paff.getX()<GlobalConstants.Physics.X_MIN)
+                    paff.getBody().setTransform(new Vec2(GlobalConstants.Physics.X_MAX,paff.getY()),0);
                 break;
             case JOINT:
                 Log.e("JOINT", "JOINT");
+                world.setGravity(0,0);
                 createHardDistanceJoint(paff,(GameObject)collidedBubble.getUserData());
                 paff.getBody().setAngularVelocity(0);
-                paff.getBody().setLinearVelocity(new Vec2(paff.getX(), paff.getY()));
                 gameState = GameState.ROTATE;
             break;
             default:

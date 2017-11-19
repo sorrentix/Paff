@@ -17,6 +17,7 @@ import android.graphics.RectF;
 
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Pixmap;
+import com.paff.orlandale.paff.GlobalConstants;
 
 public class AndroidGraphics implements Graphics {
     AssetManager assets;
@@ -85,6 +86,7 @@ public class AndroidGraphics implements Graphics {
     @Override
     public void drawPixel(float x, float y, int color) {
         paint.setColor(color);
+        paint.setAlpha(255);
         canvas.drawPoint(x, y, paint);
     }
 
@@ -95,6 +97,7 @@ public class AndroidGraphics implements Graphics {
         paint.setStyle(Style.STROKE);
         paint.setStrokeWidth(20);
         canvas.drawLine(x, y, x2, y2, paint);
+        drawPixel(x,y, GlobalConstants.Colors.RED);
     }
 
     @Override

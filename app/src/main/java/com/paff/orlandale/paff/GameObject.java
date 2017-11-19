@@ -12,6 +12,8 @@ public abstract class GameObject {
 
     protected final Game game;
     protected Body body;
+    public float oldPos;
+    public double perlinSeed;
 
     public GameObject(Game game){
         this.game = game;
