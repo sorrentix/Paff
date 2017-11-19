@@ -23,7 +23,7 @@ public class GameScreen extends Screen {
     AccelerometerHandler accelerometerHandler;
 
     GameObject paff;
-    GameObject []bubbles;
+    List<GameObject> bubbles;
     GameObject background;
 
     public GameScreen(Game game) {
@@ -35,7 +35,7 @@ public class GameScreen extends Screen {
 
         physicWorld = new PhysicWorld( PhysicToPixel.physicalSize, input);
         paff       = physicWorld.paff;
-        bubbles    = physicWorld.bubbles;
+        bubbles    = physicWorld.activeBubbles;
         background = setSimpleImage(new Position(0, 0), Assets.menu_background);
     }
 

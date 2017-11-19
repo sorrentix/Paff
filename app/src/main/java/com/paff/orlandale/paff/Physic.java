@@ -21,6 +21,7 @@ public class Physic implements Component{
     public Vec2 force;
     private Vec2 nullForce = new Vec2(0,0);
     private Vec2 toroidalMovement = new Vec2(0,0);
+    private Vec2 fallingMovement = new Vec2(0,0);
     private float radius;
 
 
@@ -154,5 +155,11 @@ public class Physic implements Component{
             toroidalMovement.setY(this.getPosY());
             this.body.setTransform(toroidalMovement,0);
         }
+    }
+
+    public void fallSmoothly(){
+        fallingMovement.setX(this.getPosX());
+        fallingMovement.setY(this.getPosY()+0.1f);
+        this.body.setTransform(fallingMovement,0);
     }
 }
