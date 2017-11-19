@@ -5,7 +5,6 @@ import android.util.Log;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
 import com.google.fpl.liquidfun.BodyType;
-import com.google.fpl.liquidfun.Joint;
 import com.google.fpl.liquidfun.Vec2;
 import com.google.fpl.liquidfun.World;
 import java.util.Random;
@@ -17,21 +16,16 @@ import java.util.Random;
 public class PhysicWorld {
     World world;
 
-    final Box physicalSize, screenSize;
+    final Box physicalSize;
 
     private static final float TIME_STEP = GlobalConstants.FPS; //60 fps
     private static final int VELOCITY_ITERATIONS = 8;
     private static final int POSITION_ITERATIONS = 3;
     private static final int PARTICLE_ITERATIONS = 3;
 
-    private Vec2 gravity;
-    private float framebufferWidth;
-    private float framebufferHeight;
 
-    //Bubble bubbles[] = new Bubble[5];
     int currentAcceleration = 0;
     int previousAcceleration = 0;
-    Joint distanceJoint;
     Input input;
     private Physic collidedBubble;
     private PaffContactListener paffContactListener;
@@ -41,15 +35,11 @@ public class PhysicWorld {
     GameObject paff;
     GameObject []bubbles = new GameObject[5];
 
-    public PhysicWorld(Box physicalSize, Box screenSize, Vec2 gravity, Input input) {
+    public PhysicWorld(Box physicalSize, Input input) {
         this.physicalSize = physicalSize;
-        this.screenSize = screenSize;
-        this.gravity = gravity;
-        this.framebufferWidth = screenSize.xmax;
-        this.framebufferHeight = screenSize.ymax;
         this.input = input;
 
-        this.world = new World(gravity.getX(), gravity.getY());
+        this.world = new World(GlobalConstants.GRAVITY.getX(), GlobalConstants.GRAVITY.getY());
         Random generator = new Random();
 
 

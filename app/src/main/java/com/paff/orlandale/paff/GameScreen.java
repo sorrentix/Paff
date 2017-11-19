@@ -33,9 +33,7 @@ public class GameScreen extends Screen {
         input = game.getInput();
         animationPool = game.getAnimationPool();
 
-        physicWorld = new PhysicWorld( PhysicToPixel.physicalSize,new Box(0,0,GlobalConstants.FRAME_BUFFER_WIDTH,GlobalConstants.FRAME_BUFFER_HEIGHT),
-                                       GlobalConstants.GRAVITY,
-                                       input);
+        physicWorld = new PhysicWorld( PhysicToPixel.physicalSize, input);
         paff       = physicWorld.paff;
         bubbles    = physicWorld.bubbles;
         background = setSimpleImage(new Position(0, 0), Assets.menu_background);
