@@ -126,6 +126,10 @@ public class Physic implements Component{
 
     public void nullifyResidualVelocity(){
         this.body.setAngularVelocity(0);
+        //this.body.setLinearVelocity(nullForce);
+    }
+
+    public void  nullifyResidualLinearVelocity(){
         this.body.setLinearVelocity(nullForce);
     }
 
@@ -143,15 +147,16 @@ public class Physic implements Component{
     }
 
     public void checkToroidalWorld(){
-
-        if (this.getPosX() > world.physicalSize.xmax + radius) {
-            toroidalMovement.setX(world.physicalSize.xmin - radius + 0.1f);
-            toroidalMovement.setY(this.getPosY());
-            this.body.setTransform(toroidalMovement,0);
-        }else if (this.getPosX() < world.physicalSize.xmin - radius){
-            toroidalMovement.setX(world.physicalSize.xmax + radius - 0.1f);
-            toroidalMovement.setY(this.getPosY());
-            this.body.setTransform(toroidalMovement,0);
+        if( this.joint == null ) {
+            if (this.getPosX() > world.physicalSize.xmax + radius) {
+                toroidalMovement.setX(world.physicalSize.xmin - radius + 0.1f);
+                toroidalMovement.setY(this.getPosY());
+                this.body.setTransform(toroidalMovement, 0);
+            } else if (this.getPosX() < world.physicalSize.xmin - radius) {
+                toroidalMovement.setX(world.physicalSize.xmax + radius - 0.1f);
+                toroidalMovement.setY(this.getPosY());
+                this.body.setTransform(toroidalMovement, 0);
+            }
         }
     }
 

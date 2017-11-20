@@ -28,8 +28,8 @@ public class PhysicWorld {
     private static final int PARTICLE_ITERATIONS = 3;
 
 
-    int currentAcceleration = 0;
-    int previousAcceleration = 0;
+    float currentAcceleration = 0;
+    float previousAcceleration = 0;
     private Input input;
     private Physic collidedBubble;
     private PaffContactListener paffContactListener;
@@ -47,7 +47,7 @@ public class PhysicWorld {
         this.world = new World(GlobalConstants.GRAVITY.getX(), GlobalConstants.GRAVITY.getY());
 
 
-        paff       = Screen.setBubble(this,GlobalConstants.PAFF_RADIUS,new Vec2(6.0f, -0.5f - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.02f),BodyType.dynamicBody, input);
+        paff       = Screen.setBubble(this,GlobalConstants.PAFF_RADIUS,new Vec2(6.0f, -0.5f - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.05f),BodyType.dynamicBody, input);
 
         bubblesPool = initPool(this, input);
         for( int i = 0; i < GlobalConstants.BUBBLE_NUMBER; i++){
@@ -71,7 +71,7 @@ public class PhysicWorld {
             case SHOT:
                 Log.e("SPARA", "SPARA");
                 paff.physic.nullifyResidualVelocity();
-                paff.physic.computeForce(400);//1000
+                paff.physic.computeForce(300);//1000
                 paff.physic.breakJoint();
                 paff.physic.applyForce();
 
@@ -79,15 +79,15 @@ public class PhysicWorld {
                 gameState = GameState.WAITING;
                 break;
             case ROTATE:
-                paff.physic.computeForce(5);//20
+                currentAcceleration = input.getAccelX();
+                float forceParameter =  Math.abs(currentAcceleration);
+                paff.physic.computeForce(4 * forceParameter);//20
                 paff.physic.computeForceDirection(input.getAccelX());
                 paff.physic.applyForce();
                 if(paff.evtManager.isAccelXOpposite(previousAcceleration)) {
-                    paff.physic.computeForce(20);
+                    paff.physic.computeForce(25 * forceParameter);
                     paff.physic.applyExtraBrakingForce();
                 }
-
-
                 previousAcceleration = currentAcceleration;
 
                 Log.e("ROTATE : ", "X=" + input.getAccelX() + "\n Y=" + input.getAccelY());
@@ -126,6 +126,8 @@ public class PhysicWorld {
             if (paff.physic.joint.getBodyB().getUserData().equals(b.physic) ) {
                 Log.e("BREAKING JOINT","3");
                 paff.physic.breakJoint();
+                paff.physic.nullifyResidualLinearVelocity();
+                world.setGravity(GlobalConstants.GRAVITY.getX(),GlobalConstants.GRAVITY.getY());
                 gameState = GameState.WAITING;
             }
         }
@@ -143,12 +145,14 @@ public class PhysicWorld {
 
 
     public void collisionDetected(Physic ba, Physic bb) {
-        if (!ba.equals(paff.physic))
-            collidedBubble = ba;
-        else
-            collidedBubble = bb;
-        paff.sound.play();
-        gameState = GameState.JOINT;
+        if( paff.physic.joint == null) {
+            if (!ba.equals(paff.physic))
+                collidedBubble = ba;
+            else
+                collidedBubble = bb;
+            paff.sound.play();
+            gameState = GameState.JOINT;
+        }
     }
 
     private Pool initPool(PhysicWorld w, Input i){
@@ -173,6 +177,7 @@ public class PhysicWorld {
             private Vec2 restPosition = new Vec2(0,30.0f);
             private Vec2 respawnPosition = new Vec2(0,0);
             private int bubbleCounter = 0;
+            private GameObject highestBubble;
             final Random generator = new Random();
 
             public void free(GameObject object) {
@@ -187,6 +192,8 @@ public class PhysicWorld {
                 g.physic.body.setTransform(respawnPosition,0);
                 g.physic.oldPosX = respawnPosition.getX();
                 g.physic.body.setSleepingAllowed(false);
+                if (bubbleCounter >= GlobalConstants.BUBBLE_NUMBER - 1)
+                    highestBubble = g;
                 return g;
             }
 
@@ -195,27 +202,72 @@ public class PhysicWorld {
                 switch (bubbleCounter){
                     case 0:
                         respawn.setX(0.0f);
-                        respawn.setY(15.0f);
+                        respawn.setY(14.0f);
                         break;
                     case 1:
-                        respawn.setX(-8.0f);
-                        respawn.setY(13.0f);
+                        respawn.setX(-7.0f);
+                        respawn.setY(11.0f);
                         break;
                     case 2:
-                        respawn.setX(8.0f);
-                        respawn.setY(12.5f);
+                        respawn.setX(-6.0f);
+                        respawn.setY(-12.5f);
                         break;
                     case 3:
                         respawn.setX(6.0f);
-                        respawn.setY(0.5f);
+                        respawn.setY(3.5f);
                         break;
                     case 4:
                         respawn.setX(-4.0f);
                         respawn.setY(-5.5f);
                         break;
+                    case 5:
+                        respawn.setX(6.0f);
+                        respawn.setY(-8.5f);
+                        break;
+                    case 6:
+                        respawn.setX(2.0f);
+                        respawn.setY(-9.5f);
+                        break;
+                    case 7:
+                        respawn.setX(-2.0f);
+                        respawn.setY(-1.5f);
+                        break;
+                    case 8:
+                        respawn.setX(-2.0f);
+                        respawn.setY(-13.5f);
+                        break;
+                    case 9:
+                        respawn.setX(-6.0f);
+                        respawn.setY(-18.5f);
+                        break;
+                    case 10:
+                        respawn.setX(6.5f);
+                        respawn.setY(-17.5f);
+                        break;
+                    case 11:
+                        respawn.setX(-1.5f);
+                        respawn.setY(6.5f);
+                        break;
                     default:
-                        respawn.setX(generator.nextFloat()*11.0f - (GlobalConstants.Physics.X_MAX - GlobalConstants.BUBBLE_BASIC_RADIUS - 2.0f));
-                        respawn.setY(GlobalConstants.Physics.Y_MIN - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.2f);
+                        float y = generator.nextFloat()*(4.0f) +  (GlobalConstants.Physics.Y_MIN - 8.0f);
+                        float x = (generator.nextFloat()*14.0f - (GlobalConstants.Physics.X_MAX - GlobalConstants.BUBBLE_BASIC_RADIUS - 2.0f));
+                        float y2MinusY1Quadro = (highestBubble.physic.getPosY()- y) * (highestBubble.physic.getPosY()- y);
+                        float wantedDistance = (4 * GlobalConstants.BUBBLE_BASIC_RADIUS) + 2.0f;
+
+                        if (Math.sqrt((highestBubble.physic.getPosX()- x) * (highestBubble.physic.getPosX()- x)+ y2MinusY1Quadro) < wantedDistance ){
+                            double partial =  Math.sqrt((wantedDistance*wantedDistance) - y2MinusY1Quadro);
+                            x = (float)(highestBubble.physic.getPosX() - partial);
+                            if (x + GlobalConstants.BUBBLE_BASIC_RADIUS + 2.0f > GlobalConstants.Physics.X_MAX ||  x - GlobalConstants.BUBBLE_BASIC_RADIUS - 2.0f < GlobalConstants.Physics.X_MIN)
+                                x = (float) (highestBubble.physic.getPosX() + partial);
+                            Log.e("RANDOM POSITION"," NOT GOOD");
+                        }else{
+                            Log.e("RANDOM POSITION"," GOOD");
+
+                        }
+                        respawn.setY(y);
+                        respawn.setX(x);
+                        //respawn.setX(generator.nextFloat()*11.0f - (GlobalConstants.Physics.X_MAX - GlobalConstants.BUBBLE_BASIC_RADIUS - 2.0f));00000000000000
+                        //respawn.setY(GlobalConstants.Physics.Y_MIN - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.2f);
                         break;
                 }
                 bubbleCounter++;
