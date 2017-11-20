@@ -23,6 +23,8 @@ public class Physic implements Component{
     private Vec2 toroidalMovement = new Vec2(0,0);
     private Vec2 fallingMovement = new Vec2(0,0);
     private float radius;
+    public float oldPosX;
+    public double perlinSeed;
 
 
     public Physic(PhysicWorld wld){
@@ -33,18 +35,13 @@ public class Physic implements Component{
 
 
     public void setDistanceJoint(Physic elementB){
-        System.out.println("bolle a buon fine");
         DistanceJointDef jointDef = new DistanceJointDef();
         jointDef.setBodyA(this.body);
         jointDef.setBodyB(elementB.body);
         ((DistanceJointDef) jointDef).setFrequencyHz(0);
         ((DistanceJointDef) jointDef).setDampingRatio(0);
         ((DistanceJointDef) jointDef).setLength(this.getRadius()+elementB.getRadius());
-        System.out.println("distance jointdef:"+jointDef);
         joint = world.world.createJoint(jointDef);
-        System.out.println("joint a buon fine4");
-        System.out.println("distance jointdef:"+jointDef);
-
         jointDef.delete();
     }
 
@@ -133,7 +130,8 @@ public class Physic implements Component{
     }
 
     public  void applyExtraBrakingForce(){
-        this.body.setAngularVelocity(this.body.getAngularVelocity()/10.0f);
+        //this.body.setLinearVelocity(this.body.getAngularVelocity()/20.0f);
+        //this.body.setAngularVelocity(this.body.getAngularVelocity()/20.0f);
         force.setX(force.getX());
         force.setY(force.getY());
         this.body.applyForce(force,this.body.getPosition(),false);
@@ -158,8 +156,9 @@ public class Physic implements Component{
     }
 
     public void fallSmoothly(){
-        fallingMovement.setX(this.getPosX());
-        fallingMovement.setY(this.getPosY()+0.1f);
+        this.perlinSeed += 0.007;
+        fallingMovement.setX(this.oldPosX + ImprovedNoise.map((float)ImprovedNoise.noise(this.perlinSeed,0,0),(float)-Math.sqrt(0.25),(float)Math.sqrt(0.25),-1f,1f));
+        fallingMovement.setY(this.getPosY() + 0.05f);
         this.body.setTransform(fallingMovement,0);
     }
 }

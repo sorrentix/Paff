@@ -39,7 +39,6 @@ public class PhysicWorld {
     GameObject paff;
     Pool<GameObject>  bubblesPool;
     List<GameObject>  activeBubbles = new ArrayList<>();
-    List<GameObject>  toRemoveBubbles = new ArrayList<>();
 
     public PhysicWorld(Box physicalSize, Input input) {
         this.physicalSize = physicalSize;
@@ -48,18 +47,13 @@ public class PhysicWorld {
         this.world = new World(GlobalConstants.GRAVITY.getX(), GlobalConstants.GRAVITY.getY());
 
 
-        paff       = Screen.setBubble(this,GlobalConstants.PAFF_RADIUS,new Vec2(2.5f, 3.9f),BodyType.dynamicBody, input);
+        paff       = Screen.setBubble(this,GlobalConstants.PAFF_RADIUS,new Vec2(6.0f, -0.5f - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.02f),BodyType.dynamicBody, input);
 
         bubblesPool = initPool(this, input);
         for( int i = 0; i < GlobalConstants.BUBBLE_NUMBER; i++){
             activeBubbles.add(bubblesPool.newObject());
-        }/*
-        bubbles[0] = Screen.setBubble(this,2.0f,new Vec2(2.5f, 2),BodyType.staticBody, input);
-        bubbles[1] = Screen.setBubble(this,1.8f,new Vec2(7, -7),BodyType.staticBody, input);
-        bubbles[2] = Screen.setBubble(this,2.0f,new Vec2(-3.5f, 8),BodyType.staticBody, input);
-        bubbles[3] = Screen.setBubble(this,1.7f,new Vec2(-4.5f, -3),BodyType.staticBody, input);
-        bubbles[4] = Screen.setBubble(this,2.0f,new Vec2(-6, -9),BodyType.staticBody, input);
-*/
+        }
+
         paffContactListener = new PaffContactListener(this);
         world.setContactListener(paffContactListener);
     }
@@ -77,28 +71,32 @@ public class PhysicWorld {
             case SHOT:
                 Log.e("SPARA", "SPARA");
                 paff.physic.nullifyResidualVelocity();
-                paff.physic.computeForce(1000);
+                paff.physic.computeForce(400);//1000
                 paff.physic.breakJoint();
                 paff.physic.applyForce();
 
+                world.setGravity(GlobalConstants.GRAVITY.getX(),GlobalConstants.GRAVITY.getY());
                 gameState = GameState.WAITING;
                 break;
             case ROTATE:
-                paff.physic.computeForce(20);
+                paff.physic.computeForce(5);//20
                 paff.physic.computeForceDirection(input.getAccelX());
-                if(paff.evtManager.isAccelXOpposite(previousAcceleration))
+                paff.physic.applyForce();
+                if(paff.evtManager.isAccelXOpposite(previousAcceleration)) {
+                    paff.physic.computeForce(20);
                     paff.physic.applyExtraBrakingForce();
-                else
-                    paff.physic.applyForce();
+                }
+
 
                 previousAcceleration = currentAcceleration;
 
-                Log.e("DATI ACCELEROMETRO : ", "X=" + input.getAccelX() + "\n Y=" + input.getAccelY());
+                Log.e("ROTATE : ", "X=" + input.getAccelX() + "\n Y=" + input.getAccelY());
                 break;
             case WAITING:
                 Log.e("WAITING", "WAITING");
             break;
             case JOINT:
+                world.setGravity(0,0);
                 paff.physic.setDistanceJoint(collidedBubble);
                 Log.e("JOINT", "JOINT");
 
@@ -107,22 +105,31 @@ public class PhysicWorld {
             default:
             break;
         }
+
         paff.physic.checkToroidalWorld();
-        for (GameObject b : activeBubbles){
-            b.physic.fallSmoothly();
-            markAsRemovableFallenBubble(b);
-        }
-        for (GameObject b : toRemoveBubbles ){
-            activeBubbles.remove(b);
-            bubblesPool.free(b);
+        for (int i = 0; i < activeBubbles.size(); i++){
+            activeBubbles.get(i).physic.fallSmoothly();
+            if (markAsRemovableFallenBubble(activeBubbles.get(i))){
+                GameObject b = activeBubbles.get(i);
+                activeBubbles.remove(b);
+                bubblesPool.free(b);
+            }
         }
 
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
     }
-    public void markAsRemovableFallenBubble(GameObject b){
-        if(b.physic.getPosY() + GlobalConstants.BUBBLE_BASIC_RADIUS  >= GlobalConstants.Physics.Y_MAX ){
-            toRemoveBubbles.add(b);
+    public boolean markAsRemovableFallenBubble(GameObject b){
+        boolean removable = (b.physic.getPosY() - b.physic.getRadius()  >= GlobalConstants.Physics.Y_MAX  );
+        Log.e("BREAKING JOINT","1"+ " removable: "+ removable+ " jointpaff: "+paff.physic.joint);
+        if (removable && paff.physic.joint != null){
+            Log.e("BREAKING JOINT","2"+ "paff: "+paff.physic +" probable paff: "+paff.physic.joint.getBodyA().getUserData() +" probable other body:"+paff.physic.joint.getBodyB().getUserData()+ " other body: "+ b.physic );
+            if (paff.physic.joint.getBodyB().getUserData().equals(b.physic) ) {
+                Log.e("BREAKING JOINT","3");
+                paff.physic.breakJoint();
+                gameState = GameState.WAITING;
+            }
         }
+        return removable;
     }
 
     public synchronized void setGravity(float x, float y) {
@@ -148,6 +155,7 @@ public class PhysicWorld {
         final Random generator = new Random();
         final PhysicWorld container = this;
         final Input in = i;
+
         Pool.PoolObjectFactory<GameObject> factory = new Pool.PoolObjectFactory<GameObject>() {
             @Override
             public GameObject createObject() {
@@ -159,10 +167,12 @@ public class PhysicWorld {
                 return bubble;
             }
         };
+
         return new Pool<GameObject>(factory, 15){
 
-            private Vec2 restPosition = new Vec2(0,14.0f);
+            private Vec2 restPosition = new Vec2(0,30.0f);
             private Vec2 respawnPosition = new Vec2(0,0);
+            private int bubbleCounter = 0;
             final Random generator = new Random();
 
             public void free(GameObject object) {
@@ -172,12 +182,49 @@ public class PhysicWorld {
             }
             public GameObject newObject() {
                 GameObject g = super.newObject();
-                respawnPosition.setX(generator.nextFloat()*20.0f - 10.0f);
-                respawnPosition.setY(generator.nextFloat()*20.0f - 10.0f);
+                respawnPosition = setStartPosition(respawnPosition);
+                g.physic.perlinSeed = generator.nextInt()*100;
                 g.physic.body.setTransform(respawnPosition,0);
+                g.physic.oldPosX = respawnPosition.getX();
                 g.physic.body.setSleepingAllowed(false);
                 return g;
             }
+
+            private Vec2 setStartPosition(Vec2 respawnPosition){
+                Vec2 respawn = respawnPosition;
+                switch (bubbleCounter){
+                    case 0:
+                        respawn.setX(0.0f);
+                        respawn.setY(15.0f);
+                        break;
+                    case 1:
+                        respawn.setX(-8.0f);
+                        respawn.setY(13.0f);
+                        break;
+                    case 2:
+                        respawn.setX(8.0f);
+                        respawn.setY(12.5f);
+                        break;
+                    case 3:
+                        respawn.setX(6.0f);
+                        respawn.setY(0.5f);
+                        break;
+                    case 4:
+                        respawn.setX(-4.0f);
+                        respawn.setY(-5.5f);
+                        break;
+                    default:
+                        respawn.setX(generator.nextFloat()*11.0f - (GlobalConstants.Physics.X_MAX - GlobalConstants.BUBBLE_BASIC_RADIUS - 2.0f));
+                        respawn.setY(GlobalConstants.Physics.Y_MIN - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.2f);
+                        break;
+                }
+                bubbleCounter++;
+                return  respawn;
+            }
         };
+
+
     }
+
+
 }

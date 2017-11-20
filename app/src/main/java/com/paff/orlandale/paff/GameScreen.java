@@ -58,8 +58,9 @@ public class GameScreen extends Screen {
     public void present(float deltaTime) {
         graphics.drawGameObject(background);
 
-        for (GameObject bubble : bubbles) {
-            ((PaffGraphics)graphics).drawBubble(bubble,GlobalConstants.Colors.BLUE,GlobalConstants.ALPHA);
+        //for (GameObject bubble : bubbles) {
+        for (int i = 0; i < bubbles.size(); i++ ) {
+            ((PaffGraphics)graphics).drawBubble(bubbles.get(i),GlobalConstants.Colors.BLUE,GlobalConstants.ALPHA);
         }
         ((PaffGraphics)graphics).drawBubble(paff,GlobalConstants.Colors.RED,GlobalConstants.ALPHA);
 

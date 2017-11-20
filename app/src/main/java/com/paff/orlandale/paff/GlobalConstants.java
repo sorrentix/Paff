@@ -9,13 +9,13 @@ import com.google.fpl.liquidfun.Vec2;
 public class GlobalConstants {
     public static final int FRAME_BUFFER_WIDTH = 1080;
     public static final int FRAME_BUFFER_HEIGHT = 1920;
-    public static final float FPS = 1.0f/60.0f;
+    public static final float FPS = 1.0f/60.0f;//1.0f/60.0f;
 
     public static final float VOLUME = 1.0f;
 
     public static final Vec2 GRAVITY = new Vec2(0,9.81f);
-    public static final float PAFF_RADIUS = 1.0f;
-    public static final float BUBBLE_BASIC_RADIUS = 1.8f;
+    public static final float PAFF_RADIUS = 0.4f;
+    public static final float BUBBLE_BASIC_RADIUS = 0.7f;
     public static final int BUBBLE_NUMBER = 5;
 
 

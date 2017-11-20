@@ -15,6 +15,7 @@ public class PaffGraphics extends AndroidGraphics {
     public PaffGraphics(AssetManager assets, Bitmap frameBuffer) {
         super(assets,frameBuffer);
     }
+
     public void drawBubble(GameObject bubble, int color, int alpha){
         float y      = PhysicToPixel.Y(bubble.physic.getPosY());
         float x      = PhysicToPixel.X(bubble.physic.getPosX());

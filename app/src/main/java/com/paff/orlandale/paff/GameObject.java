@@ -22,14 +22,12 @@ public class GameObject {
 
     public void addComponent(Component c){
         Field[] fields = this.getClass().getFields();
-        System.out.println("opoete ovo: "+ c.getClass());
         for(Field field : fields){
 
             if (field.getType().isAssignableFrom(c.getClass())){
                 field.setAccessible(true);
                 try {
                     field.set(this,c);
-                    System.out.println("tipe e sto settado: "+ field.getType());
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
