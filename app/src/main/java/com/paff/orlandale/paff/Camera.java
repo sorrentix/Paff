@@ -39,9 +39,15 @@ public class Camera {
         }
     }
 
-    public static void moveCameraVerticallyForEndlessBackground(GameObject b){
-        
-
+    public static void moveCameraVerticallyForEndlessBackground(GameObject []b){
+        if (movement.getY() > 0.0f ) {
+            for (int i = 0; i< b.length; i++) {
+                b[i].position.y = b[i].position.y + PhysicToPixel.Length(movement.getY());
+                if ( b[i].position.y > GlobalConstants.FRAME_BUFFER_HEIGHT ){
+                    b[i].position.y = -(b.length-1)*GlobalConstants.FRAME_BUFFER_HEIGHT;
+                }
+            }
+        }
     }
 
 }

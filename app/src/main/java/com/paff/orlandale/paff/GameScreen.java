@@ -24,7 +24,7 @@ public class GameScreen extends Screen {
 
     GameObject paff;
     List<GameObject> bubbles;
-    GameObject background;
+    GameObject []backgrounds = new GameObject[3];
 
     public GameScreen(Game game) {
         super(game);
@@ -36,8 +36,9 @@ public class GameScreen extends Screen {
         physicWorld = new PhysicWorld( PhysicToPixel.physicalSize, input);
         paff       = physicWorld.paff;
         bubbles    = physicWorld.activeBubbles;
-        background = setSimpleImage(new Position(0, 0), Assets.menu_background);
-
+        for (int i = 0; i < backgrounds.length; i++ ) {
+            backgrounds[i] = setSimpleImage(new Position(0,-i * GlobalConstants.FRAME_BUFFER_HEIGHT), Assets.menu_background);
+        }
     }
 
     @Override
@@ -55,15 +56,18 @@ public class GameScreen extends Screen {
         Camera.computeVerticalMovement(paff);
         Camera.moveCameraVertically(paff);
         Camera.moveCameraVertically(bubbles);
-        //Camera.moveCameraVerticallyForEndlessBackground(background);
+
+        Camera.moveCameraVerticallyForEndlessBackground(backgrounds);
+
     }
 
 
     @Override
     public void present(float deltaTime) {
-        graphics.drawGameObject(background);
+        for (int i = 0; i < backgrounds.length; i++ ) {
+            graphics.drawGameObject(backgrounds[i]);
+        }
 
-        //for (GameObject bubble : bubbles) {
         for (int i = 0; i < bubbles.size(); i++ ) {
             ((PaffGraphics)graphics).drawBubble(bubbles.get(i),GlobalConstants.Colors.BLUE,GlobalConstants.ALPHA);
         }
