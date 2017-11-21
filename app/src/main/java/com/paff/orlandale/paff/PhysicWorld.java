@@ -2,6 +2,7 @@ package com.paff.orlandale.paff;
 
 import android.util.Log;
 
+import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Pool;
 import com.badlogic.androidgames.framework.Screen;
@@ -35,6 +36,7 @@ public class PhysicWorld {
     private PaffContactListener paffContactListener;
 
     GameState gameState = GameState.WAITING;
+    GameState previousState = GameState.WAITING;
 
     GameObject paff;
     Pool<GameObject>  bubblesPool;
@@ -67,9 +69,11 @@ public class PhysicWorld {
         if( GlobalConstants.BUBBLE_NUMBER > activeBubbles.size()){
             activeBubbles.add(bubblesPool.newObject());
         }
+        if(paff.physic.getPosY()-paff.physic.getRadius()> GlobalConstants.Physics.Y_MAX  )
+            gameState = GameState.GAME_OVER;
         switch (gameState) {
             case SHOT:
-                Log.e("SPARA", "SPARA");
+              //  Log.e("SPARA", "SPARA");
                 paff.physic.nullifyResidualVelocity();
                 paff.physic.computeForce(300);//1000
                 paff.physic.breakJoint();
@@ -90,15 +94,15 @@ public class PhysicWorld {
                 }
                 previousAcceleration = currentAcceleration;
 
-                Log.e("ROTATE : ", "X=" + input.getAccelX() + "\n Y=" + input.getAccelY());
+             //   Log.e("ROTATE : ", "X=" + input.getAccelX() + "\n Y=" + input.getAccelY());
                 break;
             case WAITING:
-                Log.e("WAITING", "WAITING");
+            //    Log.e("WAITING", "WAITING");
             break;
             case JOINT:
                 world.setGravity(0,0);
                 paff.physic.setDistanceJoint(collidedBubble);
-                Log.e("JOINT", "JOINT");
+            //    Log.e("JOINT", "JOINT");
 
                 gameState = GameState.ROTATE;
             break;
@@ -120,11 +124,11 @@ public class PhysicWorld {
     }
     public boolean markAsRemovableFallenBubble(GameObject b){
         boolean removable = (b.physic.getPosY() - b.physic.getRadius()  >= GlobalConstants.Physics.Y_MAX  );
-        Log.e("BREAKING JOINT","1"+ " removable: "+ removable+ " jointpaff: "+paff.physic.joint);
+    //    Log.e("BREAKING JOINT","1"+ " removable: "+ removable+ " jointpaff: "+paff.physic.joint);
         if (removable && paff.physic.joint != null){
-            Log.e("BREAKING JOINT","2"+ "paff: "+paff.physic +" probable paff: "+paff.physic.joint.getBodyA().getUserData() +" probable other body:"+paff.physic.joint.getBodyB().getUserData()+ " other body: "+ b.physic );
+          //  Log.e("BREAKING JOINT","2"+ "paff: "+paff.physic +" probable paff: "+paff.physic.joint.getBodyA().getUserData() +" probable other body:"+paff.physic.joint.getBodyB().getUserData()+ " other body: "+ b.physic );
             if (paff.physic.joint.getBodyB().getUserData().equals(b.physic) ) {
-                Log.e("BREAKING JOINT","3");
+           //     Log.e("BREAKING JOINT","3");
                 paff.physic.breakJoint();
                 paff.physic.nullifyResidualLinearVelocity();
                 world.setGravity(GlobalConstants.GRAVITY.getX(),GlobalConstants.GRAVITY.getY());
@@ -259,9 +263,9 @@ public class PhysicWorld {
                             x = (float)(highestBubble.physic.getPosX() - partial);
                             if (x + GlobalConstants.BUBBLE_BASIC_RADIUS + 2.0f > GlobalConstants.Physics.X_MAX ||  x - GlobalConstants.BUBBLE_BASIC_RADIUS - 2.0f < GlobalConstants.Physics.X_MIN)
                                 x = (float) (highestBubble.physic.getPosX() + partial);
-                            Log.e("RANDOM POSITION"," NOT GOOD");
+                       //     Log.e("RANDOM POSITION"," NOT GOOD");
                         }else{
-                            Log.e("RANDOM POSITION"," GOOD");
+                        //    Log.e("RANDOM POSITION"," GOOD");
 
                         }
                         respawn.setY(y);

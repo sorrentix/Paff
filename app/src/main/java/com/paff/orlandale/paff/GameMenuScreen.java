@@ -49,51 +49,24 @@ class GameMenuScreen extends Screen {
             Assets.gamesoundtheme.setLooping(true);
             Assets.gamesoundtheme.play();
         }
-        game.setPreviousScreen(game.getCurrentScreen());
     }
 
 
 
     @Override
     public void update(float deltaTime) {
+
         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
-        switch(state){
-            case WAITING:
-                Log.e("TOUCH EVENT:"," waiting update");
-                break;
-            case PLAY:
-                game.setScreen(new GameScreen(game));
-                Log.e("TOUCH EVENT:"," play update");
-                break;
-            case HELP:
-                Log.e("TOUCH EVENT:"," help update");
-                game.setScreen(new HelpScreen(game));
-                break;
-            case SETTINGS:
-                Log.e("TOUCH EVENT:"," settings update");
-                game.setScreen(new SettingsScreen(game));
-                break;
-            default:
-                Log.e("TOUCH EVENT:"," deafault update");
-                break;
-
-        }
-
         for (int i = 0; i < touchEvents.size(); ++i) {
             TouchEvent event = touchEvents.get(i);
 
             if (event.type == TouchEvent.TOUCH_UP) {
-                Log.e("TOUCH EVENT:"," touched");
-                if (playBtn.evtManager.inBounds(event)) {
-                    Log.e("TOUCH EVENT:"," play touch");
+                if (playBtn.evtManager.inBounds(event))
                     state = GameState.PLAY;
-                } else if (settingsBtn.evtManager.inBounds(event)) {
-                    Log.e("TOUCH EVENT:"," settings touch");
+                else if (settingsBtn.evtManager.inBounds(event))
                     state = GameState.SETTINGS;
-                }else if (helpBtn.evtManager.inBounds(event)) {
-                    Log.e("TOUCH EVENT:"," help touch");
+                else if (helpBtn.evtManager.inBounds(event))
                     state = GameState.HELP;
-                }
             }
         }
 
@@ -104,7 +77,6 @@ class GameMenuScreen extends Screen {
 
         switch(state){
             case WAITING:
-                Log.e("TOUCH EVENT:"," waiting pres");
                 g.drawGameObject(background);
                 g.drawGameObject(logo);
                 g.drawGameObject(playBtn);
@@ -112,20 +84,19 @@ class GameMenuScreen extends Screen {
                 g.drawGameObject(helpBtn);
                 break;
             case PLAY:
-                Log.e("TOUCH EVENT:"," play pres");
                 playBtn.sound.play();
                 animationPool.getAnimationByID(1).executeAnimation();
+                game.setScreen(new GameScreen(game));
                 break;
             case HELP:
-                Log.e("TOUCH EVENT:"," help pres");
                 helpBtn.sound.play();
+                game.setScreen(new HelpScreen(game));
                 break;
             case SETTINGS:
-                Log.e("TOUCH EVENT:"," settings pres");
                 settingsBtn.sound.play();
+                game.setScreen(new SettingsScreen(game));
                 break;
             default:
-                Log.e("TOUCH EVENT:"," default pres");
                 break;
 
         }
