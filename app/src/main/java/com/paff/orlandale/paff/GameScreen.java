@@ -29,7 +29,7 @@ public class GameScreen extends Screen {
     GameObject exitBtn;
     GameObject rematchBtn;
     List<GameObject> bubbles;
-    GameObject background;
+    GameObject []backgrounds = new GameObject[3];
 
     public GameScreen(Game game) {
         super(game);
@@ -41,10 +41,15 @@ public class GameScreen extends Screen {
         physicWorld = new PhysicWorld( PhysicToPixel.physicalSize, input);
         paff       = physicWorld.paff;
         bubbles    = physicWorld.activeBubbles;
+
+        for (int i = 0; i < backgrounds.length; i++ ) {
+            backgrounds[i] = setSimpleImage(new Position(0,-i * GlobalConstants.FRAME_BUFFER_HEIGHT), Assets.menu_background);
+        }
         playBtn     = setButton(new Position(60, 760), Assets.btn_play, Assets.bubblexplosion, i);
         rematchBtn     = setButton(new Position(60, 760), Assets.btn_play, Assets.bubblexplosion, i);
         exitBtn = setButton(new Position(640, 960), Assets.btn_settings, Assets.bubblexplosion, i);
         background = setSimpleImage(new Position(0, 0), Assets.menu_background);
+
     }
 
     @Override
@@ -81,8 +86,13 @@ public class GameScreen extends Screen {
                 }
             }
         }
-    }
 
+        Camera.computeVerticalMovement(paff);
+        Camera.moveCameraVertically(paff);
+        Camera.moveCameraVertically(bubbles);
+        Camera.moveCameraVerticallyForEndlessBackground(backgrounds);
+
+    }
 
 
 
@@ -90,13 +100,14 @@ public class GameScreen extends Screen {
     public void present(float deltaTime) {
 
 
-            graphics.drawGameObject(background);
+        for (int i = 0; i < backgrounds.length; i++ ) {
+          graphics.drawGameObject(backgrounds[i]);
+        }
 
-            //for (GameObject bubble : bubbles) {
-            for (int i = 0; i < bubbles.size(); i++) {
-                ((PaffGraphics) graphics).drawBubble(bubbles.get(i), GlobalConstants.Colors.BLUE, GlobalConstants.ALPHA);
-            }
-            ((PaffGraphics) graphics).drawBubble(paff, GlobalConstants.Colors.RED, GlobalConstants.ALPHA);
+        for (int i = 0; i < bubbles.size(); i++) {
+          ((PaffGraphics) graphics).drawBubble(bubbles.get(i), GlobalConstants.Colors.BLUE, GlobalConstants.ALPHA);
+        }
+        ((PaffGraphics) graphics).drawBubble(paff, GlobalConstants.Colors.RED, GlobalConstants.ALPHA);
 
         if(physicWorld.getGameState()==GameState.PAUSED) {
             graphics.drawGameObject(playBtn);
@@ -107,7 +118,8 @@ public class GameScreen extends Screen {
             graphics.drawGameObject(exitBtn);
         }
 
-        }
+
+    }
 
 
     @Override
