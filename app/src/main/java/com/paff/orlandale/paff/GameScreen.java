@@ -37,6 +37,7 @@ public class GameScreen extends Screen {
         paff       = physicWorld.paff;
         bubbles    = physicWorld.activeBubbles;
         background = setSimpleImage(new Position(0, 0), Assets.menu_background);
+
     }
 
     @Override
@@ -51,8 +52,12 @@ public class GameScreen extends Screen {
                     physicWorld.gameState = GameState.SHOT;
             }
         }
-
+        Camera.computeVerticalMovement(paff);
+        Camera.moveCameraVertically(paff);
+        Camera.moveCameraVertically(bubbles);
+        //Camera.moveCameraVerticallyForEndlessBackground(background);
     }
+
 
     @Override
     public void present(float deltaTime) {
