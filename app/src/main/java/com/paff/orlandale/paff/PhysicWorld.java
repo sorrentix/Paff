@@ -69,7 +69,7 @@ public class PhysicWorld {
         if( GlobalConstants.BUBBLE_NUMBER > activeBubbles.size()){
             activeBubbles.add(bubblesPool.newObject());
         }
-        if(paff.physic.getPosY()-paff.physic.getRadius()> GlobalConstants.Physics.Y_MAX  )
+        if(paff.physic.getPosY()-paff.physic.getRadius()-0.2f > GlobalConstants.Physics.Y_MAX  )
             gameState = GameState.GAME_OVER;
         switch (gameState) {
             case SHOT:

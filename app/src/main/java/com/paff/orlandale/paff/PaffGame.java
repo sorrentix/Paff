@@ -21,8 +21,10 @@ public class PaffGame extends AndroidGame {
         Screen currScreen = super.getCurrentScreen();
         if(currScreen instanceof GameScreen) {
             GameScreen gameScreen = (GameScreen) currScreen;
-            gameScreen.physicWorld.previousState=gameScreen.physicWorld.getGameState();
-            gameScreen.physicWorld.gameState=GameState.PAUSED;
+            if(gameScreen.physicWorld.getGameState()!=GameState.PAUSED && gameScreen.physicWorld.getGameState()!=GameState.GAME_OVER ) {
+                gameScreen.physicWorld.previousState = gameScreen.physicWorld.getGameState();
+                gameScreen.physicWorld.gameState = GameState.PAUSED;
+            }
         }
         if (Assets.gamesoundtheme!=null)
             super.getAudio().pauseAll();
@@ -48,8 +50,14 @@ public class PaffGame extends AndroidGame {
 
         else if(currScreen instanceof GameScreen) {
             GameScreen gameScreen = (GameScreen) currScreen;
-            gameScreen.physicWorld.previousState=gameScreen.physicWorld.getGameState();
-            gameScreen.physicWorld.gameState=GameState.PAUSED;
+            if(gameScreen.physicWorld.getGameState() == GameState.GAME_OVER)
+                    setScreen(new GameMenuScreen(this));
+            if(gameScreen.physicWorld.getGameState() == GameState.PAUSED)
+                gameScreen.physicWorld.gameState=gameScreen.physicWorld.previousState;
+            else {
+                gameScreen.physicWorld.previousState = gameScreen.physicWorld.getGameState();
+                gameScreen.physicWorld.gameState = GameState.PAUSED;
+            }
         }
         else
             setScreen(new GameMenuScreen(this));

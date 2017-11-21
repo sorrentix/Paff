@@ -22,7 +22,6 @@ public class GameScreen extends Screen {
     Input input;
     AnimationPool animationPool;
     PhysicWorld physicWorld;
-    AccelerometerHandler accelerometerHandler;
 
     GameObject paff;
     GameObject playBtn;
@@ -42,13 +41,13 @@ public class GameScreen extends Screen {
         paff       = physicWorld.paff;
         bubbles    = physicWorld.activeBubbles;
 
-        for (int i = 0; i < backgrounds.length; i++ ) {
-            backgrounds[i] = setSimpleImage(new Position(0,-i * GlobalConstants.FRAME_BUFFER_HEIGHT), Assets.menu_background);
+        for (int k = 0; k < backgrounds.length; k++ ) {
+            backgrounds[k] = setSimpleImage(new Position(0,-k * GlobalConstants.FRAME_BUFFER_HEIGHT), Assets.menu_background);
         }
+
         playBtn     = setButton(new Position(60, 760), Assets.btn_play, Assets.bubblexplosion, i);
-        rematchBtn     = setButton(new Position(60, 760), Assets.btn_play, Assets.bubblexplosion, i);
-        exitBtn = setButton(new Position(640, 960), Assets.btn_settings, Assets.bubblexplosion, i);
-        background = setSimpleImage(new Position(0, 0), Assets.menu_background);
+        rematchBtn  = setButton(new Position(60, 760), Assets.btn_play, Assets.bubblexplosion, i);
+        exitBtn     = setButton(new Position(640, 960), Assets.btn_settings, Assets.bubblexplosion, i);
 
     }
 
@@ -56,49 +55,50 @@ public class GameScreen extends Screen {
     public void update(float deltaTime) {
         List<Input.TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
-        if (physicWorld.getGameState() != GameState.PAUSED && physicWorld.getGameState() != GameState.GAME_OVER) {
-            physicWorld.update();
-            for (int i = 0; i < touchEvents.size(); ++i) {
-                Input.TouchEvent event = touchEvents.get(i);
-                if (event.type == Input.TouchEvent.TOUCH_UP) {
-                    if (physicWorld.getGameState() == GameState.ROTATE)
-                        physicWorld.gameState = GameState.SHOT;
+        switch (physicWorld.getGameState()){
+            case PAUSED:
+                for (int i = 0; i < touchEvents.size(); ++i) {
+                    Input.TouchEvent event = touchEvents.get(i);
+                    if (event.type == Input.TouchEvent.TOUCH_UP) {
+                        if (playBtn.evtManager.inBounds(event))
+                            physicWorld.gameState = physicWorld.previousState;
+                        else if (exitBtn.evtManager.inBounds(event))
+                            game.setScreen(new GameMenuScreen(game));
+                    }
                 }
-            }
-        } else if (physicWorld.getGameState() == GameState.PAUSED) {
-            for (int i = 0; i < touchEvents.size(); ++i) {
-                Input.TouchEvent event = touchEvents.get(i);
-                if (event.type == Input.TouchEvent.TOUCH_UP) {
-                    if (playBtn.evtManager.inBounds(event))
-                        physicWorld.gameState = physicWorld.previousState;
-                    else if (exitBtn.evtManager.inBounds(event))
-                        game.setScreen(new GameMenuScreen(game));
+                break;
+            case GAME_OVER:
+                for (int i = 0; i < touchEvents.size(); ++i) {
+                    Input.TouchEvent event = touchEvents.get(i);
+                    if (event.type == Input.TouchEvent.TOUCH_UP) {
+                        if (rematchBtn.evtManager.inBounds(event))
+                            game.setScreen(new GameScreen(game));
+                        else if (exitBtn.evtManager.inBounds(event))
+                            game.setScreen(new GameMenuScreen(game));
+                    }
                 }
-            }
-        } else {
-            for (int i = 0; i < touchEvents.size(); ++i) {
-                Input.TouchEvent event = touchEvents.get(i);
-                if (event.type == Input.TouchEvent.TOUCH_UP) {
-                    if (rematchBtn.evtManager.inBounds(event))
-                        game.setScreen(new GameScreen(game));
-                    else if (exitBtn.evtManager.inBounds(event))
-                        game.setScreen(new GameMenuScreen(game));
+                break;
+            default:
+                physicWorld.update();
+                for (int i = 0; i < touchEvents.size(); ++i) {
+                    Input.TouchEvent event = touchEvents.get(i);
+                    if (event.type == Input.TouchEvent.TOUCH_UP) {
+                        if (physicWorld.getGameState() == GameState.ROTATE)
+                            physicWorld.gameState = GameState.SHOT;
+                    }
                 }
-            }
-        }
+                Camera.computeVerticalMovement(paff);
+                Camera.moveCameraVertically(paff);
+                Camera.moveCameraVertically(bubbles);
+                Camera.moveCameraVerticallyForEndlessBackground(backgrounds);
+                break;
 
-        Camera.computeVerticalMovement(paff);
-        Camera.moveCameraVertically(paff);
-        Camera.moveCameraVertically(bubbles);
-        Camera.moveCameraVerticallyForEndlessBackground(backgrounds);
+        }
 
     }
 
-
-
     @Override
     public void present(float deltaTime) {
-
 
         for (int i = 0; i < backgrounds.length; i++ ) {
           graphics.drawGameObject(backgrounds[i]);
@@ -107,19 +107,23 @@ public class GameScreen extends Screen {
         for (int i = 0; i < bubbles.size(); i++) {
           ((PaffGraphics) graphics).drawBubble(bubbles.get(i), GlobalConstants.Colors.BLUE, GlobalConstants.ALPHA);
         }
+
         ((PaffGraphics) graphics).drawBubble(paff, GlobalConstants.Colors.RED, GlobalConstants.ALPHA);
 
-        if(physicWorld.getGameState()==GameState.PAUSED) {
-            graphics.drawGameObject(playBtn);
-            graphics.drawGameObject(exitBtn);
-        }
-        if(physicWorld.getGameState()==GameState.GAME_OVER) {
-            graphics.drawGameObject(rematchBtn);
-            graphics.drawGameObject(exitBtn);
-        }
-
-
+        switch (physicWorld.getGameState()) {
+            case PAUSED :
+                graphics.drawGameObject(playBtn);
+                graphics.drawGameObject(exitBtn);
+                break;
+            case GAME_OVER :
+                graphics.drawGameObject(rematchBtn);
+                graphics.drawGameObject(exitBtn);
+                break;
+            default:
+                break;
+            }
     }
+
 
 
     @Override
