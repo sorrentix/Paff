@@ -66,6 +66,7 @@ public class AndroidMusic implements Music, OnCompletionListener {
                     mediaPlayer.prepare();
                 if(Settings.music)
                     mediaPlayer.start();
+
             }
         } catch (IllegalStateException e) {
             e.printStackTrace();

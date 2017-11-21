@@ -17,37 +17,43 @@ public class PaffGame extends AndroidGame {
     @Override
     public void onPause(){
         super.onPause();
-        Log.e(TAG, "onPause: Entrato");
-        if (Assets.gamesoundtheme!=null){//TODO SOSTITUIRE CON PAUSA TOTALE DEL GIOCO
-            Log.e(TAG, "onPause: Entrato in musictheme!=null");
-            super.getAudio().pauseAll();
+
+        Screen currScreen = super.getCurrentScreen();
+        if(currScreen instanceof GameScreen) {
+            GameScreen gameScreen = (GameScreen) currScreen;
+            gameScreen.physicWorld.previousState=gameScreen.physicWorld.getGameState();
+            gameScreen.physicWorld.gameState=GameState.PAUSED;
         }
+        if (Assets.gamesoundtheme!=null)
+            super.getAudio().pauseAll();
+
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        Log.e(TAG, "onResume: entrato");
-        if(!Assets.areReady()) {
-            Log.e(TAG, "onResume: entrato in areReady");
-            getStartScreen();
-        }
-        else if(Settings.music)//TODO SOSTITUIRE CON RESUME TOTALE DEL GIOCO
-        {
-            Log.e(TAG, "onResume: entrato in musicaaaaaa");
-            super.getAudio().resumeAll();
-        }
 
+        if(!Assets.areReady())
+            getStartScreen();
+        else if(Settings.music)
+            super.getAudio().resumeAll();
     }
 
     @Override
     public void onBackPressed() {
-        Log.e(TAG, "onBackPressed: vado a"+super.getPreviousScreen() );
+        Screen currScreen = getCurrentScreen();
 
-        Log.e(TAG, "onBackPressed: "+super.getCurrentScreen().getClass());
-        if (super.getCurrentScreen() instanceof GameMenuScreen)
+        if (currScreen instanceof GameMenuScreen)
             super.onBackPressed();
-        super.setScreen(super.getPreviousScreen());
+
+        else if(currScreen instanceof GameScreen) {
+            GameScreen gameScreen = (GameScreen) currScreen;
+            gameScreen.physicWorld.previousState=gameScreen.physicWorld.getGameState();
+            gameScreen.physicWorld.gameState=GameState.PAUSED;
+        }
+        else
+            setScreen(new GameMenuScreen(this));
+
     }
 
 }

@@ -16,6 +16,7 @@ class SplashScreen extends Screen {
 
     GameState state = GameState.BASIC_LOADING;
     long startTime;
+    long currTime;
 
 
     public SplashScreen(Game game) {
@@ -39,6 +40,7 @@ class SplashScreen extends Screen {
                 break;
             case COMPLETE_ANIMATION:
                 waitForAnimationComplete();
+                break;
             default:
                     break;
         }
@@ -60,8 +62,7 @@ class SplashScreen extends Screen {
     private void updateAll(Graphics g, Audio a, AnimationPool animationPool){
             g.clear(0xffffff);
             g.drawPixmap(Assets.logo, 262, 682);
-            if(Settings.sounds)
-                Assets.splashsound.play();
+            Assets.splashsound.play();
 
             //load here all other assets
 
@@ -94,7 +95,6 @@ class SplashScreen extends Screen {
                     //execute something when the animation is complete
 
                     game.setScreen(new SettingsScreen(game));
-                    System.out.println("animation complete !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 }
             });
             animationPool.loadAnimation(anim);
@@ -110,9 +110,14 @@ class SplashScreen extends Screen {
     }
 
     public void waitForAnimationComplete(){
-        if(!Assets.splashsound.isPlaying()){
-            game.setScreen(new GameMenuScreen(game));
+        currTime = System.nanoTime();
+        if(Settings.music) {
+            if (!Assets.splashsound.isPlaying())
+                game.setScreen(new GameMenuScreen(game));
         }
+        else if (currTime-startTime >= 3800000000.0f)
+            game.setScreen(new GameMenuScreen(game));
+
     }
 
     @Override
