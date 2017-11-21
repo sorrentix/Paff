@@ -1,12 +1,13 @@
 package com.paff.orlandale.paff;
 
-import android.graphics.Rect;
+
+import android.util.Log;
 
 import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
+import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Input.TouchEvent;
-import com.badlogic.androidgames.framework.Pixmap;
 import com.badlogic.androidgames.framework.Screen;
 
 import java.util.List;
@@ -21,60 +22,78 @@ class GameMenuScreen extends Screen {
     AnimationPool animationPool;
     Settings s;
 
-    GameState state = GameState.Waiting;
+
+    GameObject playBtn;
+    GameObject settingsBtn;
+    GameObject helpBtn;
+    GameObject background;
+    GameObject logo;
+
+    GameState state = GameState.WAITING;
 
 
     public GameMenuScreen(Game game) {
         super(game);
+        Input i = game.getInput();
+        playBtn     = setButton(new Position(60, 760), Assets.btn_play, Assets.bubblexplosion, i);
+        settingsBtn = setButton(new Position(640, 960), Assets.btn_settings, Assets.bubblexplosion, i);
+        helpBtn     = setButton(new Position(240, 1360), Assets.btn_help, Assets.bubblexplosion, i);
+        logo        = setSimpleImage(new Position(262, 160), Assets.logo);
+        background  = setSimpleImage(new Position(0, 0), Assets.menu_background);
+
         g = game.getGraphics();
         a = game.getAudio();
-
         animationPool = game.getAnimationPool();
-        s=game.getSettings();
-        if(s.music && game.getPreviousScreen()==null)
-             Assets.gamesoundtheme.playLoop(0.2f);
+
+        if (s.music && game.getPreviousScreen() == null) {
+            Assets.gamesoundtheme.setLooping(true);
+            Assets.gamesoundtheme.play();
+        }
         game.setPreviousScreen(game.getCurrentScreen());
-
     }
 
-    enum GameState{
-        Waiting,
-        Play,
-        Help,
-        Settings,
-    }
+
 
     @Override
     public void update(float deltaTime) {
         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
         switch(state){
-            case Waiting:
+            case WAITING:
+                Log.e("TOUCH EVENT:"," waiting update");
                 break;
-            case Play:
-               //TODO CAMBIARE IN GAMESCREEN
+            case PLAY:
+                game.setScreen(new GameScreen(game));
+                Log.e("TOUCH EVENT:"," play update");
                 break;
-            case Help:
+            case HELP:
+                Log.e("TOUCH EVENT:"," help update");
                 game.setScreen(new HelpScreen(game));
                 break;
-            case Settings:
+            case SETTINGS:
+                Log.e("TOUCH EVENT:"," settings update");
                 game.setScreen(new SettingsScreen(game));
                 break;
             default:
+                Log.e("TOUCH EVENT:"," deafault update");
                 break;
 
         }
 
-
         for (int i = 0; i < touchEvents.size(); ++i) {
             TouchEvent event = touchEvents.get(i);
-            if (event.type == TouchEvent.TOUCH_UP) {
-                if (inBounds(event, 60, 760, Assets.btn_play.getWidth(), Assets.btn_play.getHeight()))
-                    state = GameState.Play;
-                else if (inBounds(event, 640, 960, Assets.btn_settings.getWidth(), Assets.btn_settings.getHeight()))
-                    state = GameState.Settings;
-                else if (inBounds(event, 240, 1360, Assets.btn_help.getWidth(), Assets.btn_help.getHeight()))
-                    state = GameState.Help;
 
+            if (event.type == TouchEvent.TOUCH_UP) {
+                Log.e("TOUCH EVENT:"," touched");
+                if (playBtn.evtManager.inBounds(event)) {
+                    Log.e("TOUCH EVENT:"," play touch");
+                    state = GameState.PLAY;
+                } else if (settingsBtn.evtManager.inBounds(event)) {
+                    Log.e("TOUCH EVENT:"," settings touch");
+                    state = GameState.SETTINGS;
+                }else if (helpBtn.evtManager.inBounds(event)) {
+                    Log.e("TOUCH EVENT:"," help touch");
+                    state = GameState.HELP;
+                }
             }
         }
 
@@ -84,29 +103,29 @@ class GameMenuScreen extends Screen {
     public void present(float deltaTime) {
 
         switch(state){
-            case Waiting:
-                g.drawPixmap(Assets.menu_background, 0, 0);
-                g.drawPixmap(Assets.logo, 262, 160);
-                g.drawPixmap(Assets.btn_play, 60, 760);
-                g.drawPixmap(Assets.btn_settings, 640, 960);
-                g.drawPixmap(Assets.btn_help, 240, 1360);
+            case WAITING:
+                Log.e("TOUCH EVENT:"," waiting pres");
+                g.drawGameObject(background);
+                g.drawGameObject(logo);
+                g.drawGameObject(playBtn);
+                g.drawGameObject(settingsBtn);
+                g.drawGameObject(helpBtn);
                 break;
-            case Play:
-                if(s.sounds)
-                    Assets.bubblexplosion.play(1);
+            case PLAY:
+                Log.e("TOUCH EVENT:"," play pres");
+                playBtn.sound.play();
                 animationPool.getAnimationByID(1).executeAnimation();
                 break;
-            case Help:
-                g.drawPixmap(Assets.btn_help_click, 240, 1360);
-                if(s.sounds)
-                    Assets.bubblexplosion.play(1);
+            case HELP:
+                Log.e("TOUCH EVENT:"," help pres");
+                helpBtn.sound.play();
                 break;
-            case Settings:
-                g.drawPixmap(Assets.btn_settings_click, 640, 960);
-                if(s.sounds)
-                    Assets.bubblexplosion.play(1);
+            case SETTINGS:
+                Log.e("TOUCH EVENT:"," settings pres");
+                settingsBtn.sound.play();
                 break;
             default:
+                Log.e("TOUCH EVENT:"," default pres");
                 break;
 
         }

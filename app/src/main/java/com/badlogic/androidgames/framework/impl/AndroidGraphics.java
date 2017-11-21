@@ -9,20 +9,24 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
+import android.graphics.RectF;
 
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Pixmap;
+import com.paff.orlandale.paff.GameObject;
+import com.paff.orlandale.paff.PhysicToPixel;
 
 public class AndroidGraphics implements Graphics {
-    AssetManager assets;
-    Bitmap frameBuffer;
-    Canvas canvas;
-    Paint paint;
-    Rect srcRect = new Rect();
-    Rect dstRect = new Rect();
+    protected AssetManager assets;
+    protected Bitmap frameBuffer;
+    protected Canvas canvas;
+    protected Paint paint;
+    protected Rect srcRect = new Rect();
+    protected Rect dstRect = new Rect();
 
     public AndroidGraphics(AssetManager assets, Bitmap frameBuffer) {
         this.assets = assets;
@@ -81,19 +85,22 @@ public class AndroidGraphics implements Graphics {
     }
 
     @Override
-    public void drawPixel(int x, int y, int color) {
+    public void drawPixel(float x, float y, int color) {
         paint.setColor(color);
         canvas.drawPoint(x, y, paint);
     }
 
     @Override
-    public void drawLine(int x, int y, int x2, int y2, int color) {
+    public void drawLine(float x, float y, float x2, float y2, int color) {
         paint.setColor(color);
+        paint.setAlpha(255);
+        paint.setStyle(Style.STROKE);
+        paint.setStrokeWidth(20);
         canvas.drawLine(x, y, x2, y2, paint);
     }
 
     @Override
-    public void drawRect(int x, int y, int width, int height, int color) {
+    public void drawRect(float x, float y, float width, float height, int color) {
         paint.setColor(color);
         paint.setStyle(Style.FILL);
         canvas.drawRect(x, y, x + width - 1, y + width - 1, paint);
@@ -112,12 +119,16 @@ public class AndroidGraphics implements Graphics {
         dstRect.right = x + srcWidth - 1;
         dstRect.bottom = y + srcHeight - 1;
 
-        canvas.drawBitmap(((AndroidPixmap) pixmap).bitmap, srcRect, dstRect,
-                null);
+        canvas.drawBitmap(((AndroidPixmap) pixmap).bitmap, srcRect, dstRect,null);
+    }
+
+    @Override
+    public void drawGameObject(GameObject g){
+        canvas.drawBitmap(((AndroidPixmap) g.image).bitmap, g.position.x, g.position.y, null);
     }
     
     @Override
-    public void drawPixmap(Pixmap pixmap, int x, int y) {
+    public void drawPixmap(Pixmap pixmap, float x, float y) {
         canvas.drawBitmap(((AndroidPixmap)pixmap).bitmap, x, y, null);
     }
 
@@ -129,5 +140,18 @@ public class AndroidGraphics implements Graphics {
     @Override
     public int getHeight() {
         return frameBuffer.getHeight();
+    }
+
+    @Override
+    public void drawCircle(float x, float y, float radius, int color, int alpha){
+        paint.setColor(color);
+        paint.setAlpha(alpha/2);
+        paint.setStyle(Style.FILL);
+        canvas.drawCircle(x,y,radius,paint);
+        paint.setColor(color);
+        paint.setAlpha(alpha);
+        paint.setStyle(Style.STROKE);
+        paint.setStrokeWidth(20);
+        canvas.drawCircle(x,y,radius,paint);
     }
 }

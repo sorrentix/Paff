@@ -2,9 +2,10 @@ package com.badlogic.androidgames.framework.impl;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -20,7 +21,14 @@ import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
 
+import com.google.fpl.liquidfun.Vec2;
 import com.paff.orlandale.paff.AnimationPool;
+import com.paff.orlandale.paff.Box;
+import com.paff.orlandale.paff.GlobalConstants;
+import com.paff.orlandale.paff.PaffGraphics;
+import com.paff.orlandale.paff.PhysicToPixel;
+import com.paff.orlandale.paff.PhysicWorld;
+import com.paff.orlandale.paff.R;
 import com.paff.orlandale.paff.Settings;
 
 
@@ -35,13 +43,16 @@ public abstract class AndroidGame extends Activity implements Game {
     FileIO fileIO;
     Screen screen;
     WakeLock wakeLock;
-    Settings settings;
+    PhysicWorld physicWorld;
+    AccelerometerHandler accelerometerHandler;
 
     int screenWidth;
     int screenHeight;
     DisplayMetrics metrics = new DisplayMetrics();
     float scaleFactor;
     float offset;
+
+
 
     Screen previousScreen = null;
 
@@ -50,35 +61,37 @@ public abstract class AndroidGame extends Activity implements Game {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        System.loadLibrary("liquidfun");
+        System.loadLibrary("liquidfun_jni");
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        /*boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        int frameBufferWidth = isLandscape ? 480 : 320;
-        int frameBufferHeight = isLandscape ? 320 : 480;*/
 
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
         screenWidth = metrics.widthPixels;
         screenHeight = metrics.heightPixels;
 
-        int frameBufferWidth = 1080;
-        int frameBufferHeight = 1920;
-        Bitmap frameBuffer = Bitmap.createBitmap(frameBufferWidth,
-                frameBufferHeight, Config.RGB_565);
 
-        float scaleFactorX = (float)frameBufferWidth / (float)screenWidth;
-        float scaleFactorY = (float)frameBufferHeight / (float)screenHeight;
+        Bitmap frameBuffer = Bitmap.createBitmap(GlobalConstants.FRAME_BUFFER_WIDTH,
+                GlobalConstants.FRAME_BUFFER_HEIGHT, Config.RGB_565);
+
+        float scaleFactorX = (float)GlobalConstants.FRAME_BUFFER_WIDTH / (float)screenWidth;
+        float scaleFactorY = (float)GlobalConstants.FRAME_BUFFER_HEIGHT / (float)screenHeight;
         scaleFactor = (scaleFactorX>scaleFactorY)? scaleFactorY:scaleFactorX;
-        offset = Math.abs(metrics.widthPixels - ((1.0f/scaleFactor)* frameBufferWidth))/2.0f;
+        offset = Math.abs(metrics.widthPixels - ((1.0f/scaleFactor)* GlobalConstants.FRAME_BUFFER_WIDTH))/2.0f;
 
         Log.e(TAG,"screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " scaleFactorX: " + scaleFactorX+ " scaleFactorY: " + scaleFactorY+"ScaleFactor: "+scaleFactor);
 
+        PhysicToPixel.physicalSize = new Box(GlobalConstants.Physics.X_MIN,GlobalConstants.Physics.Y_MIN,GlobalConstants.Physics.X_MAX,GlobalConstants.Physics.Y_MAX);//new Box(-10,-15,10,15);
+        PhysicToPixel.framebufferWidth = GlobalConstants.FRAME_BUFFER_WIDTH;
+        PhysicToPixel.framebufferHeight = GlobalConstants.FRAME_BUFFER_HEIGHT;
 
-        settings = new Settings(getApplicationContext());
+        Settings.load(this);
         renderView = new AndroidFastRenderView(this, frameBuffer);
-        graphics = new AndroidGraphics(getAssets(), frameBuffer);
+        graphics = new PaffGraphics(getAssets(), frameBuffer);
         animationPool = new AnimationPool();
         fileIO = new AndroidFileIO(getAssets());
         audio = new AndroidAudio(this);
@@ -88,6 +101,9 @@ public abstract class AndroidGame extends Activity implements Game {
         
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "GLGame");
+
+
+
     }
 
     @Override
@@ -132,8 +148,9 @@ public abstract class AndroidGame extends Activity implements Game {
         return audio;
     }
 
+
     @Override
-    public Settings getSettings() {return settings;}
+    public PhysicWorld getPhysicWorld() {return physicWorld;}
 
     @Override
     public void setScreen(Screen screen) {
@@ -170,4 +187,5 @@ public abstract class AndroidGame extends Activity implements Game {
     public Screen getPreviousScreen(){
         return previousScreen;
     }
+
 }

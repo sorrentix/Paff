@@ -7,13 +7,14 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 
 import com.badlogic.androidgames.framework.Music;
+import com.paff.orlandale.paff.Settings;
 
 public class AndroidMusic implements Music, OnCompletionListener {
     MediaPlayer mediaPlayer;
-    boolean isPrepared = false;
+    public boolean isPrepared = false;
 
-    public AndroidMusic(AssetFileDescriptor assetDescriptor) {
-        mediaPlayer = new MediaPlayer();
+    public AndroidMusic(AssetFileDescriptor assetDescriptor, MediaPlayer mediaPlayer) {
+        this.mediaPlayer = mediaPlayer;
         try {
             mediaPlayer.setDataSource(assetDescriptor.getFileDescriptor(),
                     assetDescriptor.getStartOffset(),
@@ -63,7 +64,8 @@ public class AndroidMusic implements Music, OnCompletionListener {
             synchronized (this) {
                 if (!isPrepared)
                     mediaPlayer.prepare();
-                mediaPlayer.start();
+                if(Settings.music)
+                    mediaPlayer.start();
             }
         } catch (IllegalStateException e) {
             e.printStackTrace();
@@ -96,4 +98,5 @@ public class AndroidMusic implements Music, OnCompletionListener {
             isPrepared = false;
         }
     }
+
 }

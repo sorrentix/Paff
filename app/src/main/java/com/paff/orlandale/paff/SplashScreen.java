@@ -13,12 +13,8 @@ import com.badlogic.androidgames.framework.Screen;
 
 class SplashScreen extends Screen {
 
-    enum GameState{
-        BasicLoading,
-        CompleteLoading,
-        CompleteAnimation
-    }
-    GameState state = GameState.BasicLoading;
+
+    GameState state = GameState.BASIC_LOADING;
     long startTime;
 
 
@@ -35,13 +31,13 @@ class SplashScreen extends Screen {
         Audio a = game.getAudio();
 
         switch (state){
-            case BasicLoading:
+            case BASIC_LOADING:
                 updateBasics(g, a);
                 break;
-            case CompleteLoading:
+            case COMPLETE_LOADING:
                 updateAll(g, a, animationPool);
                 break;
-            case CompleteAnimation:
+            case COMPLETE_ANIMATION:
                 waitForAnimationComplete();
             default:
                     break;
@@ -56,19 +52,16 @@ class SplashScreen extends Screen {
     private void updateBasics(Graphics g, Audio a){
 
         Assets.logo = g.newPixmap("logo.png", Graphics.PixmapFormat.ARGB4444);
-        Assets.splashsound = a.newSound("splashsound.ogg");
+        Assets.splashsound = a.newMusic("splashsound.ogg");
 
-        state = GameState.CompleteLoading;
+        state = GameState.COMPLETE_LOADING;
     }
 
     private void updateAll(Graphics g, Audio a, AnimationPool animationPool){
-
-        if(Assets.splashsound.isLoaded()) {
-            Settings s=game.getSettings();
             g.clear(0xffffff);
             g.drawPixmap(Assets.logo, 262, 682);
-            if(s.sounds)
-                Assets.splashsound.play(1);
+            if(Settings.sounds)
+                Assets.splashsound.play();
 
             //load here all other assets
 
@@ -98,10 +91,10 @@ class SplashScreen extends Screen {
             anim.addListener(new AnimationPool.onAnimationCompleteListener() {
                 @Override
                 public void onAnimationComplete(Animation anim) {
-                    //fai qualcos quando l'animazione a è completa
+                    //execute something when the animation is complete
 
                     game.setScreen(new SettingsScreen(game));
-                    System.out.println("animation complete mammt!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    System.out.println("animation complete !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 }
             });
             animationPool.loadAnimation(anim);
@@ -109,16 +102,15 @@ class SplashScreen extends Screen {
 
             //Sounds
             Assets.bubblexplosion = a.newSound("bubblexplosion.ogg");
-            Assets.gamesoundtheme = a.newSound("gamesoundtheme.ogg");
+            Assets.gamesoundtheme = a.newMusic("gamesoundtheme.ogg");
             Assets.flagReady = true;
-            state = GameState.CompleteAnimation;
+            state = GameState.COMPLETE_ANIMATION;
 
-        }
+
     }
 
     public void waitForAnimationComplete(){
-        float deltaTime = (System.nanoTime()-startTime) / 1000000000.0f;
-        if( deltaTime > 3.8){
+        if(!Assets.splashsound.isPlaying()){
             game.setScreen(new GameMenuScreen(game));
         }
     }

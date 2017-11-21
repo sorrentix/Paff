@@ -1,13 +1,9 @@
 package com.paff.orlandale.paff;
 
-import com.badlogic.androidgames.framework.Graphics;
+import com.badlogic.androidgames.framework.Music;
 import com.badlogic.androidgames.framework.Pixmap;
 import com.badlogic.androidgames.framework.Sound;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by sorrentix on 08/11/2017.
@@ -16,8 +12,8 @@ import java.util.List;
 public class Assets {
     /*AUDIO*/
     public static Sound bubblexplosion;
-    public static Sound gamesoundtheme;
-    public static Sound splashsound;
+    public static Music gamesoundtheme;
+    public static Music splashsound;
     /*GRAFICHE*/
     public static Pixmap logo;
     public static Pixmap menu_background;

@@ -4,6 +4,8 @@ import android.media.SoundPool;
 import android.support.annotation.NonNull;
 
 import com.badlogic.androidgames.framework.Sound;
+import com.paff.orlandale.paff.GlobalConstants;
+import com.paff.orlandale.paff.Settings;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,13 +34,15 @@ public class AndroidSound implements Sound {
     }
 
     @Override
-    public void play(float volume) {
-        streamId = soundPool.play(soundId, volume, volume, 0, 0, 1);
+    public void play() {
+        if(Settings.sounds)
+            streamId = soundPool.play(soundId, GlobalConstants.VOLUME, GlobalConstants.VOLUME, 0, 0, 1);
     }
 
     @Override
-    public void playLoop(float volume) {
-        streamId = soundPool.play(soundId, volume, volume, 0, -1, 1);
+    public void playLoop() {
+        if(Settings.sounds)
+            streamId = soundPool.play(soundId, GlobalConstants.VOLUME, GlobalConstants.VOLUME, 0, -1, 1);
     }
 
     @Override

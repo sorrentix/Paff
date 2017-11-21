@@ -45,4 +45,5 @@ public class AccelerometerHandler implements SensorEventListener {
     public float getAccelZ() {
         return accelZ;
     }
+
 }
