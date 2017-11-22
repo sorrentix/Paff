@@ -11,16 +11,15 @@ import java.util.List;
 public class Camera {
     private static Vec2 movement = new Vec2(0,0);
     private static Vec2 effectiveMovement = new Vec2(0,0);
-
+    private static final float windowOfMovement = GlobalConstants.Physics.Y_MAX + 3.0f;
 
     public  static void computeVerticalMovement(GameObject g){
         float verticalSpaceToCover  = g.physic.getPosY() + GlobalConstants.Physics.Y_MAX;
-        verticalSpaceToCover =   verticalSpaceToCover < GlobalConstants.Physics.Y_MAX + 3.0f ? verticalSpaceToCover : 0.0f;
-        System.out.println("mammt1:     "+verticalSpaceToCover);
+        verticalSpaceToCover        = verticalSpaceToCover < windowOfMovement ? (windowOfMovement - verticalSpaceToCover) : 0.0f;
+        System.out.println("mammt1: "+verticalSpaceToCover);
 
         if ( verticalSpaceToCover >  0.0f ) {
-            float ratio = verticalSpaceToCover / (GlobalConstants.Physics.Y_MAX * 2.0f);
-            verticalSpaceToCover = (verticalSpaceToCover * ratio)/100.0f;
+            verticalSpaceToCover = (verticalSpaceToCover)/50.0f;
             System.out.println("mammt"+verticalSpaceToCover);
             movement.setY(verticalSpaceToCover);
         }else{
