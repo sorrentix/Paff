@@ -52,7 +52,7 @@ public class GameScreen extends Screen {
         exitBtn     = setButton(new Position(640, 960), Assets.btn_settings, Assets.bubblexplosion, i);
 
         score = setText(new Position(60,60),Assets.score, Assets.bubblexplosion,new Text("0"));
-        highScore = setText(new Position(GlobalConstants.FRAME_BUFFER_WIDTH-60,60),Assets.score, Assets.bubblexplosion,new Text(""+Settings.highscore));
+        highScore = setText(new Position(GlobalConstants.FRAME_BUFFER_WIDTH-55,60),Assets.score, Assets.bubblexplosion,new Text(""+Settings.highscore));
 
     }
 
@@ -123,9 +123,9 @@ public class GameScreen extends Screen {
             physicWorld.scoreToAdd--;
            score.text.toWrite=""+(Integer.parseInt(score.text.toWrite)+1);
         }
-        ((PaffGraphics) graphics).drawText(score, GlobalConstants.Colors.BLACK);
+        ((PaffGraphics) graphics).drawText(score, GlobalConstants.Colors.GREY);
         if(Settings.highscore >= (Integer.parseInt(score.text.toWrite))) {
-            ((PaffGraphics) graphics).drawText(highScore, GlobalConstants.Colors.BLACK);
+            ((PaffGraphics) graphics).drawText(highScore, GlobalConstants.Colors.GREY);
         }
         else {
             ((PaffGraphics) graphics).drawText(highScore, GlobalConstants.Colors.RED);
@@ -133,12 +133,12 @@ public class GameScreen extends Screen {
 
         switch (physicWorld.getGameState()) {
             case PAUSED :
-                ((PaffGraphics) graphics).drawFilter(GlobalConstants.Colors.BLACK);
+                ((PaffGraphics) graphics).drawFilter(GlobalConstants.Colors.GREY);
                 graphics.drawGameObject(playBtn);
                 graphics.drawGameObject(exitBtn);
                 break;
             case GAME_OVER :
-                ((PaffGraphics) graphics).drawFilter(GlobalConstants.Colors.BLACK);
+                ((PaffGraphics) graphics).drawFilter(GlobalConstants.Colors.GREY);
                 graphics.drawGameObject(rematchBtn);
                 graphics.drawGameObject(exitBtn);
                 break;

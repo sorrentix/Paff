@@ -43,22 +43,22 @@ public class PaffGraphics extends AndroidGraphics {
 
         if (paint.measureText(object.text.toWrite) + object.position.x + object.image.getWidth() > GlobalConstants.FRAME_BUFFER_WIDTH) {
 
-            canvas.translate(-(paint.measureText(object.text.toWrite) + object.image.getWidth() + 20), 0);
+            canvas.translate(-(paint.measureText(object.text.toWrite) + object.image.getWidth()), 0);
             super.drawGameObject(object);
             paint.setColor(color);
             paint.setAlpha(255);
             paint.setStyle(Paint.Style.FILL_AND_STROKE);
-            paint.setStrokeWidth(4);
+            paint.setStrokeWidth(3);
             paint.setTextSize(40);
             paint.setTypeface(Assets.font);
             canvas.drawText(object.text.toWrite, object.position.x + object.image.getWidth(), object.position.y + object.image.getHeight(), paint);
-            canvas.translate(paint.measureText(object.text.toWrite) + object.image.getWidth() + 20, 0);
+            canvas.translate(paint.measureText(object.text.toWrite) + object.image.getWidth(), 0);
         } else
             super.drawGameObject(object);
             paint.setColor(color);
             paint.setAlpha(255);
             paint.setStyle(Paint.Style.FILL_AND_STROKE);
-            paint.setStrokeWidth(4);
+            paint.setStrokeWidth(3);
             paint.setTextSize(40);
             paint.setTypeface(Assets.font);
             canvas.drawText(object.text.toWrite, object.position.x + object.image.getWidth(), object.position.y + object.image.getHeight(), paint);
