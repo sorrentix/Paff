@@ -12,6 +12,7 @@ public class Camera {
     private static Vec2 movement = new Vec2(0,0);
     private static Vec2 effectiveMovement = new Vec2(0,0);
 
+
     public  static void computeVerticalMovement(GameObject g){
         float verticalSpaceToCover  = g.physic.getPosY() <= 0.0f ? g.physic.getPosY() : 0.0f;
         if ( verticalSpaceToCover < 0.0f ) {
@@ -42,9 +43,9 @@ public class Camera {
     public static void moveCameraVerticallyForEndlessBackground(GameObject []b){
         if (movement.getY() > 0.0f ) {
             for (int i = 0; i< b.length; i++) {
-                b[i].position.y = b[i].position.y + PhysicToPixel.Length(movement.getY());
+                b[i].position.y = b[i].position.y + (int)Math.floor(PhysicToPixel.Length(movement.getY()));
                 if ( b[i].position.y > GlobalConstants.FRAME_BUFFER_HEIGHT ){
-                    b[i].position.y = -(b.length-1)*GlobalConstants.FRAME_BUFFER_HEIGHT;
+                    b[i].position.y = (-(b.length-1)*GlobalConstants.FRAME_BUFFER_HEIGHT)+(int)Math.floor(PhysicToPixel.Length(movement.getY()));
                 }
             }
         }

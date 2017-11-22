@@ -126,7 +126,7 @@ public class Physic implements Component{
 
     public void nullifyResidualVelocity(){
         this.body.setAngularVelocity(0);
-        //this.body.setLinearVelocity(nullForce);
+        this.body.setLinearVelocity(nullForce);
     }
 
     public void  nullifyResidualLinearVelocity(){
