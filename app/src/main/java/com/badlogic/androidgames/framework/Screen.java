@@ -49,11 +49,11 @@ public abstract class Screen {
         return g;
     }
 
-    public static GameObject setBubble(PhysicWorld p, float radius, Vec2 pos, BodyType b, Input i){
+    public static GameObject setBubble(PhysicWorld p, float radius, Vec2 pos, BodyType b, Input i, float expirationTime){
         GameObject g;
         g = new GameObject();
         g.addComponent(Assets.bubblexplosion);
-        g.addComponent(new Physic(p));
+        g.addComponent(new Physic(p,expirationTime));
         g.physic.CircleShape(radius);
         g.physic.Body(pos, 1, b);
         g.addComponent(new EventManager(g.position, g.size, i));

@@ -45,6 +45,8 @@ public class PhysicWorld {
     Pool<GameObject>  bubblesPool;
     List<GameObject>  activeBubbles = new ArrayList<>();
 
+
+
     public PhysicWorld(Box physicalSize, Input input) {
         this.physicalSize = physicalSize;
         this.input = input;
@@ -52,7 +54,7 @@ public class PhysicWorld {
         this.world = new World(GlobalConstants.GRAVITY.getX(), GlobalConstants.GRAVITY.getY());
 
 
-        paff       = Screen.setBubble(this,GlobalConstants.PAFF_RADIUS,new Vec2(6.0f, 2.8f - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.05f),BodyType.dynamicBody, input);
+        paff       = Screen.setBubble(this,GlobalConstants.PAFF_RADIUS,new Vec2(6.0f, 2.8f - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.05f),BodyType.dynamicBody, input,-1);
         paffPreviousPosition = paff.physic.getPosY();
         bubblesPool = initPool(this, input);
         for( int i = 0; i < GlobalConstants.BUBBLE_NUMBER; i++){
@@ -117,7 +119,7 @@ public class PhysicWorld {
         paff.physic.checkToroidalWorld();
         for (int i = 0; i < activeBubbles.size(); i++){
             activeBubbles.get(i).physic.fallSmoothly();
-            if (markAsRemovableFallenBubble(activeBubbles.get(i))){
+            if (markAsRemovableFallenBubble(activeBubbles.get(i)) || markAsExplodedBubble(activeBubbles.get(i))){
                 GameObject b = activeBubbles.get(i);
                 activeBubbles.remove(b);
                 bubblesPool.free(b);
@@ -128,11 +130,30 @@ public class PhysicWorld {
     }
     public boolean markAsRemovableFallenBubble(GameObject b){
         boolean removable = (b.physic.getPosY() - b.physic.getRadius()  >= GlobalConstants.Physics.Y_MAX  );
+
     //    Log.e("BREAKING JOINT","1"+ " removable: "+ removable+ " jointpaff: "+paff.physic.joint);
         if (removable && paff.physic.joint != null){
           //  Log.e("BREAKING JOINT","2"+ "paff: "+paff.physic +" probable paff: "+paff.physic.joint.getBodyA().getUserData() +" probable other body:"+paff.physic.joint.getBodyB().getUserData()+ " other body: "+ b.physic );
             if (paff.physic.joint.getBodyB().getUserData().equals(b.physic) ) {
            //     Log.e("BREAKING JOINT","3");
+                paff.physic.breakJoint();
+                paff.physic.nullifyResidualLinearVelocity();
+                world.setGravity(GlobalConstants.GRAVITY.getX(),GlobalConstants.GRAVITY.getY());
+                gameState = GameState.WAITING;
+            }
+        }
+        return removable;
+    }
+
+    public boolean markAsExplodedBubble(GameObject b) {
+        b.physic.elapsedTime = (System.nanoTime()-b.physic.startTime)/1000000000.0f;
+        boolean removable= ( b.physic.elapsedTime >= b.physic.expirationTime);
+        System.out.println("EXPIRATION TIME= "+b.physic.expirationTime+" ELAPSED TIME= "+b.physic.elapsedTime);
+
+        if (removable && paff.physic.joint != null){
+            //  Log.e("BREAKING JOINT","2"+ "paff: "+paff.physic +" probable paff: "+paff.physic.joint.getBodyA().getUserData() +" probable other body:"+paff.physic.joint.getBodyB().getUserData()+ " other body: "+ b.physic );
+            if (paff.physic.joint.getBodyB().getUserData().equals(b.physic) ) {
+                //     Log.e("BREAKING JOINT","3");
                 paff.physic.breakJoint();
                 paff.physic.nullifyResidualLinearVelocity();
                 world.setGravity(GlobalConstants.GRAVITY.getX(),GlobalConstants.GRAVITY.getY());
@@ -180,7 +201,8 @@ public class PhysicWorld {
                 float radius = generator.nextFloat()/2.0f;
                 radius += GlobalConstants.BUBBLE_BASIC_RADIUS;
                 Vec2 startingPosition = new Vec2(0,14.0f);
-                GameObject bubble = Screen.setBubble(container,radius, startingPosition,BodyType.staticBody, in);
+                float expiration = generator.nextFloat()*15.0f+5.0f;
+                GameObject bubble = Screen.setBubble(container,radius, startingPosition,BodyType.staticBody, in,expiration);
                 bubble.physic.body.setSleepingAllowed(true);
                 return bubble;
             }
@@ -206,6 +228,8 @@ public class PhysicWorld {
                 g.physic.body.setTransform(respawnPosition,0);
                 g.physic.oldPosX = respawnPosition.getX();
                 g.physic.body.setSleepingAllowed(false);
+                g.physic.elapsedTime =0;
+                g.physic.startTime =  System.nanoTime();
                 if (bubbleCounter >= GlobalConstants.BUBBLE_NUMBER - 1)
                     highestBubble = g;
                 return g;
