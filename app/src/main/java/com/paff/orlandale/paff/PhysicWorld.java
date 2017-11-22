@@ -148,7 +148,6 @@ public class PhysicWorld {
     public boolean markAsExplodedBubble(GameObject b) {
         b.physic.elapsedTime = (System.nanoTime()-b.physic.startTime)/1000000000.0f;
         boolean removable= ( b.physic.elapsedTime >= b.physic.expirationTime);
-        System.out.println("EXPIRATION TIME= "+b.physic.expirationTime+" ELAPSED TIME= "+b.physic.elapsedTime);
 
         if (removable && paff.physic.joint != null){
             //  Log.e("BREAKING JOINT","2"+ "paff: "+paff.physic +" probable paff: "+paff.physic.joint.getBodyA().getUserData() +" probable other body:"+paff.physic.joint.getBodyB().getUserData()+ " other body: "+ b.physic );

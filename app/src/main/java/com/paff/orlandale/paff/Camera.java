@@ -16,11 +16,9 @@ public class Camera {
     public  static void computeVerticalMovement(GameObject g){
         float verticalSpaceToCover  = g.physic.getPosY() + GlobalConstants.Physics.Y_MAX;
         verticalSpaceToCover        = verticalSpaceToCover < windowOfMovement ? (windowOfMovement - verticalSpaceToCover) : 0.0f;
-        System.out.println("mammt1: "+verticalSpaceToCover);
 
         if ( verticalSpaceToCover >  0.0f ) {
             verticalSpaceToCover = (verticalSpaceToCover)/50.0f;
-            System.out.println("mammt"+verticalSpaceToCover);
             movement.setY(verticalSpaceToCover);
         }else{
             movement.setY(0);
