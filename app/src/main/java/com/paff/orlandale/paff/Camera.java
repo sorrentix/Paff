@@ -14,11 +14,17 @@ public class Camera {
 
 
     public  static void computeVerticalMovement(GameObject g){
-        float verticalSpaceToCover  = g.physic.getPosY() <= 0.0f ? g.physic.getPosY() : 0.0f;
-        if ( verticalSpaceToCover < 0.0f ) {
-            float ratio = verticalSpaceToCover / GlobalConstants.Physics.Y_MIN;
-            verticalSpaceToCover = (verticalSpaceToCover * ratio)/-100.0f;
+        float verticalSpaceToCover  = g.physic.getPosY() + GlobalConstants.Physics.Y_MAX;
+        verticalSpaceToCover =   verticalSpaceToCover < GlobalConstants.Physics.Y_MAX + 3.0f ? verticalSpaceToCover : 0.0f;
+        System.out.println("mammt1:     "+verticalSpaceToCover);
+
+        if ( verticalSpaceToCover >  0.0f ) {
+            float ratio = verticalSpaceToCover / (GlobalConstants.Physics.Y_MAX * 2.0f);
+            verticalSpaceToCover = (verticalSpaceToCover * ratio)/100.0f;
+            System.out.println("mammt"+verticalSpaceToCover);
             movement.setY(verticalSpaceToCover);
+        }else{
+            movement.setY(0);
         }
     }
 

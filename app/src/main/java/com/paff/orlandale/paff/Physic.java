@@ -17,6 +17,9 @@ public class Physic implements Component{
     PhysicWorld world;
     public Shape shape;
     public Body body;
+    public float expirationTime=-1;
+    public float elapsedTime=0;
+    public float startTime = System.nanoTime();
     public Joint joint;
     public Vec2 force;
     private Vec2 nullForce = new Vec2(0,0);
@@ -27,8 +30,9 @@ public class Physic implements Component{
     public double perlinSeed;
 
 
-    public Physic(PhysicWorld wld){
+    public Physic(PhysicWorld wld, float expirationTime){
         world = wld;
+        this.expirationTime = expirationTime;
         force = new Vec2(0,0);
     }
 
