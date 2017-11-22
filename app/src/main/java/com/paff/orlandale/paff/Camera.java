@@ -45,7 +45,7 @@ public class Camera {
             for (int i = 0; i< b.length; i++) {
                 b[i].position.y = b[i].position.y + (int)Math.floor(PhysicToPixel.Length(movement.getY()));
                 if ( b[i].position.y > GlobalConstants.FRAME_BUFFER_HEIGHT ){
-                    b[i].position.y = (-(b.length-1)*GlobalConstants.FRAME_BUFFER_HEIGHT)+(int)Math.floor(PhysicToPixel.Length(movement.getY()));
+                    b[i].position.y = b[i].position.y -(b.length-1)*GlobalConstants.FRAME_BUFFER_HEIGHT;
                 }
             }
         }

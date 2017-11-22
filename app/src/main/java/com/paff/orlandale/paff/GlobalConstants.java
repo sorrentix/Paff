@@ -13,7 +13,7 @@ public class GlobalConstants {
 
     public static final float VOLUME = 1.0f;
 
-    public static final Vec2 GRAVITY = new Vec2(0,9.81f);
+    public static final Vec2 GRAVITY = new Vec2(0,-0.81f);
     public static final float PAFF_RADIUS = 0.5f;
     public static final float BUBBLE_BASIC_RADIUS = 0.95f;
     public static final int BUBBLE_NUMBER = 12;
