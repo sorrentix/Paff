@@ -28,6 +28,9 @@ public class PhysicWorld {
     private static final int POSITION_ITERATIONS = 3;
     private static final int PARTICLE_ITERATIONS = 3;
 
+    private float paffPreviousPosition;
+    public float scoreToAdd=0;
+
 
     float currentAcceleration = 0;
     float previousAcceleration = 0;
@@ -49,8 +52,8 @@ public class PhysicWorld {
         this.world = new World(GlobalConstants.GRAVITY.getX(), GlobalConstants.GRAVITY.getY());
 
 
-        paff       = Screen.setBubble(this,GlobalConstants.PAFF_RADIUS,new Vec2(6.0f, -0.5f - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.05f),BodyType.dynamicBody, input);
-
+        paff       = Screen.setBubble(this,GlobalConstants.PAFF_RADIUS,new Vec2(6.0f, 2.8f - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.05f),BodyType.dynamicBody, input);
+        paffPreviousPosition = paff.physic.getPosY();
         bubblesPool = initPool(this, input);
         for( int i = 0; i < GlobalConstants.BUBBLE_NUMBER; i++){
             activeBubbles.add(bubblesPool.newObject());
@@ -71,6 +74,7 @@ public class PhysicWorld {
         }
         if(paff.physic.getPosY()-paff.physic.getRadius()-0.2f > GlobalConstants.Physics.Y_MAX  )
             gameState = GameState.GAME_OVER;
+
         switch (gameState) {
             case SHOT:
               //  Log.e("SPARA", "SPARA");
@@ -155,10 +159,16 @@ public class PhysicWorld {
             else
                 collidedBubble = bb;
             paff.sound.play();
+
+            computeScore();
+
             gameState = GameState.JOINT;
         }
     }
+    private void computeScore(){
+        scoreToAdd += Math.abs((collidedBubble.getPosY()+GlobalConstants.Physics.Y_MAX)-(paffPreviousPosition+GlobalConstants.Physics.Y_MAX));
 
+    }
     private Pool initPool(PhysicWorld w, Input i){
         final Random generator = new Random();
         final PhysicWorld container = this;

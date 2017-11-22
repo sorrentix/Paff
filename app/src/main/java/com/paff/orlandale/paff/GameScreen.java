@@ -27,6 +27,8 @@ public class GameScreen extends Screen {
     GameObject playBtn;
     GameObject exitBtn;
     GameObject rematchBtn;
+    GameObject score;
+    GameObject highScore;
     List<GameObject> bubbles;
     GameObject []backgrounds = new GameObject[3];
 
@@ -49,6 +51,9 @@ public class GameScreen extends Screen {
         rematchBtn  = setButton(new Position(60, 760), Assets.btn_play, Assets.bubblexplosion, i);
         exitBtn     = setButton(new Position(640, 960), Assets.btn_settings, Assets.bubblexplosion, i);
 
+        score = setText(new Position(60,60),Assets.score, Assets.bubblexplosion,new Text("0"));
+        highScore = setText(new Position(GlobalConstants.FRAME_BUFFER_WIDTH-60,60),Assets.score, Assets.bubblexplosion,new Text(""+Settings.highscore));
+
     }
 
     @Override
@@ -68,6 +73,9 @@ public class GameScreen extends Screen {
                 }
                 break;
             case GAME_OVER:
+                if(Integer.parseInt(score.text.toWrite)+physicWorld.scoreToAdd > Settings.highscore){
+                    Settings.newHighscore((int) (Integer.parseInt(score.text.toWrite)+physicWorld.scoreToAdd)+1);
+                }
                 for (int i = 0; i < touchEvents.size(); ++i) {
                     Input.TouchEvent event = touchEvents.get(i);
                     if (event.type == Input.TouchEvent.TOUCH_UP) {
@@ -100,6 +108,7 @@ public class GameScreen extends Screen {
     @Override
     public void present(float deltaTime) {
 
+
         for (int i = 0; i < backgrounds.length; i++ ) {
           graphics.drawGameObject(backgrounds[i]);
         }
@@ -110,12 +119,26 @@ public class GameScreen extends Screen {
 
         ((PaffGraphics) graphics).drawBubble(paff, GlobalConstants.Colors.RED, GlobalConstants.ALPHA);
 
+        if(physicWorld.scoreToAdd > 0){
+            physicWorld.scoreToAdd--;
+           score.text.toWrite=""+(Integer.parseInt(score.text.toWrite)+1);
+        }
+        ((PaffGraphics) graphics).drawText(score, GlobalConstants.Colors.BLACK);
+        if(Settings.highscore >= (Integer.parseInt(score.text.toWrite))) {
+            ((PaffGraphics) graphics).drawText(highScore, GlobalConstants.Colors.BLACK);
+        }
+        else {
+            ((PaffGraphics) graphics).drawText(highScore, GlobalConstants.Colors.RED);
+        }
+
         switch (physicWorld.getGameState()) {
             case PAUSED :
+                ((PaffGraphics) graphics).drawFilter(GlobalConstants.Colors.BLACK);
                 graphics.drawGameObject(playBtn);
                 graphics.drawGameObject(exitBtn);
                 break;
             case GAME_OVER :
+                ((PaffGraphics) graphics).drawFilter(GlobalConstants.Colors.BLACK);
                 graphics.drawGameObject(rematchBtn);
                 graphics.drawGameObject(exitBtn);
                 break;

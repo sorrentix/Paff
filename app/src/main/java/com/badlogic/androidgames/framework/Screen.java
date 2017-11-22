@@ -9,6 +9,7 @@ import com.paff.orlandale.paff.Physic;
 import com.paff.orlandale.paff.PhysicWorld;
 import com.paff.orlandale.paff.Position;
 import com.paff.orlandale.paff.Size;
+import com.paff.orlandale.paff.Text;
 
 public abstract class Screen {
     protected final Game game;
@@ -56,6 +57,15 @@ public abstract class Screen {
         g.physic.CircleShape(radius);
         g.physic.Body(pos, 1, b);
         g.addComponent(new EventManager(g.position, g.size, i));
+        return g;
+    }
+
+    public static GameObject setText(Position p, Pixmap img, Sound s, Text t){
+        GameObject g = new GameObject();
+        g.addComponent(p);
+        g.addComponent(img);
+        g.addComponent(s);
+        g.addComponent(t);
         return g;
     }
 

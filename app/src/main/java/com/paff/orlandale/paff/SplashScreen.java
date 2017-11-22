@@ -1,6 +1,7 @@
 package com.paff.orlandale.paff;
 
 import android.graphics.Rect;
+import android.graphics.Typeface;
 
 import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Game;
@@ -29,6 +30,7 @@ class SplashScreen extends Screen {
 
         AnimationPool animationPool = game.getAnimationPool();
         Graphics g = game.getGraphics();
+        Font f = game.getFont();
         Audio a = game.getAudio();
 
         switch (state){
@@ -36,7 +38,7 @@ class SplashScreen extends Screen {
                 updateBasics(g, a);
                 break;
             case COMPLETE_LOADING:
-                updateAll(g, a, animationPool);
+                updateAll(g, a,f, animationPool);
                 break;
             case COMPLETE_ANIMATION:
                 waitForAnimationComplete();
@@ -59,7 +61,7 @@ class SplashScreen extends Screen {
         state = GameState.COMPLETE_LOADING;
     }
 
-    private void updateAll(Graphics g, Audio a, AnimationPool animationPool){
+    private void updateAll(Graphics g, Audio a,Font f, AnimationPool animationPool){
             g.clear(0xffffff);
             g.drawPixmap(Assets.logo, 262, 682);
             Assets.splashsound.play();
@@ -79,6 +81,9 @@ class SplashScreen extends Screen {
             Assets.sounds_text = g.newPixmap("sounds.png", Graphics.PixmapFormat.ARGB4444);
             Assets.music_text = g.newPixmap("music.png", Graphics.PixmapFormat.ARGB4444);
             Assets.help_screen = g.newPixmap("help_screen.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.highscore = g.newPixmap("top_highscore.png",Graphics.PixmapFormat.ARGB4444);
+            Assets.score = g.newPixmap("top_highscore.png",Graphics.PixmapFormat.ARGB4444);
+            Assets.font = f.newFont("paff_font.ttf");
 
             //Animations
             Pixmap images[] = new Pixmap[]{Assets.btn_play,

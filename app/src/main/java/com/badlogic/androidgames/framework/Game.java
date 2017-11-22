@@ -3,6 +3,7 @@ package com.badlogic.androidgames.framework;
 
 import com.badlogic.androidgames.framework.impl.AccelerometerHandler;
 import com.paff.orlandale.paff.AnimationPool;
+import com.paff.orlandale.paff.Font;
 import com.paff.orlandale.paff.PhysicWorld;
 import com.paff.orlandale.paff.Settings;
 
@@ -29,4 +30,6 @@ public interface Game {
     public void setPreviousScreen(Screen screen);
 
     public Screen getPreviousScreen();
+
+    Font getFont();
 }

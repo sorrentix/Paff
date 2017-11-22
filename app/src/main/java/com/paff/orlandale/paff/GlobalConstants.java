@@ -29,6 +29,7 @@ public class GlobalConstants {
     public class Colors {
         public static final int BLUE = 0x3498db;
         public static final int RED = 0xe74c3c;
+        public static final int BLACK = 0x181818;
     }
     public static final int ALPHA = 255;
 

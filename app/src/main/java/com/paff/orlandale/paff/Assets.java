@@ -1,5 +1,7 @@
 package com.paff.orlandale.paff;
 
+import android.graphics.Typeface;
+
 import com.badlogic.androidgames.framework.Music;
 import com.badlogic.androidgames.framework.Pixmap;
 import com.badlogic.androidgames.framework.Sound;
@@ -28,6 +30,9 @@ public class Assets {
     public static Pixmap sounds_text;
     public static Pixmap music_text;
     public static Pixmap help_screen;
+    public static Pixmap highscore;
+    public static Pixmap score;
+    public static Typeface font;
 
     public static boolean flagReady=false;
 
