@@ -1,9 +1,9 @@
 package com.paff.orlandale.paff;
 
 public class Position implements Component{
-    public float x,y;
+    public int x,y;
 
-    public Position(float x, float y){
+    public Position(int x, int y){
         this.x = x;
         this.y = y;
     }
