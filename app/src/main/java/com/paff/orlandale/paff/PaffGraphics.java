@@ -30,6 +30,13 @@ public class PaffGraphics extends AndroidGraphics {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(20);
         canvas.drawCircle(x, y, radius, paint);
+
+        paint.setARGB(255, 0, 255, 0);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        if (bubble.physic.tail != null)
+             canvas.drawCircle(PhysicToPixel.X(bubble.physic.tail.getPositionX()), PhysicToPixel.Y(bubble.physic.tail.getPositionY()), 6, paint);
+
+
     }
 
     public void drawFilter(int color) {

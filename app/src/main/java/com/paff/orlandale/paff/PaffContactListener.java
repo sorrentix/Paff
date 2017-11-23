@@ -22,9 +22,10 @@ public class PaffContactListener extends ContactListener {
         Fixture fa = contact.getFixtureA(),
                 fb = contact.getFixtureB();
         Physic ba = (Physic) fa.getBody().getUserData(), bb = (Physic) fb.getBody().getUserData();
-        Log.e("CONTATTO", "body beginContact: CONTATTO AVVENUTO tra"+ba+"  e tra "+bb);
-        physicWorld.collisionDetected(ba,bb);
-
+        if (ba != null && bb != null) {
+            Log.e("CONTATTO", "body beginContact: CONTATTO AVVENUTO tra" + ba + "  e tra " + bb);
+            physicWorld.collisionDetected(ba, bb);
+        }
 
 
     }

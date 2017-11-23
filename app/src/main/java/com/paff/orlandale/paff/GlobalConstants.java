@@ -24,6 +24,11 @@ public class GlobalConstants {
         public static final float X_MAX = 9.0f;
         public static final float Y_MIN = -16.0f;
         public static final float Y_MAX = 16.0f;
+
+        public static final float TIME_STEP = GlobalConstants.FPS; //60 fps
+        public static final int VELOCITY_ITERATIONS = 8;
+        public static final int POSITION_ITERATIONS = 3;
+        public static final int PARTICLE_ITERATIONS = 3;
     }
 
     public class Colors {

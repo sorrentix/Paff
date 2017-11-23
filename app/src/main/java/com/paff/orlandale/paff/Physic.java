@@ -1,5 +1,6 @@
 package com.paff.orlandale.paff;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.google.fpl.liquidfun.Body;
@@ -9,22 +10,36 @@ import com.google.fpl.liquidfun.CircleShape;
 import com.google.fpl.liquidfun.DistanceJointDef;
 import com.google.fpl.liquidfun.FixtureDef;
 import com.google.fpl.liquidfun.Joint;
+import com.google.fpl.liquidfun.ParticleGroup;
+import com.google.fpl.liquidfun.ParticleGroupDef;
+import com.google.fpl.liquidfun.ParticleSystem;
+import com.google.fpl.liquidfun.ParticleSystemDef;
+import com.google.fpl.liquidfun.PolygonShape;
+import com.google.fpl.liquidfun.RopeJointDef;
 import com.google.fpl.liquidfun.Shape;
 import com.google.fpl.liquidfun.Vec2;
+import com.google.fpl.liquidfun.World;
+
+import java.nio.ByteBuffer;
 
 public class Physic implements Component{
 
     PhysicWorld world;
     public Shape shape;
     public Body body;
+
     public float expirationTime=-1;
     public float elapsedTime=0;
     public float startTime = System.nanoTime();
     public Joint joint;
     public Vec2 force;
+
     private Vec2 nullForce = new Vec2(0,0);
     private Vec2 toroidalMovement = new Vec2(0,0);
     private Vec2 fallingMovement = new Vec2(0,0);
+
+    public Body tail = null;
+
     private float radius;
     public float oldPosX;
     public double perlinSeed;
@@ -49,6 +64,43 @@ public class Physic implements Component{
         jointDef.delete();
     }
 
+
+    public void Tail() {
+
+        BodyDef bdef = new BodyDef();
+        bdef.setUserData(null);
+        bdef.setPosition(new Vec2( this.getPosX(),this.getPosY()));
+        bdef.setType(BodyType.dynamicBody);
+        this.tail = world.world.createBody(bdef);
+        this.tail.setSleepingAllowed(false);
+        this.tail.setBullet(true);
+        this.tail.setUserData(null);
+
+
+        FixtureDef fixtureDef = new FixtureDef();
+        CircleShape c =  new CircleShape();
+        c.setPosition(0.0f,0.0f);
+        c.setRadius(0.4f);
+
+        fixtureDef.setShape(c);
+        fixtureDef.setFriction(0.1f);
+        fixtureDef.setDensity(0f);
+
+        this.tail.createFixture(fixtureDef);
+
+        RopeJointDef jointDef = new RopeJointDef();
+        jointDef.setBodyA(this.tail);
+        jointDef.setBodyB(this.body);
+        jointDef.setMaxLength(2);
+        joint = world.world.createJoint(jointDef);
+
+        jointDef.delete();
+        fixtureDef.delete();
+        bdef.delete();
+        c.delete();
+    }
+
+
     public void CircleShape(float radius){
         CircleShape c =  new CircleShape();
         c.setPosition(0.0f,0.0f);
@@ -63,6 +115,7 @@ public class Physic implements Component{
 
     public void Body( Vec2 physicPosition, float density, BodyType bodyType){
         BodyDef bdef = new BodyDef();
+        bdef.setUserData(this);
         bdef.setPosition(physicPosition);
         bdef.setType(bodyType);
         this.body = world.world.createBody(bdef);
@@ -167,7 +220,7 @@ public class Physic implements Component{
     public void fallSmoothly(){
         this.perlinSeed += 0.007;
         fallingMovement.setX(this.oldPosX + ImprovedNoise.map((float)ImprovedNoise.noise(this.perlinSeed,0,0),(float)-Math.sqrt(0.25),(float)Math.sqrt(0.25),-1f,1f));
-        fallingMovement.setY(this.getPosY() + 0.05f);
+        fallingMovement.setY(this.getPosY()/* + 0.05f*/);
         this.body.setTransform(fallingMovement,0);
     }
 }

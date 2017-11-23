@@ -23,10 +23,6 @@ public class PhysicWorld {
 
     final Box physicalSize;
 
-    private static final float TIME_STEP = GlobalConstants.FPS; //60 fps
-    private static final int VELOCITY_ITERATIONS = 8;
-    private static final int POSITION_ITERATIONS = 3;
-    private static final int PARTICLE_ITERATIONS = 3;
 
     private float paffPreviousPosition;
     public float scoreToAdd=0;
@@ -55,6 +51,7 @@ public class PhysicWorld {
 
 
         paff       = Screen.setBubble(this,GlobalConstants.PAFF_RADIUS,new Vec2(6.0f, 2.8f - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.05f),BodyType.dynamicBody, input,-1);
+        paff.physic.Tail();
         paffPreviousPosition = paff.physic.getPosY();
         bubblesPool = initPool(this, input);
         for( int i = 0; i < GlobalConstants.BUBBLE_NUMBER; i++){
@@ -81,7 +78,7 @@ public class PhysicWorld {
             case SHOT:
               //  Log.e("SPARA", "SPARA");
                 paff.physic.nullifyResidualVelocity();
-                paff.physic.computeForce(400);//1000
+                paff.physic.computeForce(480);//1000
                 paff.physic.breakJoint();
                 paff.physic.applyForce();
 
@@ -126,7 +123,10 @@ public class PhysicWorld {
             }
         }
 
-        world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
+        world.step(GlobalConstants.Physics.TIME_STEP,
+                GlobalConstants.Physics.VELOCITY_ITERATIONS,
+                GlobalConstants.Physics.POSITION_ITERATIONS,
+                GlobalConstants.Physics.PARTICLE_ITERATIONS);
     }
     public boolean markAsRemovableFallenBubble(GameObject b){
         boolean removable = (b.physic.getPosY() - b.physic.getRadius()  >= GlobalConstants.Physics.Y_MAX  );
@@ -200,7 +200,7 @@ public class PhysicWorld {
                 float radius = generator.nextFloat()/2.0f;
                 radius += GlobalConstants.BUBBLE_BASIC_RADIUS;
                 Vec2 startingPosition = new Vec2(0,14.0f);
-                float expiration = generator.nextFloat()*15.0f+5.0f;
+                float expiration = generator.nextFloat()*25.0f+5.0f;
                 GameObject bubble = Screen.setBubble(container,radius, startingPosition,BodyType.staticBody, in,expiration);
                 bubble.physic.body.setSleepingAllowed(true);
                 return bubble;
