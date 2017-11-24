@@ -78,11 +78,16 @@ class SplashScreen extends Screen {
             Assets.btn_settings_click =  g.newPixmap("settings_click.png", Graphics.PixmapFormat.ARGB4444);
             Assets.btn_on = g.newPixmap("on.png", Graphics.PixmapFormat.ARGB4444);
             Assets.btn_off = g.newPixmap("off.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_resume = g.newPixmap("resume_btn.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_replay = g.newPixmap("replay_btn.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.btn_exit = g.newPixmap("exit_btn.png", Graphics.PixmapFormat.ARGB4444);
             Assets.sounds_text = g.newPixmap("sounds.png", Graphics.PixmapFormat.ARGB4444);
             Assets.music_text = g.newPixmap("music.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.pause_text = g.newPixmap("pausa.png", Graphics.PixmapFormat.ARGB4444);
+            Assets.gameover_text = g.newPixmap("game_over_red.png", Graphics.PixmapFormat.ARGB4444);
             Assets.help_screen = g.newPixmap("help_screen.png", Graphics.PixmapFormat.ARGB4444);
             Assets.highscore = g.newPixmap("top_highscore.png",Graphics.PixmapFormat.ARGB4444);
-            Assets.score = g.newPixmap("top_highscore.png",Graphics.PixmapFormat.ARGB4444);
+            Assets.score = g.newPixmap("score.png",Graphics.PixmapFormat.ARGB4444);
             Assets.font = f.newFont("paff_font.ttf");
 
             //Animations

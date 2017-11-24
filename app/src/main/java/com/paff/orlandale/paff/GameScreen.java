@@ -7,7 +7,6 @@ import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
-import com.badlogic.androidgames.framework.impl.AccelerometerHandler;
 
 import java.util.List;
 
@@ -29,6 +28,8 @@ public class GameScreen extends Screen {
     GameObject rematchBtn;
     GameObject score;
     GameObject highScore;
+    GameObject gameover;
+    GameObject pause;
     List<GameObject> bubbles;
     GameObject []backgrounds = new GameObject[3];
 
@@ -47,12 +48,14 @@ public class GameScreen extends Screen {
             backgrounds[k] = setSimpleImage(new Position(0,-k * GlobalConstants.FRAME_BUFFER_HEIGHT), Assets.menu_background);
         }
 
-        playBtn     = setButton(new Position(60, 760), Assets.btn_play, Assets.bubblexplosion, i);
-        rematchBtn  = setButton(new Position(60, 760), Assets.btn_play, Assets.bubblexplosion, i);
-        exitBtn     = setButton(new Position(640, 960), Assets.btn_settings, Assets.bubblexplosion, i);
+        playBtn     = setButton(new Position(60, 760), Assets.btn_resume, Assets.bubblexplosion, i);
+        rematchBtn  = setButton(new Position(60, 760), Assets.btn_replay, Assets.bubblexplosion, i);
+        exitBtn     = setButton(new Position(640, 960), Assets.btn_exit, Assets.bubblexplosion, i);
+        gameover    = setSimpleImage(new Position(40, 40), Assets.gameover_text);
+        pause       = setSimpleImage(new Position(40, 260), Assets.pause_text);
 
         score = setText(new Position(60,60),Assets.score, Assets.bubblexplosion,new Text("0"));
-        highScore = setText(new Position(GlobalConstants.FRAME_BUFFER_WIDTH-55,60),Assets.score, Assets.bubblexplosion,new Text(""+Settings.highscore));
+        highScore = setText(new Position(GlobalConstants.FRAME_BUFFER_WIDTH-55,60),Assets.highscore, Assets.bubblexplosion,new Text(""+Settings.highscore));
 
     }
 
@@ -140,11 +143,13 @@ public class GameScreen extends Screen {
                 ((PaffGraphics) graphics).drawFilter(GlobalConstants.Colors.GREY);
                 graphics.drawGameObject(playBtn);
                 graphics.drawGameObject(exitBtn);
+                graphics.drawGameObject(pause);
                 break;
             case GAME_OVER :
                 ((PaffGraphics) graphics).drawFilter(GlobalConstants.Colors.GREY);
                 graphics.drawGameObject(rematchBtn);
                 graphics.drawGameObject(exitBtn);
+                graphics.drawGameObject(gameover);
                 break;
             default:
                 break;
