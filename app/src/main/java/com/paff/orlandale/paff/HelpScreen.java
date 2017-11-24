@@ -2,6 +2,7 @@ package com.paff.orlandale.paff;
 
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
+import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Screen;
 
 /**
@@ -10,10 +11,15 @@ import com.badlogic.androidgames.framework.Screen;
 
 public class HelpScreen extends Screen {
     Graphics g;
+    Input i;
 
     public HelpScreen(Game game) {
         super(game);
+
         g = game.getGraphics();
+        i = game.getInput();
+        i.clearTouchEvents();
+
     }
 
     @Override

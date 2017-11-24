@@ -33,4 +33,8 @@ public class Pool<T> {
         if (freeObjects.size() < maxSize)
             freeObjects.add(object);
     }
+
+    public void clearPool(){
+        freeObjects.clear();
+    }
 }

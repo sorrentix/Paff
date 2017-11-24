@@ -12,7 +12,7 @@ import com.badlogic.androidgames.framework.Pool.PoolObjectFactory;
 
 public class KeyboardHandler implements OnKeyListener {
     boolean[] pressedKeys = new boolean[128];
-    Pool<KeyEvent> keyEventPool;
+    public Pool<KeyEvent> keyEventPool;
     List<KeyEvent> keyEventsBuffer = new ArrayList<KeyEvent>();    
     List<KeyEvent> keyEvents = new ArrayList<KeyEvent>();
 
@@ -70,4 +70,6 @@ public class KeyboardHandler implements OnKeyListener {
             return keyEvents;
         }
     }
+
+
 }

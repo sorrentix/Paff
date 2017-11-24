@@ -27,7 +27,9 @@ public class SettingsScreen extends Screen {
 
     public SettingsScreen(Game game) {
         super(game);
+
         Input i = game.getInput();
+        i.clearTouchEvents();
         soundsBtn   = setButton( new Position(600, 800),
                                  Settings.sounds ? Assets.btn_on : Assets.btn_off,
                                  Assets.bubblexplosion, i);
