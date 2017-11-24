@@ -167,7 +167,7 @@ public class Physic implements Component{
     public void fallSmoothly(){
         this.perlinSeed += 0.007;
         fallingMovement.setX(this.oldPosX + ImprovedNoise.map((float)ImprovedNoise.noise(this.perlinSeed,0,0),(float)-Math.sqrt(0.25),(float)Math.sqrt(0.25),-1f,1f));
-        fallingMovement.setY(this.getPosY() + 0.01f);
+        fallingMovement.setY(this.getPosY() + 0.025f);
         this.body.setTransform(fallingMovement,0);
     }
 }
