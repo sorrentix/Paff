@@ -27,8 +27,13 @@ public class Assets {
     public static Pixmap btn_help_click;
     public static Pixmap btn_on;
     public static Pixmap btn_off;
+    public static Pixmap btn_resume;
+    public static Pixmap btn_replay;
+    public static Pixmap btn_exit;
     public static Pixmap sounds_text;
     public static Pixmap music_text;
+    public static Pixmap pause_text;
+    public static Pixmap gameover_text;
     public static Pixmap help_screen;
     public static Pixmap highscore;
     public static Pixmap score;
