@@ -81,7 +81,7 @@ public class PhysicWorld {
             case SHOT:
               //  Log.e("SPARA", "SPARA");
                 paff.physic.nullifyResidualVelocity();
-                paff.physic.computeForce(400);//1000
+                paff.physic.computeForce(480);//1000
                 paff.physic.breakJoint();
                 paff.physic.applyForce();
 

@@ -9,9 +9,9 @@ import android.view.View;
 import com.badlogic.androidgames.framework.Input;
 
 public class AndroidInput implements Input {    
-    AccelerometerHandler accelHandler;
-    KeyboardHandler keyHandler;
-    TouchHandler touchHandler;
+    public AccelerometerHandler accelHandler;
+    public KeyboardHandler keyHandler;
+    public TouchHandler touchHandler;
 
     public AndroidInput(Context context, View view, float scaleX, float scaleY) {
         accelHandler = new AccelerometerHandler(context);
@@ -66,4 +66,10 @@ public class AndroidInput implements Input {
     public List<KeyEvent> getKeyEvents() {
         return keyHandler.getKeyEvents();
     }
+
+    @Override
+    public void clearTouchEvents(){
+        touchHandler.clearEvents();
+    }
+
 }

@@ -21,6 +21,7 @@ class GameMenuScreen extends Screen {
     Audio a;
     AnimationPool animationPool;
     Settings s;
+    Input i;
 
 
     GameObject playBtn;
@@ -34,7 +35,8 @@ class GameMenuScreen extends Screen {
 
     public GameMenuScreen(Game game) {
         super(game);
-        Input i = game.getInput();
+        i = game.getInput();
+        i.clearTouchEvents();
         playBtn     = setButton(new Position(60, 760), Assets.btn_play, Assets.bubblexplosion, i);
         settingsBtn = setButton(new Position(640, 960), Assets.btn_settings, Assets.bubblexplosion, i);
         helpBtn     = setButton(new Position(240, 1360), Assets.btn_help, Assets.bubblexplosion, i);
@@ -56,7 +58,8 @@ class GameMenuScreen extends Screen {
     @Override
     public void update(float deltaTime) {
 
-        List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
+        List<TouchEvent> touchEvents = i.getTouchEvents();
+
         for (int i = 0; i < touchEvents.size(); ++i) {
             TouchEvent event = touchEvents.get(i);
 

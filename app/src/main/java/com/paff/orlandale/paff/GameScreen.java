@@ -35,9 +35,11 @@ public class GameScreen extends Screen {
 
     public GameScreen(Game game) {
         super(game);
+
         graphics= game.getGraphics();
         audio = game.getAudio();
         input = game.getInput();
+        input.clearTouchEvents();
         animationPool = game.getAnimationPool();
         Input i = game.getInput();
         physicWorld = new PhysicWorld( PhysicToPixel.physicalSize, input);

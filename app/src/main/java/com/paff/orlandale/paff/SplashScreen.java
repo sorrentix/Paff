@@ -22,6 +22,7 @@ class SplashScreen extends Screen {
 
     public SplashScreen(Game game) {
         super(game);
+
         startTime = System.nanoTime();
     }
 

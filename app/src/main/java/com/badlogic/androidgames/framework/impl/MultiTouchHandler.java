@@ -14,7 +14,7 @@ public class MultiTouchHandler implements TouchHandler {
     boolean[] isTouched = new boolean[20];
     int[] touchX = new int[20];
     int[] touchY = new int[20];
-    Pool<TouchEvent> touchEventPool;
+    public Pool<TouchEvent> touchEventPool;
     List<TouchEvent> touchEvents = new ArrayList<TouchEvent>();
     List<TouchEvent> touchEventsBuffer = new ArrayList<TouchEvent>();
     float scaleX;
@@ -134,4 +134,13 @@ public class MultiTouchHandler implements TouchHandler {
             return touchEvents;
         }
     }
+
+    @Override
+    public void clearEvents(){
+        touchEventPool.clearPool();
+        touchEvents.clear();
+        touchEventsBuffer.clear();
+    }
+
+
 }
