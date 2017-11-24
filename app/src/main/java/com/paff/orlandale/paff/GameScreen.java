@@ -119,8 +119,12 @@ public class GameScreen extends Screen {
         }
 
         for (int i = 0; i < bubbles.size(); i++) {
-            if ((bubbles.get(i).physic.expirationTime - bubbles.get(i).physic.elapsedTime) < 1)
+
+            if ((bubbles.get(i).physic.expirationTime - bubbles.get(i).physic.elapsedTime) <= 1)
                  ((PaffGraphics) graphics).drawBubble(bubbles.get(i), GlobalConstants.Colors.RED_DARK, GlobalConstants.ALPHA);
+            else if ((bubbles.get(i).physic.expirationTime - bubbles.get(i).physic.elapsedTime) <= 3)
+                ((PaffGraphics) graphics).drawBubble(bubbles.get(i), GlobalConstants.Colors.ORANGE
+                        , GlobalConstants.ALPHA);
             else
                 ((PaffGraphics) graphics).drawBubble(bubbles.get(i), GlobalConstants.Colors.BLUE, GlobalConstants.ALPHA);
 

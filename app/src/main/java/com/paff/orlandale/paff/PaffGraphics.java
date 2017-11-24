@@ -49,7 +49,7 @@ public class PaffGraphics extends AndroidGraphics {
             paint.setAlpha(255);
             paint.setStyle(Paint.Style.FILL_AND_STROKE);
             paint.setStrokeWidth(3);
-            paint.setTextSize(40);
+            paint.setTextSize(80);
             paint.setTypeface(Assets.font);
             canvas.drawText(object.text.toWrite, object.position.x + object.image.getWidth(), object.position.y + object.image.getHeight(), paint);
             canvas.translate(paint.measureText(object.text.toWrite) + object.image.getWidth(), 0);
@@ -59,7 +59,7 @@ public class PaffGraphics extends AndroidGraphics {
             paint.setAlpha(255);
             paint.setStyle(Paint.Style.FILL_AND_STROKE);
             paint.setStrokeWidth(3);
-            paint.setTextSize(40);
+            paint.setTextSize(80);
             paint.setTypeface(Assets.font);
             canvas.drawText(object.text.toWrite, object.position.x + object.image.getWidth(), object.position.y + object.image.getHeight(), paint);
 
