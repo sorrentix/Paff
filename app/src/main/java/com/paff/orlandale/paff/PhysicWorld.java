@@ -38,6 +38,9 @@ public class PhysicWorld {
     private Physic collidedBubble;
     private PaffContactListener paffContactListener;
 
+    public float timeOfSpeedIncrement  = System.nanoTime()/1000000000.0f;
+    public float gameSpeed = 0.02f;
+
     GameState gameState = GameState.WAITING;
     GameState previousState = GameState.WAITING;
 
@@ -127,6 +130,10 @@ public class PhysicWorld {
         }
 
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
+        if ( (System.nanoTime()/1000000000.0f)-timeOfSpeedIncrement > GlobalConstants.SPEEDUP_TIME){
+            timeOfSpeedIncrement = (System.nanoTime()/1000000000.0f);
+            gameSpeed += 0.01f;
+        }
     }
     public boolean markAsRemovableFallenBubble(GameObject b){
         boolean removable = (b.physic.getPosY() - b.physic.getRadius()  >= GlobalConstants.Physics.Y_MAX  );

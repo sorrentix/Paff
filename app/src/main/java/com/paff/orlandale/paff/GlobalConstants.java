@@ -18,6 +18,7 @@ public class GlobalConstants {
     public static final float BUBBLE_BASIC_RADIUS = 0.95f;
     public static final int BUBBLE_NUMBER = 12;
 
+    public static final float SPEEDUP_TIME = 5.0f;
 
     public class Physics {
         public static final float X_MIN = -9.0f;
