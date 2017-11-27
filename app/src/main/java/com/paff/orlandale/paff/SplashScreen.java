@@ -93,7 +93,7 @@ class SplashScreen extends Screen {
         Assets.count2 = g.newPixmap("count2.png",Graphics.PixmapFormat.ARGB4444);
         Assets.count1 = g.newPixmap("count1.png",Graphics.PixmapFormat.ARGB4444);
         Assets.countJump = g.newPixmap("countjump.png",Graphics.PixmapFormat.ARGB4444);
-            Assets.scoreText = g.newPixmap("scoretext.png",Graphics.PixmapFormat.ARGB4444);
+        Assets.scoreText = g.newPixmap("scoretext.png",Graphics.PixmapFormat.ARGB4444);
         //Font
         Assets.font = f.newFont("paff_font.ttf");
 
@@ -102,17 +102,18 @@ class SplashScreen extends Screen {
         Assets.bubblexplosion = a.newSound("bubblexplosion.ogg");
         Assets.gamesoundtheme = a.newMusic("gamesoundtheme.ogg");
         Assets.gamemenusoundtheme = a.newMusic("gamemenusoundtheme.ogg");
+        Assets.countdown = a.newSound("jump.ogg");
         Assets.flagReady = true;
         state = GameState.COMPLETE_ANIMATION;
 
           //Animations
-        Pixmap countDown3[]    = new Pixmap[30];
-        Pixmap countDown2[]    = new Pixmap[30];
-        Pixmap countDown1[]    = new Pixmap[30];
-        Pixmap countDownJump[] = new Pixmap[30];
+        Pixmap countDown3[]    = new Pixmap[60];
+        Pixmap countDown2[]    = new Pixmap[60];
+        Pixmap countDown1[]    = new Pixmap[60];
+        Pixmap countDownJump[] = new Pixmap[60];
 
         Rect countDown3StartingRect = new Rect(140, 560, 140 + Assets.count3.getWidth(), 560 + Assets.count3.getHeight());
-        Rect countDown3Positions[] = new Rect[30];
+        Rect countDown3Positions[] = new Rect[60];
 
         for (int i = 0; i < countDown3Positions.length; i++ ){
             if (i == 0)
@@ -166,6 +167,8 @@ class SplashScreen extends Screen {
                 //execute something when the animation is complete
                 System.out.println("finito fai partire il gioo");
                 animationPool.animationToExecute = -1;
+                Assets.gamesoundtheme.setLooping(true);
+                Assets.gamesoundtheme.play();
             }
         });
         animationPool.loadAnimation(countDownJumpAnimation);

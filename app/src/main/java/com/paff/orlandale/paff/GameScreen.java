@@ -65,10 +65,9 @@ public class GameScreen extends Screen {
 
         animationPool.animationToExecute = 1;
       
-        Assets.gamesoundtheme.setLooping(false);
+        Assets.gamemenusoundtheme.setLooping(false);
         Assets.gamemenusoundtheme.pause();
-        Assets.gamesoundtheme.setLooping(true);
-        Assets.gamesoundtheme.play();
+        Assets.countdown.play();
 
     }
 
@@ -100,16 +99,23 @@ public class GameScreen extends Screen {
                 for (int i = 0; i < touchEvents.size(); ++i) {
                     Input.TouchEvent event = touchEvents.get(i);
                     if (event.type == Input.TouchEvent.TOUCH_UP) {
-                        if (rematchBtn.evtManager.inBounds(event))
+                        if (rematchBtn.evtManager.inBounds(event)) {
+                            Assets.gamesoundtheme.setLooping(false);
+                            Assets.gamesoundtheme.pause();
                             game.setScreen(new GameScreen(game));
+                        }
                         else if (exitBtn.evtManager.inBounds(event))
                             game.setScreen(new GameMenuScreen(game));
                     }
                 }
                 break;
             case SETUP:
-                if(animationPool.animationToExecute ==-1)
+                if(animationPool.animationToExecute ==-1) {
+                    for(int i=0; i< bubbles.size(); i++)
+                        bubbles.get(i).physic.startTime = System.nanoTime();
+
                     physicWorld.gameState = GameState.WAITING;
+                }
                 break;
             default:
                 physicWorld.update();

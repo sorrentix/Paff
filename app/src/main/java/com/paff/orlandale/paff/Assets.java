@@ -17,6 +17,7 @@ public class Assets {
     public static Music gamesoundtheme;
     public static Music splashsound;
     public static Music gamemenusoundtheme;
+    public static Sound countdown;
     /*GRAFICHE*/
     public static Pixmap logo;
     public static Pixmap menu_background;
