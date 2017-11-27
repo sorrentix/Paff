@@ -39,6 +39,12 @@ public class Assets {
     public static Pixmap highscore;
     public static Pixmap score;
     public static Pixmap scoreText;
+    public static Pixmap count3;
+    public static Pixmap count2;
+    public static Pixmap count1;
+    public static Pixmap countJump;
+    
+    //Font
     public static Typeface font;
 
     public static boolean flagReady=false;

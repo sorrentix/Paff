@@ -29,7 +29,8 @@ public class Physic implements Component{
     private float radius;
     public float oldPosX;
     public double perlinSeed;
-
+    public Vec2 totalForce = new Vec2(0,0);
+    private float percentage = 0.01f;
 
     public Physic(PhysicWorld wld, float expirationTime){
         world = wld;
@@ -99,7 +100,19 @@ public class Physic implements Component{
             Physic elementJoined = ( joint.getBodyA().getUserData() == this) ?
                                     (Physic) joint.getBodyB().getUserData() : (Physic) joint.getBodyA().getUserData();
 
-            float x = (this.getPosX() - elementJoined.getPosX() );
+            float x = (this.getPosX() - elementJoined.getPosX());
+            float y = (this.getPosY() - elementJoined.getPosY());
+
+            double forceValue = Math.sqrt(x*x + y*y);
+            double forceCap = GlobalConstants.BUBBLE_BASIC_RADIUS + this.radius + GlobalConstants.BUBBLE_VARIATION_RADIUS;
+            if( forceValue > forceCap){
+                x = x * (float) (forceCap/ forceValue);
+                y = y * (float) (forceCap/ forceValue);
+            }
+
+            x *= powerMultiplier;
+            y *= powerMultiplier;
+            /*float x = (this.getPosX() - elementJoined.getPosX() );
             float y = (this.getPosY() - elementJoined.getPosY() );
 
             float ratio = Math.abs(x/y);
@@ -112,7 +125,8 @@ public class Physic implements Component{
             }
             force.setX( x );
             force.setY( y );
-
+*/
+            force.set(x, y);
         }else{
             Log.e("RUOTA", "stai tentando di far ruotare paff anche se non è agganciato ad una bolla");
         }
@@ -123,10 +137,25 @@ public class Physic implements Component{
             force.rotate(-90);
         else if(value < 0)
             force.rotate(90);
+
+        totalForce.set(totalForce.getX()+force.getX(),totalForce.getY()+force.getY());
+        if (percentage <= 0.9f)
+            percentage += 0.01;
     }
 
     public  void applyForce(){
         this.body.applyForce(force,this.body.getPosition(),false);
+    }
+
+    public  void applyTotalForce(){
+        totalForce.set(totalForce.getX()*percentage,totalForce.getY()*percentage);
+        this.body.applyForce(totalForce,this.body.getPosition(),false);
+        resetTotalForce();
+    }
+
+    public void resetTotalForce(){
+        totalForce.set(0,0);
+        percentage = 0.01f;
     }
 
     public void nullifyResidualVelocity(){
@@ -137,6 +166,7 @@ public class Physic implements Component{
     public void  nullifyResidualLinearVelocity(){
         this.body.setLinearVelocity(nullForce);
     }
+
 
     public  void applyExtraBrakingForce(){
         //this.body.setLinearVelocity(this.body.getAngularVelocity()/20.0f);

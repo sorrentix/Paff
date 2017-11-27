@@ -63,10 +63,13 @@ public class GameScreen extends Screen {
         finalScore = setText(new Position(100,900),Assets.scoreText, Assets.bubblexplosion,new Text("0"));
         highScore = setText(new Position(GlobalConstants.FRAME_BUFFER_WIDTH-55,60),Assets.highscore, Assets.bubblexplosion,new Text(""+Settings.highscore));
 
+        animationPool.animationToExecute = 1;
+      
         Assets.gamesoundtheme.setLooping(false);
         Assets.gamemenusoundtheme.pause();
         Assets.gamesoundtheme.setLooping(true);
         Assets.gamesoundtheme.play();
+
     }
 
     @Override
@@ -104,6 +107,10 @@ public class GameScreen extends Screen {
                     }
                 }
                 break;
+            case SETUP:
+                if(animationPool.animationToExecute ==-1)
+                    physicWorld.gameState = GameState.WAITING;
+                break;
             default:
                 physicWorld.update();
                 for (int i = 0; i < touchEvents.size(); ++i) {
@@ -125,7 +132,6 @@ public class GameScreen extends Screen {
 
     @Override
     public void present(float deltaTime) {
-
 
         for (int i = 0; i < backgrounds.length; i++ ) {
           graphics.drawGameObject(backgrounds[i]);
@@ -172,9 +178,17 @@ public class GameScreen extends Screen {
                 finalScore.text.toWrite = score.text.toWrite;
                 ((PaffGraphics) graphics).drawText(finalScore, GlobalConstants.Colors.WHITE,280);
                 break;
+            case SETUP:
+                if(animationPool.animationToExecute !=-1) {
+                    ((PaffGraphics) graphics).drawFilter(GlobalConstants.Colors.GREY);
+                    animationPool.getAnimationByID(animationPool.animationToExecute).executeAnimation();
+                }
+                break;
             default:
                 break;
-            }
+        }
+
+
     }
 
 

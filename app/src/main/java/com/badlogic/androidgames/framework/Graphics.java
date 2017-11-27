@@ -1,5 +1,7 @@
 package com.badlogic.androidgames.framework;
 
+import android.graphics.Rect;
+
 import com.paff.orlandale.paff.GameObject;
 
 public interface Graphics {
@@ -21,7 +23,10 @@ public interface Graphics {
     public void drawPixmap(Pixmap pixmap, int x, int y, int srcX, int srcY,
             int srcWidth, int srcHeight);
 
-    public void drawPixmap(Pixmap pixmap, float x, float y);
+    public void drawScaledPixmap(Pixmap pixmap, Rect srcRect, Rect dstRect );
+
+
+        public void drawPixmap(Pixmap pixmap, float x, float y);
 
     public void drawGameObject(GameObject g);
 
