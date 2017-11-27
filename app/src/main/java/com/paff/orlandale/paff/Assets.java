@@ -37,6 +37,8 @@ public class Assets {
     public static Pixmap help_screen;
     public static Pixmap highscore;
     public static Pixmap score;
+    public static Pixmap count3;
+    //Font
     public static Typeface font;
 
     public static boolean flagReady=false;

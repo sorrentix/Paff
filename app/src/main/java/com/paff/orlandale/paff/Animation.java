@@ -36,9 +36,12 @@ public class Animation {
         return id;
     }
 
+    Rect rectstart = new Rect(0,0,800,800);
     public void executeAnimation(){
         //execution ended
-        g.drawPixmap(images[currentImage], r[currentImage].left, r[currentImage].top);
+
+        g.drawScaledPixmap(images[currentImage],rectstart ,r[currentImage]);
+        //g.drawPixmap(images[currentImage], r[currentImage].left, r[currentImage].top);
         currentImage++;
         // Notify everybody that may be interested.
         if( currentImage == images.length-1 ){

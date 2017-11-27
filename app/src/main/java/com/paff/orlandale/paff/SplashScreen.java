@@ -89,26 +89,43 @@ class SplashScreen extends Screen {
             Assets.help_screen = g.newPixmap("help_screen.png", Graphics.PixmapFormat.ARGB4444);
             Assets.highscore = g.newPixmap("top_highscore.png",Graphics.PixmapFormat.ARGB4444);
             Assets.score = g.newPixmap("score.png",Graphics.PixmapFormat.ARGB4444);
+            Assets.count3 = g.newPixmap("count3.png",Graphics.PixmapFormat.ARGB4444);
+
+            //Font
             Assets.font = f.newFont("paff_font.ttf");
 
             //Animations
-            Pixmap images[] = new Pixmap[]{Assets.btn_play,
-                    Assets.btn_play,Assets.btn_play_click,Assets.btn_play_click,
-                    Assets.btn_play_click,Assets.btn_play,Assets.btn_play,
-                    Assets.btn_play,Assets.btn_play_click};
-            Rect btn = new Rect(60, 760, 60+Assets.btn_play.getWidth(), 760+Assets.btn_play.getHeight());
-            Rect positions[] = new Rect[]{ btn, btn, btn, btn, btn, btn, btn, btn, btn };
+            Pixmap countDown3[] = new Pixmap[]{
+                    Assets.count3,Assets.count3,Assets.count3,
+                    Assets.count3,Assets.count3,Assets.count3,
+                    Assets.count3,Assets.count3,Assets.count3,
+                    Assets.count3,Assets.count3,Assets.count3,
+                    Assets.count3,Assets.count3,Assets.count3,
+                    Assets.count3,Assets.count3,Assets.count3,
+                    Assets.count3,Assets.count3,Assets.count3,
+                    Assets.count3,Assets.count3,Assets.count3,
+                    Assets.count3,Assets.count3,Assets.count3,
+                    Assets.count3,Assets.count3,Assets.count3
+            };
+            Rect countDown3StartingRect = new Rect(140, 560, 140 + Assets.count3.getWidth(), 560 + Assets.count3.getHeight());
+            Rect countDown3Positions[] = new Rect[30];
+            for (int i = 0; i < countDown3Positions.length; i++ ){
+                if (i == 0)
+                    countDown3Positions[i] = new Rect(countDown3StartingRect.left, countDown3StartingRect.top, countDown3StartingRect.right, countDown3StartingRect.bottom);
+                else
+                    countDown3Positions[i] = new Rect(countDown3Positions[i-1].left + 1, countDown3Positions[i-1].top + 1, countDown3Positions[i-1].right - 1, countDown3Positions[i-1].bottom - 1);
+            }
 
-            Animation anim = new Animation(g, images, positions,1);
-            anim.addListener(new AnimationPool.onAnimationCompleteListener() {
+            Animation countDown3Animation = new Animation(g, countDown3, countDown3Positions,1);
+            countDown3Animation.addListener(new AnimationPool.onAnimationCompleteListener() {
                 @Override
                 public void onAnimationComplete(Animation anim) {
                     //execute something when the animation is complete
 
-                    game.setScreen(new SettingsScreen(game));
+                    System.out.println("fai partire il 2");
                 }
             });
-            animationPool.loadAnimation(anim);
+            animationPool.loadAnimation(countDown3Animation);
 
 
             //Sounds

@@ -113,7 +113,6 @@ public class GameScreen extends Screen {
     @Override
     public void present(float deltaTime) {
 
-
         for (int i = 0; i < backgrounds.length; i++ ) {
           graphics.drawGameObject(backgrounds[i]);
         }
@@ -160,6 +159,8 @@ public class GameScreen extends Screen {
             default:
                 break;
             }
+        animationPool.getAnimationByID(1).executeAnimation();
+
     }
 
 
