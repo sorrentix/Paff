@@ -16,6 +16,7 @@ public class GlobalConstants {
     public static final Vec2 GRAVITY = new Vec2(0,9.81f);
     public static final float PAFF_RADIUS = 0.5f;
     public static final float BUBBLE_BASIC_RADIUS = 0.95f;
+    public static final float BUBBLE_VARIATION_RADIUS = 0.5f;
     public static final int BUBBLE_NUMBER = 12;
 
     public static final float SPEEDUP_TIME = 5.0f;
@@ -34,6 +35,7 @@ public class GlobalConstants {
         public static final int GREY = 0x34495e;
         public static final int RED_DARK = 0xc0392b;
         public static final int ORANGE = 0xf39c12;
+        public static final int WHITE = 0xffffff;
     }
     public static final int ALPHA = 255;
 

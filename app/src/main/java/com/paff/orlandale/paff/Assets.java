@@ -16,6 +16,8 @@ public class Assets {
     public static Sound bubblexplosion;
     public static Music gamesoundtheme;
     public static Music splashsound;
+    public static Music gamemenusoundtheme;
+    public static Sound countdown;
     /*GRAFICHE*/
     public static Pixmap logo;
     public static Pixmap menu_background;
@@ -37,6 +39,13 @@ public class Assets {
     public static Pixmap help_screen;
     public static Pixmap highscore;
     public static Pixmap score;
+    public static Pixmap scoreText;
+    public static Pixmap count3;
+    public static Pixmap count2;
+    public static Pixmap count1;
+    public static Pixmap countJump;
+    
+    //Font
     public static Typeface font;
 
     public static boolean flagReady=false;

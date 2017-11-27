@@ -27,11 +27,14 @@ public class GameScreen extends Screen {
     GameObject exitBtn;
     GameObject rematchBtn;
     GameObject score;
+    GameObject finalScore;
     GameObject highScore;
     GameObject gameover;
     GameObject pause;
     List<GameObject> bubbles;
     GameObject []backgrounds = new GameObject[3];
+
+
 
     public GameScreen(Game game) {
         super(game);
@@ -50,14 +53,21 @@ public class GameScreen extends Screen {
             backgrounds[k] = setSimpleImage(new Position(0,-k * GlobalConstants.FRAME_BUFFER_HEIGHT), Assets.menu_background);
         }
 
-        playBtn     = setButton(new Position(60, 760), Assets.btn_resume, Assets.bubblexplosion, i);
-        rematchBtn  = setButton(new Position(60, 760), Assets.btn_replay, Assets.bubblexplosion, i);
-        exitBtn     = setButton(new Position(640, 960), Assets.btn_exit, Assets.bubblexplosion, i);
+        playBtn     = setButton(new Position(60, 1260), Assets.btn_resume, Assets.bubblexplosion, i);
+        rematchBtn  = setButton(new Position(60, 1260), Assets.btn_replay, Assets.bubblexplosion, i);
+        exitBtn     = setButton(new Position(640, 1260), Assets.btn_exit, Assets.bubblexplosion, i);
         gameover    = setSimpleImage(new Position(40, 40), Assets.gameover_text);
         pause       = setSimpleImage(new Position(40, 260), Assets.pause_text);
 
         score = setText(new Position(60,60),Assets.score, Assets.bubblexplosion,new Text("0"));
+        finalScore = setText(new Position(100,900),Assets.scoreText, Assets.bubblexplosion,new Text("0"));
         highScore = setText(new Position(GlobalConstants.FRAME_BUFFER_WIDTH-55,60),Assets.highscore, Assets.bubblexplosion,new Text(""+Settings.highscore));
+
+        animationPool.animationToExecute = 1;
+      
+        Assets.gamemenusoundtheme.setLooping(false);
+        Assets.gamemenusoundtheme.pause();
+        Assets.countdown.play();
 
     }
 
@@ -70,8 +80,13 @@ public class GameScreen extends Screen {
                 for (int i = 0; i < touchEvents.size(); ++i) {
                     Input.TouchEvent event = touchEvents.get(i);
                     if (event.type == Input.TouchEvent.TOUCH_UP) {
-                        if (playBtn.evtManager.inBounds(event))
+                        if (playBtn.evtManager.inBounds(event)) {
+                            physicWorld.pausedTime = System.nanoTime() - physicWorld.pausedTime;
+                            for (int j = 0 ; j < bubbles.size(); j++)
+                                bubbles.get(j).physic.totalPausedTime += physicWorld.pausedTime/1000000000.0f;
+                            physicWorld.totalPausedTime +=  physicWorld.pausedTime/1000000000.0f;
                             physicWorld.gameState = physicWorld.previousState;
+                        }
                         else if (exitBtn.evtManager.inBounds(event))
                             game.setScreen(new GameMenuScreen(game));
                     }
@@ -84,11 +99,22 @@ public class GameScreen extends Screen {
                 for (int i = 0; i < touchEvents.size(); ++i) {
                     Input.TouchEvent event = touchEvents.get(i);
                     if (event.type == Input.TouchEvent.TOUCH_UP) {
-                        if (rematchBtn.evtManager.inBounds(event))
+                        if (rematchBtn.evtManager.inBounds(event)) {
+                            Assets.gamesoundtheme.setLooping(false);
+                            Assets.gamesoundtheme.pause();
                             game.setScreen(new GameScreen(game));
+                        }
                         else if (exitBtn.evtManager.inBounds(event))
                             game.setScreen(new GameMenuScreen(game));
                     }
+                }
+                break;
+            case SETUP:
+                if(animationPool.animationToExecute ==-1) {
+                    for(int i=0; i< bubbles.size(); i++)
+                        bubbles.get(i).physic.startTime = System.nanoTime();
+
+                    physicWorld.gameState = GameState.WAITING;
                 }
                 break;
             default:
@@ -113,7 +139,6 @@ public class GameScreen extends Screen {
     @Override
     public void present(float deltaTime) {
 
-
         for (int i = 0; i < backgrounds.length; i++ ) {
           graphics.drawGameObject(backgrounds[i]);
         }
@@ -136,12 +161,12 @@ public class GameScreen extends Screen {
             physicWorld.scoreToAdd--;
            score.text.toWrite=""+(Integer.parseInt(score.text.toWrite)+1);
         }
-        ((PaffGraphics) graphics).drawText(score, GlobalConstants.Colors.GREY);
+        ((PaffGraphics) graphics).drawText(score, GlobalConstants.Colors.GREY,80);
         if(Settings.highscore >= (Integer.parseInt(score.text.toWrite))) {
-            ((PaffGraphics) graphics).drawText(highScore, GlobalConstants.Colors.GREY);
+            ((PaffGraphics) graphics).drawText(highScore, GlobalConstants.Colors.GREY,80);
         }
         else {
-            ((PaffGraphics) graphics).drawText(highScore, GlobalConstants.Colors.RED);
+            ((PaffGraphics) graphics).drawText(highScore, GlobalConstants.Colors.RED,80);
         }
 
         switch (physicWorld.getGameState()) {
@@ -156,10 +181,20 @@ public class GameScreen extends Screen {
                 graphics.drawGameObject(rematchBtn);
                 graphics.drawGameObject(exitBtn);
                 graphics.drawGameObject(gameover);
+                finalScore.text.toWrite = score.text.toWrite;
+                ((PaffGraphics) graphics).drawText(finalScore, GlobalConstants.Colors.WHITE,280);
+                break;
+            case SETUP:
+                if(animationPool.animationToExecute !=-1) {
+                    ((PaffGraphics) graphics).drawFilter(GlobalConstants.Colors.GREY);
+                    animationPool.getAnimationByID(animationPool.animationToExecute).executeAnimation();
+                }
                 break;
             default:
                 break;
-            }
+        }
+
+
     }
 
 

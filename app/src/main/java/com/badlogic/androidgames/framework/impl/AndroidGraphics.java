@@ -126,10 +126,15 @@ public class AndroidGraphics implements Graphics {
     public void drawGameObject(GameObject g){
         canvas.drawBitmap(((AndroidPixmap) g.image).bitmap, g.position.x, g.position.y, null);
     }
-    
+
     @Override
     public void drawPixmap(Pixmap pixmap, float x, float y) {
         canvas.drawBitmap(((AndroidPixmap)pixmap).bitmap, x, y, null);
+    }
+
+    @Override
+    public void drawScaledPixmap(Pixmap pixmap, Rect srcRect, Rect dstRect ) {
+        canvas.drawBitmap(((AndroidPixmap)pixmap).bitmap, srcRect, dstRect, null);
     }
 
     @Override
