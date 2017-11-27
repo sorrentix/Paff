@@ -23,6 +23,7 @@ public class PaffGame extends AndroidGame {
             GameScreen gameScreen = (GameScreen) currScreen;
             if(gameScreen.physicWorld.getGameState()!=GameState.PAUSED && gameScreen.physicWorld.getGameState()!=GameState.GAME_OVER ) {
                 gameScreen.physicWorld.previousState = gameScreen.physicWorld.getGameState();
+                gameScreen.physicWorld.pausedTime = System.nanoTime();
                 gameScreen.physicWorld.gameState = GameState.PAUSED;
             }
         }
@@ -56,6 +57,7 @@ public class PaffGame extends AndroidGame {
                 gameScreen.physicWorld.gameState=gameScreen.physicWorld.previousState;
             else {
                 gameScreen.physicWorld.previousState = gameScreen.physicWorld.getGameState();
+                gameScreen.physicWorld.pausedTime = System.nanoTime();
                 gameScreen.physicWorld.gameState = GameState.PAUSED;
             }
         }

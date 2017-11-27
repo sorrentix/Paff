@@ -68,5 +68,12 @@ public abstract class Screen {
         g.addComponent(t);
         return g;
     }
+    public static GameObject setText(Position p, Text t){
+        GameObject g = new GameObject();
+        g.addComponent(p);
+        g.addComponent(t);
+        return g;
+    }
+
 
 }

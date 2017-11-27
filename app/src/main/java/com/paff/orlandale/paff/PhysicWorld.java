@@ -41,6 +41,9 @@ public class PhysicWorld {
     public float timeOfSpeedIncrement  = System.nanoTime()/1000000000.0f;
     public float gameSpeed = 0.02f;
 
+    public float pausedTime = 0;
+    public float totalPausedTime = 0;
+  
     GameState gameState = GameState.SETUP;
     GameState previousState = GameState.WAITING;
 
@@ -138,7 +141,7 @@ public class PhysicWorld {
         }
 
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
-        if ( (System.nanoTime()/1000000000.0f)-timeOfSpeedIncrement > GlobalConstants.SPEEDUP_TIME){
+        if ( (System.nanoTime()/1000000000.0f)-timeOfSpeedIncrement-totalPausedTime > GlobalConstants.SPEEDUP_TIME){
             timeOfSpeedIncrement = (System.nanoTime()/1000000000.0f);
             gameSpeed += 0.01f;
         }
@@ -161,7 +164,7 @@ public class PhysicWorld {
     }
 
     public boolean markAsExplodedBubble(GameObject b) {
-        b.physic.elapsedTime = (System.nanoTime()-b.physic.startTime)/1000000000.0f;
+        b.physic.elapsedTime = ((System.nanoTime()-b.physic.startTime)/1000000000.0f) - b.physic.totalPausedTime;
         boolean removable= ( b.physic.elapsedTime >= b.physic.expirationTime);
 
         if (removable && paff.physic.joint != null){
@@ -201,7 +204,8 @@ public class PhysicWorld {
         }
     }
     private void computeScore(){
-        scoreToAdd += Math.abs((collidedBubble.getPosY()+GlobalConstants.Physics.Y_MAX)-(paffPreviousPosition+GlobalConstants.Physics.Y_MAX));
+            scoreToAdd += Math.abs((collidedBubble.getPosY()+GlobalConstants.Physics.Y_MAX)-(paffPreviousPosition+GlobalConstants.Physics.Y_MAX))+Camera.getVerticalSpace();
+
 
     }
     private Pool initPool(PhysicWorld w, Input i){
@@ -244,6 +248,7 @@ public class PhysicWorld {
                 g.physic.body.setSleepingAllowed(false);
                 g.physic.elapsedTime =0;
                 g.physic.startTime =  System.nanoTime();
+                g.physic.totalPausedTime = 0;
                 if (bubbleCounter >= GlobalConstants.BUBBLE_NUMBER - 1)
                     highestBubble = g;
                 return g;

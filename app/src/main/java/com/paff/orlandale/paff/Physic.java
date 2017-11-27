@@ -20,6 +20,7 @@ public class Physic implements Component{
     public float expirationTime=-1;
     public float elapsedTime=0;
     public float startTime = System.nanoTime();
+    public float totalPausedTime = 0;
     public Joint joint;
     public Vec2 force;
     private Vec2 nullForce = new Vec2(0,0);
@@ -96,7 +97,7 @@ public class Physic implements Component{
 
     public void computeForce(float powerMultiplier){
         if(joint != null) {
-            Physic elementJoined = ((Physic) joint.getBodyA().getUserData() == this) ?
+            Physic elementJoined = ( joint.getBodyA().getUserData() == this) ?
                                     (Physic) joint.getBodyB().getUserData() : (Physic) joint.getBodyA().getUserData();
 
             float x = (this.getPosX() - elementJoined.getPosX());

@@ -93,11 +93,19 @@ class SplashScreen extends Screen {
         Assets.count2 = g.newPixmap("count2.png",Graphics.PixmapFormat.ARGB4444);
         Assets.count1 = g.newPixmap("count1.png",Graphics.PixmapFormat.ARGB4444);
         Assets.countJump = g.newPixmap("countjump.png",Graphics.PixmapFormat.ARGB4444);
-
+            Assets.scoreText = g.newPixmap("scoretext.png",Graphics.PixmapFormat.ARGB4444);
         //Font
         Assets.font = f.newFont("paff_font.ttf");
 
-        //Animations
+
+        //Sounds
+        Assets.bubblexplosion = a.newSound("bubblexplosion.ogg");
+        Assets.gamesoundtheme = a.newMusic("gamesoundtheme.ogg");
+        Assets.gamemenusoundtheme = a.newMusic("gamemenusoundtheme.ogg");
+        Assets.flagReady = true;
+        state = GameState.COMPLETE_ANIMATION;
+
+          //Animations
         Pixmap countDown3[]    = new Pixmap[30];
         Pixmap countDown2[]    = new Pixmap[30];
         Pixmap countDown1[]    = new Pixmap[30];
@@ -116,7 +124,7 @@ class SplashScreen extends Screen {
             countDown1[i]= Assets.count1;
             countDownJump[i]= Assets.countJump;
         }
-
+  
         Animation countDown3Animation    = new Animation(g, countDown3, new Rect(0,0,Assets.count3.getWidth(), Assets.count3.getHeight()), countDown3Positions,1);
         Animation countDown2Animation    = new Animation(g, countDown2, new Rect(0,0,Assets.count2.getWidth(), Assets.count2.getHeight()), countDown3Positions,2);
         Animation countDown1Animation    = new Animation(g, countDown1, new Rect(0,0,Assets.count1.getWidth(), Assets.count1.getHeight()), countDown3Positions,3);
