@@ -115,12 +115,12 @@ public class SettingsScreen extends Screen {
                 soundsBtn.sound.play();
                 break;
             case MUSIC_ON:
-                Assets.gamesoundtheme.setLooping(true);
-                Assets.gamesoundtheme.play();
+                Assets.gamemenusoundtheme.setLooping(true);
+                Assets.gamemenusoundtheme.play();
                 musicBtn.sound.play();
                 break;
             case MUSIC_OFF:
-                Assets.gamesoundtheme.pause();
+                Assets.gamemenusoundtheme.pause();
                 musicBtn.sound.play();
                 break;
             case WAITING:

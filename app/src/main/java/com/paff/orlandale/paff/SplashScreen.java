@@ -89,7 +89,9 @@ class SplashScreen extends Screen {
             Assets.help_screen = g.newPixmap("help_screen.png", Graphics.PixmapFormat.ARGB4444);
             Assets.highscore = g.newPixmap("top_highscore.png",Graphics.PixmapFormat.ARGB4444);
             Assets.score = g.newPixmap("score.png",Graphics.PixmapFormat.ARGB4444);
+            Assets.scoreText = g.newPixmap("scoretext.png",Graphics.PixmapFormat.ARGB4444);
             Assets.font = f.newFont("paff_font.ttf");
+
 
             //Animations
             Pixmap images[] = new Pixmap[]{Assets.btn_play,
@@ -114,6 +116,7 @@ class SplashScreen extends Screen {
             //Sounds
             Assets.bubblexplosion = a.newSound("bubblexplosion.ogg");
             Assets.gamesoundtheme = a.newMusic("gamesoundtheme.ogg");
+            Assets.gamemenusoundtheme = a.newMusic("gamemenusoundtheme.ogg");
             Assets.flagReady = true;
             state = GameState.COMPLETE_ANIMATION;
 

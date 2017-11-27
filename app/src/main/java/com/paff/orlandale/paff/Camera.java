@@ -1,5 +1,7 @@
 package com.paff.orlandale.paff;
 
+import android.util.Log;
+
 import com.google.fpl.liquidfun.Vec2;
 
 import java.util.List;
@@ -12,9 +14,10 @@ public class Camera {
     private static Vec2 movement = new Vec2(0,0);
     private static Vec2 effectiveMovement = new Vec2(0,0);
     private static final float windowOfMovement = GlobalConstants.Physics.Y_MAX + 3.0f;
+    private static float verticalSpaceToCover=0;
 
-    public  static void computeVerticalMovement(GameObject g){
-        float verticalSpaceToCover  = g.physic.getPosY() + GlobalConstants.Physics.Y_MAX;
+    public static void computeVerticalMovement(GameObject g){
+        verticalSpaceToCover  = g.physic.getPosY() + GlobalConstants.Physics.Y_MAX;
         verticalSpaceToCover        = verticalSpaceToCover < windowOfMovement ? (windowOfMovement - verticalSpaceToCover) : 0.0f;
 
         if ( verticalSpaceToCover >  0.0f ) {
@@ -52,6 +55,9 @@ public class Camera {
                 }
             }
         }
+    }
+    public static float getVerticalSpace() {
+        return verticalSpaceToCover*50;
     }
 
 }
