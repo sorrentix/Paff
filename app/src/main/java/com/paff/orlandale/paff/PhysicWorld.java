@@ -211,7 +211,7 @@ public class PhysicWorld {
         Pool.PoolObjectFactory<GameObject> factory = new Pool.PoolObjectFactory<GameObject>() {
             @Override
             public GameObject createObject() {
-                float radius = generator.nextFloat()/2.0f;
+                float radius = generator.nextFloat() * GlobalConstants.BUBBLE_VARIATION_RADIUS;
                 radius += GlobalConstants.BUBBLE_BASIC_RADIUS;
                 Vec2 startingPosition = new Vec2(0,14.0f);
                 float expiration = generator.nextFloat()*15.0f+5.0f;

@@ -99,6 +99,18 @@ public class Physic implements Component{
             Physic elementJoined = ((Physic) joint.getBodyA().getUserData() == this) ?
                                     (Physic) joint.getBodyB().getUserData() : (Physic) joint.getBodyA().getUserData();
 
+            float x = (this.getPosX() - elementJoined.getPosX());
+            float y = (this.getPosY() - elementJoined.getPosY());
+
+            double forceValue = Math.sqrt(x*x + y*y);
+            double forceCap = GlobalConstants.BUBBLE_BASIC_RADIUS + this.radius + GlobalConstants.BUBBLE_VARIATION_RADIUS;
+            if( forceValue > forceCap){
+                x = x * (float) (forceCap/ forceValue);
+                y = y * (float) (forceCap/ forceValue);
+            }
+
+            x *= powerMultiplier;
+            y *= powerMultiplier;
             /*float x = (this.getPosX() - elementJoined.getPosX() );
             float y = (this.getPosY() - elementJoined.getPosY() );
 
@@ -113,7 +125,7 @@ public class Physic implements Component{
             force.setX( x );
             force.setY( y );
 */
-            force.set((this.getPosX() - elementJoined.getPosX())*powerMultiplier, (this.getPosY() - elementJoined.getPosY())*powerMultiplier);
+            force.set(x, y);
         }else{
             Log.e("RUOTA", "stai tentando di far ruotare paff anche se non è agganciato ad una bolla");
         }
