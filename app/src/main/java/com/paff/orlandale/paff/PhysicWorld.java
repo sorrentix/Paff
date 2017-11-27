@@ -48,7 +48,7 @@ public class PhysicWorld {
     Pool<GameObject>  bubblesPool;
     List<GameObject>  activeBubbles = new ArrayList<>();
 
-
+    boolean fallFlag = true;
 
     public PhysicWorld(Box physicalSize, Input input) {
         this.physicalSize = physicalSize;
@@ -83,45 +83,52 @@ public class PhysicWorld {
         switch (gameState) {
             case SHOT:
               //  Log.e("SPARA", "SPARA");
+                paff.physic.resetTotalForce();
                 paff.physic.nullifyResidualVelocity();
-                paff.physic.computeForce(480);//1000
+                paff.physic.computeForce(450);//1000
                 paff.physic.breakJoint();
                 paff.physic.applyForce();
-
                 world.setGravity(GlobalConstants.GRAVITY.getX(),GlobalConstants.GRAVITY.getY());
+                fallFlag = false;
                 gameState = GameState.WAITING;
                 break;
             case ROTATE:
                 currentAcceleration = input.getAccelX();
-                float forceParameter =  Math.abs(currentAcceleration);
-                paff.physic.computeForce(4 * forceParameter);//20
-                paff.physic.computeForceDirection(input.getAccelX());
+                int forceParameter =  Math.abs((int)currentAcceleration);
+                paff.physic.computeForce(6 *forceParameter);//20
+                paff.physic.computeForceDirection(currentAcceleration);
                 paff.physic.applyForce();
                 if(paff.evtManager.isAccelXOpposite(previousAcceleration)) {
-                    paff.physic.computeForce(25 * forceParameter);
-                    paff.physic.applyExtraBrakingForce();
+                    //paff.physic.computeForceDirection(currentAcceleration);
+                    //paff.physic.applyTotalForce();
+                    paff.physic.computeForce(25 *forceParameter);//20
+                    paff.physic.computeForceDirection(currentAcceleration);
+                    paff.physic.applyForce();
                 }
+
                 previousAcceleration = currentAcceleration;
-
-             //   Log.e("ROTATE : ", "X=" + input.getAccelX() + "\n Y=" + input.getAccelY());
                 break;
-            case WAITING:
-            //    Log.e("WAITING", "WAITING");
-            break;
-            case JOINT:
-                world.setGravity(0,0);
-                paff.physic.setDistanceJoint(collidedBubble);
-            //    Log.e("JOINT", "JOINT");
 
-                gameState = GameState.ROTATE;
-            break;
-            default:
-            break;
-        }
+            case WAITING:
+                //    Log.e("WAITING", "WAITING");
+                fallFlag = true;
+                break;
+                case JOINT:
+                    world.setGravity(0,0);
+                    paff.physic.setDistanceJoint(collidedBubble);
+                    //paff.physic.nullifyResidualVelocity();
+                //    Log.e("JOINT", "JOINT");
+
+                    gameState = GameState.ROTATE;
+                break;
+                default:
+                break;
+            }
 
         paff.physic.checkToroidalWorld();
         for (int i = 0; i < activeBubbles.size(); i++){
-            activeBubbles.get(i).physic.fallSmoothly();
+            if (fallFlag)
+                activeBubbles.get(i).physic.fallSmoothly();
             if (markAsRemovableFallenBubble(activeBubbles.get(i)) || markAsExplodedBubble(activeBubbles.get(i))){
                 GameObject b = activeBubbles.get(i);
                 activeBubbles.remove(b);
