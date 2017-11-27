@@ -16,18 +16,21 @@ import java.util.List;
 public class Animation {
     Graphics g;
     Pixmap [] images;
+    Rect srcR;
     Rect r[];
     int id;
     int currentImage = 0;
+
     private List<AnimationPool.onAnimationCompleteListener> listeners = new ArrayList<AnimationPool.onAnimationCompleteListener>();
 
     public void addListener(AnimationPool.onAnimationCompleteListener toAdd) {
         listeners.add(toAdd);
     }
 
-    public Animation(Graphics g, Pixmap[] images, Rect []r, int id){
+    public Animation(Graphics g, Pixmap[] images, Rect srcR, Rect []dstR, int id){
         this.images = images;
-        this.r = r;
+        this.srcR = srcR;
+        this.r = dstR;
         this.id = id;
         this.g = g;
     }
@@ -36,12 +39,8 @@ public class Animation {
         return id;
     }
 
-    Rect rectstart = new Rect(0,0,800,800);
     public void executeAnimation(){
-        //execution ended
-
-        g.drawScaledPixmap(images[currentImage],rectstart ,r[currentImage]);
-        //g.drawPixmap(images[currentImage], r[currentImage].left, r[currentImage].top);
+        g.drawScaledPixmap(images[currentImage],srcR ,r[currentImage]);
         currentImage++;
         // Notify everybody that may be interested.
         if( currentImage == images.length-1 ){

@@ -58,7 +58,7 @@ public class GameScreen extends Screen {
 
         score = setText(new Position(60,60),Assets.score, Assets.bubblexplosion,new Text("0"));
         highScore = setText(new Position(GlobalConstants.FRAME_BUFFER_WIDTH-55,60),Assets.highscore, Assets.bubblexplosion,new Text(""+Settings.highscore));
-
+        animationPool.animationToExecute = 1;
     }
 
     @Override
@@ -90,6 +90,10 @@ public class GameScreen extends Screen {
                             game.setScreen(new GameMenuScreen(game));
                     }
                 }
+                break;
+            case SETUP:
+                if(animationPool.animationToExecute ==-1)
+                    physicWorld.gameState = GameState.WAITING;
                 break;
             default:
                 physicWorld.update();
@@ -156,10 +160,16 @@ public class GameScreen extends Screen {
                 graphics.drawGameObject(exitBtn);
                 graphics.drawGameObject(gameover);
                 break;
+            case SETUP:
+                if(animationPool.animationToExecute !=-1) {
+                    ((PaffGraphics) graphics).drawFilter(GlobalConstants.Colors.GREY);
+                    animationPool.getAnimationByID(animationPool.animationToExecute).executeAnimation();
+                }
+                break;
             default:
                 break;
-            }
-        animationPool.getAnimationByID(1).executeAnimation();
+        }
+
 
     }
 

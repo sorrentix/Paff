@@ -8,6 +8,7 @@ import java.util.Map;
  */
 public class AnimationPool {
     Map<Integer, Animation> animations;
+    public int animationToExecute = -1;
 
     public AnimationPool(){
         animations = new HashMap<>();

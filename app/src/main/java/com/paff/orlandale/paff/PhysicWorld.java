@@ -41,7 +41,7 @@ public class PhysicWorld {
     public float timeOfSpeedIncrement  = System.nanoTime()/1000000000.0f;
     public float gameSpeed = 0.02f;
 
-    GameState gameState = GameState.WAITING;
+    GameState gameState = GameState.SETUP;
     GameState previousState = GameState.WAITING;
 
     GameObject paff;
@@ -57,7 +57,7 @@ public class PhysicWorld {
         this.world = new World(GlobalConstants.GRAVITY.getX(), GlobalConstants.GRAVITY.getY());
 
 
-        paff       = Screen.setBubble(this,GlobalConstants.PAFF_RADIUS,new Vec2(6.0f, 2.8f - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.05f),BodyType.dynamicBody, input,-1);
+        paff = Screen.setBubble(this,GlobalConstants.PAFF_RADIUS,new Vec2(6.0f, 2.8f - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.05f),BodyType.dynamicBody, input,-1);
         paffPreviousPosition = paff.physic.getPosY();
         bubblesPool = initPool(this, input);
         for( int i = 0; i < GlobalConstants.BUBBLE_NUMBER; i++){
@@ -66,6 +66,7 @@ public class PhysicWorld {
 
         paffContactListener = new PaffContactListener(this);
         world.setContactListener(paffContactListener);
+
     }
 
 
