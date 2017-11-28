@@ -11,7 +11,7 @@ import com.badlogic.androidgames.framework.Sound;
  * Created by sorrentix on 08/11/2017.
  */
 /**
- * Convinience class usata per mantere un riferimento a tutti gli asset
+ * Convenience class usata per mantere un riferimento a tutti gli asset
  * necessari al corretto svolgimento del gioco.
  * Tipi di asset sono: Sound, Music, Pixmap, Typeface
  */

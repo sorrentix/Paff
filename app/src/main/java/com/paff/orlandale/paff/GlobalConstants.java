@@ -6,7 +6,7 @@ import com.google.fpl.liquidfun.Vec2;
  * Created by Yoshi on 17/11/2017.
  */
 /**
- * Convinience class usata per conservare tutte le costanti del progetto
+ * Convenience class usata per conservare tutte le costanti del progetto
  */
 public class GlobalConstants {
     public static final int FRAME_BUFFER_WIDTH = 1080;
