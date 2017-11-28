@@ -1,10 +1,8 @@
 package com.paff.orlandale.paff;
 
 import android.graphics.Rect;
-
 import com.badlogic.androidgames.framework.Graphics;
 import com.badlogic.androidgames.framework.Pixmap;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,10 +38,10 @@ public class Animation {
      */
     public Animation(Graphics g, Pixmap[] images, Rect srcR, Rect []dstR, int id){
         this.images = images;
-        this.srcR = srcR;
-        this.r = dstR;
-        this.id = id;
-        this.g = g;
+        this.srcR   = srcR;
+        this.r      = dstR;
+        this.id     = id;
+        this.g      = g;
     }
 
     public int getID(){

@@ -1,7 +1,5 @@
 package com.paff.orlandale.paff;
 
-import android.util.Log;
-
 import com.google.fpl.liquidfun.Body;
 import com.google.fpl.liquidfun.BodyDef;
 import com.google.fpl.liquidfun.BodyType;

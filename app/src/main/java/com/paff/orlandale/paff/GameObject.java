@@ -2,7 +2,6 @@ package com.paff.orlandale.paff;
 
 import com.badlogic.androidgames.framework.Pixmap;
 import com.badlogic.androidgames.framework.Sound;
-
 import java.lang.reflect.Field;
 
 /**

@@ -3,7 +3,6 @@ package com.badlogic.androidgames.framework.impl;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -43,7 +42,7 @@ public class AndroidFastRenderView extends SurfaceView implements Runnable {
 
             game.getCurrentScreen().update(deltaTime);
             game.getCurrentScreen().present(deltaTime);
-            fpsCounter.logFrame();
+            //fpsCounter.logFrame();
             Canvas canvas = holder.lockCanvas();
 
             canvas.scale(1.0f/game.getScaleFactor(),1.0f/game.getScaleFactor());

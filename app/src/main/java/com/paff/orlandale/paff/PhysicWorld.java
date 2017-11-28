@@ -1,15 +1,11 @@
 package com.paff.orlandale.paff;
 
-import android.util.Log;
-
-import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Pool;
 import com.badlogic.androidgames.framework.Screen;
 import com.google.fpl.liquidfun.BodyType;
 import com.google.fpl.liquidfun.Vec2;
 import com.google.fpl.liquidfun.World;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -119,7 +115,6 @@ public class PhysicWorld {
          */
         switch (gameState) {
             case SHOT:
-              //  Log.e("SPARA", "SPARA");
                 paff.physic.nullifyResidualVelocity();
                 paff.physic.computeForce(450);//1000
                 paff.physic.breakJoint();
@@ -189,11 +184,8 @@ public class PhysicWorld {
     public boolean markAsRemovableFallenBubble(GameObject b){
         boolean removable = (b.physic.getPosY() - b.physic.getRadius()  >= GlobalConstants.Physics.Y_MAX  );
 
-    //    Log.e("BREAKING JOINT","1"+ " removable: "+ removable+ " jointpaff: "+paff.physic.joint);
         if (removable && paff.physic.joint != null){
-          //  Log.e("BREAKING JOINT","2"+ "paff: "+paff.physic +" probable paff: "+paff.physic.joint.getBodyA().getUserData() +" probable other body:"+paff.physic.joint.getBodyB().getUserData()+ " other body: "+ b.physic );
             if (paff.physic.joint.getBodyB().getUserData().equals(b.physic) ) {
-           //     Log.e("BREAKING JOINT","3");
                 paff.physic.breakJoint();
                 paff.physic.nullifyResidualLinearVelocity();
                 world.setGravity(GlobalConstants.GRAVITY.getX(),GlobalConstants.GRAVITY.getY());
@@ -212,9 +204,7 @@ public class PhysicWorld {
         boolean removable= ( b.physic.elapsedTime >= b.physic.expirationTime);
 
         if (removable && paff.physic.joint != null){
-            //  Log.e("BREAKING JOINT","2"+ "paff: "+paff.physic +" probable paff: "+paff.physic.joint.getBodyA().getUserData() +" probable other body:"+paff.physic.joint.getBodyB().getUserData()+ " other body: "+ b.physic );
             if (paff.physic.joint.getBodyB().getUserData().equals(b.physic) ) {
-                //     Log.e("BREAKING JOINT","3");
                 paff.physic.breakJoint();
                 paff.physic.nullifyResidualLinearVelocity();
                 world.setGravity(GlobalConstants.GRAVITY.getX(),GlobalConstants.GRAVITY.getY());

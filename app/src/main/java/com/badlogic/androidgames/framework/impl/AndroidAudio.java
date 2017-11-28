@@ -60,7 +60,6 @@ public class AndroidAudio implements Audio {
             soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
                 @Override
                 public void onLoadComplete(SoundPool soundPool, int i, int i1) {
-                    System.out.println("onload complete listenere called---------------------------------------------for sound"+ getSoundByID(i) + "input id"+ i);
                     getSoundByID(i).setIsLoaded();
                 }
             });

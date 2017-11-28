@@ -1,7 +1,5 @@
 package com.paff.orlandale.paff;
 
-import android.util.Log;
-
 import com.badlogic.androidgames.framework.Input;
 
 /**

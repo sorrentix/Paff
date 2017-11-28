@@ -1,7 +1,6 @@
 package com.paff.orlandale.paff;
 
 import android.graphics.Typeface;
-
 import com.badlogic.androidgames.framework.Music;
 import com.badlogic.androidgames.framework.Pixmap;
 import com.badlogic.androidgames.framework.Sound;

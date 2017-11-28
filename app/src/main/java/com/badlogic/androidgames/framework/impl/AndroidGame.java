@@ -85,8 +85,6 @@ public abstract class AndroidGame extends Activity implements Game {
         scaleFactor = (scaleFactorX>scaleFactorY)? scaleFactorY:scaleFactorX;
         offset = Math.abs(metrics.widthPixels - ((1.0f/scaleFactor)* GlobalConstants.FRAME_BUFFER_WIDTH))/2.0f;
 
-        Log.e(TAG,"screenWidth: " + screenWidth + " screenHeight: " + screenHeight + " scaleFactorX: " + scaleFactorX+ " scaleFactorY: " + scaleFactorY+"ScaleFactor: "+scaleFactor);
-
         PhysicToPixel.physicalSize = new Box(GlobalConstants.Physics.X_MIN,GlobalConstants.Physics.Y_MIN,GlobalConstants.Physics.X_MAX,GlobalConstants.Physics.Y_MAX);//new Box(-10,-15,10,15);
         PhysicToPixel.framebufferWidth = GlobalConstants.FRAME_BUFFER_WIDTH;
         PhysicToPixel.framebufferHeight = GlobalConstants.FRAME_BUFFER_HEIGHT;

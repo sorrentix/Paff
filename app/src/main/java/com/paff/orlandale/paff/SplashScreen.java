@@ -1,8 +1,6 @@
 package com.paff.orlandale.paff;
 
 import android.graphics.Rect;
-import android.graphics.Typeface;
-
 import com.badlogic.androidgames.framework.Audio;
 import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Graphics;
@@ -141,7 +139,6 @@ class SplashScreen extends Screen {
             @Override
             public void onAnimationComplete(Animation anim) {
                 //execute something when the animation is complete
-                System.out.println("fai partire il 2");
                 animationPool.animationToExecute = 2;
                 animationPool.getAnimationByID(2).currentImage=0;
             }
@@ -152,7 +149,6 @@ class SplashScreen extends Screen {
             @Override
             public void onAnimationComplete(Animation anim) {
                 //execute something when the animation is complete
-                System.out.println("fai partire il 3");
                 animationPool.animationToExecute = 3;
                 animationPool.getAnimationByID(3).currentImage=0;
             }
@@ -163,7 +159,6 @@ class SplashScreen extends Screen {
             @Override
             public void onAnimationComplete(Animation anim) {
                 //execute something when the animation is complete
-                System.out.println("fai partire il 3");
                 animationPool.animationToExecute = 4;
                 animationPool.getAnimationByID(4).currentImage=0;
             }
@@ -174,7 +169,6 @@ class SplashScreen extends Screen {
             @Override
             public void onAnimationComplete(Animation anim) {
                 //execute something when the animation is complete
-                System.out.println("finito fai partire il gioo");
                 animationPool.animationToExecute = -1;
                 Assets.gamesoundtheme.setLooping(true);
                 Assets.gamesoundtheme.play();
