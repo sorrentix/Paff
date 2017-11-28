@@ -26,6 +26,7 @@ public class SettingsScreen extends Screen {
     GameObject background;
     GameObject soundText;
     GameObject musicText;
+    GameObject credits;
 
     public SettingsScreen(Game game) {
         super(game);
@@ -42,6 +43,7 @@ public class SettingsScreen extends Screen {
         background  = setSimpleImage(new Position(0, 0), Assets.menu_background);
         soundText   = setSimpleImage(new Position( 100, 900), Assets.sounds_text);
         musicText   = setSimpleImage(new Position( 100, 1300), Assets.music_text);
+        credits     = setSimpleImage(new Position(40,1550),Assets.credits);
 
         g = game.getGraphics();
         a = game.getAudio();
@@ -111,6 +113,8 @@ public class SettingsScreen extends Screen {
 
         g.drawGameObject(musicBtn);
         g.drawGameObject(musicText);
+
+        g.drawGameObject(credits);
 
         switch(state){
             case SOUND_ON:

@@ -50,7 +50,8 @@ public class Assets {
     public static Pixmap count2;
     public static Pixmap count1;
     public static Pixmap countJump;
-    
+    public static Pixmap credits;
+
     //Font
     public static Typeface font;
 

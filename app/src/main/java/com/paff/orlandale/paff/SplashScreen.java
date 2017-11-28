@@ -95,6 +95,7 @@ class SplashScreen extends Screen {
         Assets.count1 = g.newPixmap("count1.png",Graphics.PixmapFormat.ARGB4444);
         Assets.countJump = g.newPixmap("countjump.png",Graphics.PixmapFormat.ARGB4444);
         Assets.scoreText = g.newPixmap("scoretext.png",Graphics.PixmapFormat.ARGB4444);
+        Assets.credits = g.newPixmap("credits_nomi.png", Graphics.PixmapFormat.ARGB4444);
         //Font
         Assets.font = f.newFont("paff_font.ttf");
 
