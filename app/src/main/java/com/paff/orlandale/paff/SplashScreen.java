@@ -103,6 +103,9 @@ class SplashScreen extends Screen {
         Assets.gamesoundtheme = a.newMusic("gamesoundtheme.ogg");
         Assets.gamemenusoundtheme = a.newMusic("gamemenusoundtheme.ogg");
         Assets.countdown = a.newSound("jump.ogg");
+        Assets.newhighscore = a.newSound("newhighscore.ogg");
+        Assets.highscore_gameover = a.newSound("hs_gameover.ogg");
+        Assets.fall_gameover = a.newSound("gameover_fall.ogg");
         Assets.flagReady = true;
         state = GameState.COMPLETE_ANIMATION;
 
@@ -137,6 +140,7 @@ class SplashScreen extends Screen {
                 //execute something when the animation is complete
                 System.out.println("fai partire il 2");
                 animationPool.animationToExecute = 2;
+                animationPool.getAnimationByID(2).currentImage=0;
             }
         });
         animationPool.loadAnimation(countDown3Animation);
@@ -147,6 +151,7 @@ class SplashScreen extends Screen {
                 //execute something when the animation is complete
                 System.out.println("fai partire il 3");
                 animationPool.animationToExecute = 3;
+                animationPool.getAnimationByID(3).currentImage=0;
             }
         });
         animationPool.loadAnimation(countDown2Animation);
@@ -157,6 +162,7 @@ class SplashScreen extends Screen {
                 //execute something when the animation is complete
                 System.out.println("fai partire il 3");
                 animationPool.animationToExecute = 4;
+                animationPool.getAnimationByID(4).currentImage=0;
             }
         });
         animationPool.loadAnimation(countDown1Animation);

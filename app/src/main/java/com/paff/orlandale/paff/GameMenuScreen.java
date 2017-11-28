@@ -16,6 +16,9 @@ import java.util.List;
  * Created by sorrentix on 08/11/2017.
  */
 
+/**
+ * Screen del menu di gioco
+ */
 class GameMenuScreen extends Screen {
     Graphics g;
     Audio a;
@@ -25,21 +28,30 @@ class GameMenuScreen extends Screen {
 
 
     GameObject playBtn;
+    GameObject playBtnClicked;
     GameObject settingsBtn;
+    GameObject settingsBtnClicked;
     GameObject helpBtn;
+    GameObject helpBtnClicked;
     GameObject background;
     GameObject logo;
 
     GameState state = GameState.WAITING;
 
-
+    /**
+     * Costruttore della classe. Inizializza tutte le entità necessarie al rendering.
+     * @param game Implementazione dell'interfaccia Game
+     */
     public GameMenuScreen(Game game) {
         super(game);
         i = game.getInput();
         i.clearTouchEvents();
         playBtn     = setButton(new Position(60, 760), Assets.btn_play, Assets.bubblexplosion, i);
+        playBtnClicked     = setButton(new Position(60, 760), Assets.btn_play_click, Assets.bubblexplosion, i);
         settingsBtn = setButton(new Position(640, 960), Assets.btn_settings, Assets.bubblexplosion, i);
+        settingsBtnClicked = setButton(new Position(640, 960), Assets.btn_settings_click, Assets.bubblexplosion, i);
         helpBtn     = setButton(new Position(240, 1360), Assets.btn_help, Assets.bubblexplosion, i);
+        helpBtnClicked     = setButton(new Position(240, 1360), Assets.btn_help_click, Assets.bubblexplosion, i);
         logo        = setSimpleImage(new Position(262, 160), Assets.logo);
         background  = setSimpleImage(new Position(0, 0), Assets.menu_background);
 
@@ -56,7 +68,10 @@ class GameMenuScreen extends Screen {
     }
 
 
-
+    /**
+     * Il metodo si occupa di effettuare il cambio di stato in base al tasto cliccato.
+     * @param deltaTime il tempo intercorso tra due frame
+     */
     @Override
     public void update(float deltaTime) {
 
@@ -77,20 +92,25 @@ class GameMenuScreen extends Screen {
 
     }
 
+    /**
+     * Il metodo si occupa di effettuare il rendering in base allo stato attivo
+     * @param deltaTime il tempo intercorso tra due frame
+     */
     @Override
     public void present(float deltaTime) {
 
         switch(state){
+
             case WAITING:
                 g.drawGameObject(background);
                 g.drawGameObject(logo);
                 g.drawGameObject(playBtn);
                 g.drawGameObject(settingsBtn);
                 g.drawGameObject(helpBtn);
+
                 break;
             case PLAY:
                 playBtn.sound.play();
-                animationPool.getAnimationByID(1).executeAnimation();
                 game.setScreen(new GameScreen(game));
                 break;
             case HELP:

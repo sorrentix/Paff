@@ -18,8 +18,8 @@ public class AnimationPool {
         animations.put(a.getID(), a);
     }
 
-    public static interface onAnimationCompleteListener{
-        public  abstract void onAnimationComplete(Animation a);
+    public interface onAnimationCompleteListener{
+         void onAnimationComplete(Animation a);
     }
 
     public Animation getAnimationByID(int id){

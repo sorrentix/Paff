@@ -36,6 +36,8 @@ public class GlobalConstants {
         public static final int RED_DARK = 0xc0392b;
         public static final int ORANGE = 0xf39c12;
         public static final int WHITE = 0xffffff;
+        public static final int GREEN = 0x2ecc71;
+        public static final int GREEN_LIGHT = 0x00fc00;
     }
     public static final int ALPHA = 255;
 

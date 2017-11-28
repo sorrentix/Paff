@@ -18,6 +18,9 @@ public class Assets {
     public static Music splashsound;
     public static Music gamemenusoundtheme;
     public static Sound countdown;
+    public static Sound highscore_gameover;
+    public static Sound newhighscore;
+    public static Sound fall_gameover;
     /*GRAFICHE*/
     public static Pixmap logo;
     public static Pixmap menu_background;

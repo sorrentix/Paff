@@ -52,6 +52,7 @@ public class PhysicWorld {
     List<GameObject>  activeBubbles = new ArrayList<>();
 
     boolean fallFlag = true;
+    boolean newhighscore=false;
 
     public PhysicWorld(Box physicalSize, Input input) {
         this.physicalSize = physicalSize;
@@ -81,9 +82,11 @@ public class PhysicWorld {
         if( GlobalConstants.BUBBLE_NUMBER > activeBubbles.size()){
             activeBubbles.add(bubblesPool.newObject());
         }
-        if(paff.physic.getPosY()-paff.physic.getRadius()-0.2f > GlobalConstants.Physics.Y_MAX  )
+        if(paff.physic.getPosY()-paff.physic.getRadius()-0.2f > GlobalConstants.Physics.Y_MAX  ) {
             gameState = GameState.GAME_OVER;
-
+            if(!newhighscore)
+                Assets.fall_gameover.play();
+        }
         switch (gameState) {
             case SHOT:
               //  Log.e("SPARA", "SPARA");
