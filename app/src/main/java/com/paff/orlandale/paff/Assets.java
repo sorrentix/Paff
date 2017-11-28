@@ -10,7 +10,11 @@ import com.badlogic.androidgames.framework.Sound;
 /**
  * Created by sorrentix on 08/11/2017.
  */
-
+/**
+ * Convenience class usata per mantere un riferimento a tutti gli asset
+ * necessari al corretto svolgimento del gioco.
+ * Tipi di asset sono: Sound, Music, Pixmap, Typeface
+ */
 public class Assets {
     /*AUDIO*/
     public static Sound bubblexplosion;
@@ -56,19 +60,4 @@ public class Assets {
     public static boolean areReady(){
         return flagReady;
     }
-
-    /*
-    public static boolean hasNullElement(){
-        Field[] allFields = Assets.class.getDeclaredFields();
-        for (Field field : allFields) {
-            try {
-                if (field.get(null) == null)
-                    return false;
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        return true;
-    }*/
-
 }

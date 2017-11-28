@@ -1,5 +1,8 @@
 package com.paff.orlandale.paff;
 
+/**
+ * Componente posizione del GameObject che non ha componente fisica
+ */
 public class Position implements Component{
     public int x,y;
 

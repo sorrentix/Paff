@@ -12,6 +12,9 @@ import com.google.fpl.liquidfun.Joint;
 import com.google.fpl.liquidfun.Shape;
 import com.google.fpl.liquidfun.Vec2;
 
+/**
+ * Classe che gestisce la componente fisica di un GameObject
+ */
 public class Physic implements Component{
 
     PhysicWorld world;
@@ -29,17 +32,23 @@ public class Physic implements Component{
     private float radius;
     public float oldPosX;
     public double perlinSeed;
-    public Vec2 totalForce = new Vec2(0,0);
-    private float percentage = 0.01f;
 
+
+    /**
+     * Costruttore della classe, inizializza i campi.
+     * @param  wld  istanza del PhysicWorld associato al gioco
+     * @param  expirationTime tempo di vita associato al GameObject
+     */
     public Physic(PhysicWorld wld, float expirationTime){
         world = wld;
         this.expirationTime = expirationTime;
         force = new Vec2(0,0);
     }
 
-
-
+    /**
+     * Imposta un distance joint tra il GameObject corrente e quello in input
+     * @param  elementB componente fisica del GameObject a cui applicare il distance joint
+     */
     public void setDistanceJoint(Physic elementB){
         DistanceJointDef jointDef = new DistanceJointDef();
         jointDef.setBodyA(this.body);
@@ -51,6 +60,10 @@ public class Physic implements Component{
         jointDef.delete();
     }
 
+    /**
+     * Imposta come shape della componente fisica un cerchio
+     * @param  radius raggio del cerchio
+     */
     public void CircleShape(float radius){
         CircleShape c =  new CircleShape();
         c.setPosition(0.0f,0.0f);
@@ -63,6 +76,12 @@ public class Physic implements Component{
 
     public void PolygonShape(){}
 
+    /**
+     * Creazione del corpo fisico di un GameObject
+     * @param  physicPosition  posizione di partenza nel mondo fisico
+     * @param  density densità del corpo fisico, influisce sulla massa
+     * @param  bodyType tipo di corpo (statico, cinematico, dinamico..)
+     */
     public void Body( Vec2 physicPosition, float density, BodyType bodyType){
         BodyDef bdef = new BodyDef();
         bdef.setPosition(physicPosition);
@@ -71,10 +90,11 @@ public class Physic implements Component{
         this.body.setSleepingAllowed(false);
         this.body.setUserData(this);
         this.body.setBullet(true);
+        this.body.setLinearDamping(0);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.setShape(shape);
-        fixtureDef.setFriction(0.1f);
+        fixtureDef.setFriction(1);
         fixtureDef.setDensity(density);
         this.body.createFixture(fixtureDef);
 
@@ -95,6 +115,12 @@ public class Physic implements Component{
         return body.getPositionY();
     }
 
+
+    /**
+     * Calcola il vettore forza tra due GameObject, inteso come vettore distanza tra i due centri
+     * moltiplicato per una costante.
+     * @param  powerMultiplier costante moltiplicativa della forza
+     */
     public void computeForce(float powerMultiplier){
         if(joint != null) {
             Physic elementJoined = ( joint.getBodyA().getUserData() == this) ?
@@ -103,6 +129,9 @@ public class Physic implements Component{
             float x = (this.getPosX() - elementJoined.getPosX());
             float y = (this.getPosY() - elementJoined.getPosY());
 
+            /**
+             * Per evitare che il vettore forza sia troppo elevato, viene inserito un tetto massimo
+             */
             double forceValue = Math.sqrt(x*x + y*y);
             double forceCap = GlobalConstants.BUBBLE_BASIC_RADIUS + this.radius + GlobalConstants.BUBBLE_VARIATION_RADIUS;
             if( forceValue > forceCap){
@@ -112,75 +141,57 @@ public class Physic implements Component{
 
             x *= powerMultiplier;
             y *= powerMultiplier;
-            /*float x = (this.getPosX() - elementJoined.getPosX() );
-            float y = (this.getPosY() - elementJoined.getPosY() );
-
-            float ratio = Math.abs(x/y);
-            if( ratio < 1.0f ){
-                x = x * ratio * powerMultiplier;
-                y = y * powerMultiplier;
-            } else {
-                x = x * powerMultiplier;
-                y = y * (1/ratio) * powerMultiplier;
-            }
-            force.setX( x );
-            force.setY( y );
-*/
             force.set(x, y);
-        }else{
-            Log.e("RUOTA", "stai tentando di far ruotare paff anche se non è agganciato ad una bolla");
         }
     }
 
+    /**
+     * Calcola la direzione in cui applicare una forza per il GameObject
+     * @param  value valore che indica la direzione della forza
+     */
     public void computeForceDirection(float value){
         if(value > 0)
             force.rotate(-90);
         else if(value < 0)
             force.rotate(90);
-
-        totalForce.set(totalForce.getX()+force.getX(),totalForce.getY()+force.getY());
-        if (percentage <= 0.9f)
-            percentage += 0.01;
     }
 
+
+    /**
+     * Applica la forza calcolata dal metodo computeForce al GameObject corrente
+     */
     public  void applyForce(){
         this.body.applyForce(force,this.body.getPosition(),false);
     }
 
-    public  void applyTotalForce(){
-        totalForce.set(totalForce.getX()*percentage,totalForce.getY()*percentage);
-        this.body.applyForce(totalForce,this.body.getPosition(),false);
-        resetTotalForce();
-    }
 
-    public void resetTotalForce(){
-        totalForce.set(0,0);
-        percentage = 0.01f;
-    }
-
+    /**
+     * Azzera le velocità del corpo
+     */
     public void nullifyResidualVelocity(){
         this.body.setAngularVelocity(0);
         this.body.setLinearVelocity(nullForce);
     }
 
+    /**
+     * Azzera la velocità lineare del corpo
+     */
     public void  nullifyResidualLinearVelocity(){
         this.body.setLinearVelocity(nullForce);
     }
 
 
-    public  void applyExtraBrakingForce(){
-        //this.body.setLinearVelocity(this.body.getAngularVelocity()/20.0f);
-        //this.body.setAngularVelocity(this.body.getAngularVelocity()/20.0f);
-        force.setX(force.getX());
-        force.setY(force.getY());
-        this.body.applyForce(force,this.body.getPosition(),false);
-    }
-
+    /**
+     * Distrugge il joint del corpo
+     */
     public void breakJoint(){
         world.world.destroyJoint(joint);
         joint = null;
     }
 
+    /**
+     * Controlla che un GameObject si sposti nel mondo in modo toroidale.
+     */
     public void checkToroidalWorld(){
         if( this.joint == null ) {
             if (this.getPosX() > world.physicalSize.xmax + radius) {
@@ -194,7 +205,11 @@ public class Physic implements Component{
             }
         }
     }
-
+    /**
+     * Muove ad ogni step del mondo fisico il GameObject nel seguente modo
+     * Verticalmente in modo rettilineo uniforme verso il basso
+     * Orizzontalmente applicando il rumore di Perlin al GameObject, ottentedo un effetto ondulato
+     */
     public void fallSmoothly(){
         this.perlinSeed += 0.007;
         fallingMovement.setX(this.oldPosX + ImprovedNoise.map((float)ImprovedNoise.noise(this.perlinSeed,0,0),(float)-Math.sqrt(0.25),(float)Math.sqrt(0.25),-1f,1f));

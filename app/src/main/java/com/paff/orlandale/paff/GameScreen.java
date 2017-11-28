@@ -54,7 +54,7 @@ public class GameScreen extends Screen {
         input.clearTouchEvents();
         animationPool = game.getAnimationPool();
         Input i = game.getInput();
-        physicWorld = new PhysicWorld( PhysicToPixel.physicalSize, input);
+        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,input);
         paff       = physicWorld.paff;
         bubbles    = physicWorld.activeBubbles;
 

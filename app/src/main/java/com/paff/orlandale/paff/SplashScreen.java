@@ -12,6 +12,9 @@ import com.badlogic.androidgames.framework.Screen;
  * Created by sorrentix on 08/11/2017.
  */
 
+/**
+ * Schermata iniziale in cui avviene il caricamento degli assets
+ */
 class SplashScreen extends Screen {
 
 

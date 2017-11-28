@@ -4,6 +4,9 @@ package com.paff.orlandale.paff;
  * Created by sorrentix on 13/11/2017.
  */
 
+/**
+ * Conveniece class per la conversione dal sistema di riferimento fisico a quello pixel
+ */
 public class PhysicToPixel {
 
     public static Box physicalSize;

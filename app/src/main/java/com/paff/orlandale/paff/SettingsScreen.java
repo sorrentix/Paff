@@ -11,7 +11,9 @@ import java.util.List;
 /**
  * Created by sorrentix on 10/11/2017.
  */
-
+/**
+ * Schermata per la gestione dei settings
+ */
 public class SettingsScreen extends Screen {
     Graphics g;
     Audio a;
