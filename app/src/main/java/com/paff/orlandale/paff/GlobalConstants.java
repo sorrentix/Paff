@@ -5,11 +5,13 @@ import com.google.fpl.liquidfun.Vec2;
 /**
  * Created by Yoshi on 17/11/2017.
  */
-
+/**
+ * Convenience class usata per conservare tutte le costanti del progetto
+ */
 public class GlobalConstants {
     public static final int FRAME_BUFFER_WIDTH = 1080;
     public static final int FRAME_BUFFER_HEIGHT = 1920;
-    public static final float FPS = 1.0f/60.0f;//1.0f/60.0f;
+    public static final float FPS = 1.0f/60.0f;
 
     public static final float VOLUME = 1.0f;
 
@@ -36,6 +38,8 @@ public class GlobalConstants {
         public static final int RED_DARK = 0xc0392b;
         public static final int ORANGE = 0xf39c12;
         public static final int WHITE = 0xffffff;
+        public static final int GREEN = 0x2ecc71;
+        public static final int GREEN_LIGHT = 0x00fc00;
     }
     public static final int ALPHA = 255;
 

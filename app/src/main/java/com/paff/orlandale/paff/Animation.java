@@ -12,7 +12,9 @@ import java.util.List;
  * Created by Yoshi on 10/11/2017.
  */
 
-
+/**
+ * Classe per la gestione di un'animazione con sprite
+ */
 public class Animation {
     Graphics g;
     Pixmap [] images;
@@ -27,6 +29,15 @@ public class Animation {
         listeners.add(toAdd);
     }
 
+    /**
+     * Costruttore della classe, inizializza i campi.
+     * @param  g  istanza di una classe che implementa Graphics, consente di
+     *            disegnare lo step corrente dell'animazione
+     * @param  images  sequenza di immagini che compongono l'animazione
+     * @param  srcR  Rect delle immagini in input da prendere
+     * @param  dstR  Rect di destinazione sul disegno dell'animazione
+     * @param  id    identificativo univoco per l'animazione
+     */
     public Animation(Graphics g, Pixmap[] images, Rect srcR, Rect []dstR, int id){
         this.images = images;
         this.srcR = srcR;
@@ -39,6 +50,11 @@ public class Animation {
         return id;
     }
 
+
+    /**
+     * Disegna uno step dell'animazione e poi passa allo step successivo.
+     * Quando l'animazione è terminata, avvisa tutti gli ovserver della conclusione
+     */
     public void executeAnimation(){
         g.drawScaledPixmap(images[currentImage],srcR ,r[currentImage]);
         currentImage++;

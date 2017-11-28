@@ -9,10 +9,17 @@ import com.badlogic.androidgames.framework.Screen;
  * Created by sorrentix on 11/11/2017.
  */
 
+/**
+ * Schermata di help del gioco, in cui ci sono le istruzioni su come muoversi
+ */
 public class HelpScreen extends Screen {
     Graphics g;
     Input i;
 
+    /**
+     * Costruttore della classe, inizializza i campi.
+     * @param  game  istanza di una classe che implementa l'interfaccia Game
+     */
     public HelpScreen(Game game) {
         super(game);
 

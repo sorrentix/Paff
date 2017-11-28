@@ -17,11 +17,12 @@ import java.util.Random;
 /**
  * Created by sorrentix on 13/11/2017.
  */
-
+/**
+ * Classe per la gestione del mondo fisico.
+ */
 public class PhysicWorld {
     World world;
 
-    final Box physicalSize;
 
     private static final float TIME_STEP = GlobalConstants.FPS; //60 fps
     private static final int VELOCITY_ITERATIONS = 8;
@@ -52,17 +53,28 @@ public class PhysicWorld {
     List<GameObject>  activeBubbles = new ArrayList<>();
 
     boolean fallFlag = true;
+    boolean newhighscore = false;
 
+    Box physicalSize;
+  
+    /**
+     * Costruttore della classe:
+     * <ul>
+     *     <li>Crea il mondo fisico</li>
+     *     <li>Crea paff</li>
+     *     <li>Crea un Pool di bolle</li>
+     *     <li>Inizializza il contact listener</li>
+     * </ul>
+     * @param  physicalSize  dimensioni del mondo fisico
+     * @param  input  gestore degli input dell'utente (usato per la gestione dell'acceleromentro)
+     */
     public PhysicWorld(Box physicalSize, Input input) {
         this.physicalSize = physicalSize;
         this.input = input;
-
         this.world = new World(GlobalConstants.GRAVITY.getX(), GlobalConstants.GRAVITY.getY());
-
-
         paff = Screen.setBubble(this,GlobalConstants.PAFF_RADIUS,new Vec2(6.0f, 2.8f - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.05f),BodyType.dynamicBody, input,-1);
         paffPreviousPosition = paff.physic.getPosY();
-        bubblesPool = initPool(this, input);
+        bubblesPool = initPool(input);
         for( int i = 0; i < GlobalConstants.BUBBLE_NUMBER; i++){
             activeBubbles.add(bubblesPool.newObject());
         }
@@ -78,16 +90,36 @@ public class PhysicWorld {
     }
 
     public synchronized void update() {
+        /**
+         * Se non sono attive all'interno del gioco abbastanza bolle, ne viene attivata una nuova dal Pool
+         */
         if( GlobalConstants.BUBBLE_NUMBER > activeBubbles.size()){
             activeBubbles.add(bubblesPool.newObject());
         }
-        if(paff.physic.getPosY()-paff.physic.getRadius()-0.2f > GlobalConstants.Physics.Y_MAX  )
+         /**
+         * Verifica la condizione di game over --> paff è uscito dallo schermo.
+         */
+        if(paff.physic.getPosY()-paff.physic.getRadius()-0.2f > GlobalConstants.Physics.Y_MAX  ) {
             gameState = GameState.GAME_OVER;
+            if(!newhighscore)
+                Assets.fall_gameover.play();
+        }
 
+        paff.physic.body.setLinearDamping(0f);
+
+        /**
+         * Gestisce gli stati principali in cui può trovarsi Paff.
+         * <ul>
+         *     <li>SHOT: l'utente ha premuto sullo schermo, mentre Paff era legato ad una bolla
+         *         richiedendo il lancio di Paff</li>
+         *     <li>ROTATE: Paff è legato ad una bolla: viene gestito il movimento tramite acceleromentro</li>
+         *     <li>WAITING: Paff è in volo tra due bolle</li>
+         *     <li>JOINT: Paff ha appena effettuato una collisione con una bolla, viene creato un DistanceJoint</li>
+         * </ul>
+         */
         switch (gameState) {
             case SHOT:
               //  Log.e("SPARA", "SPARA");
-                paff.physic.resetTotalForce();
                 paff.physic.nullifyResidualVelocity();
                 paff.physic.computeForce(450);//1000
                 paff.physic.breakJoint();
@@ -103,33 +135,32 @@ public class PhysicWorld {
                 paff.physic.computeForceDirection(currentAcceleration);
                 paff.physic.applyForce();
                 if(paff.evtManager.isAccelXOpposite(previousAcceleration)) {
-                    //paff.physic.computeForceDirection(currentAcceleration);
-                    //paff.physic.applyTotalForce();
-                    paff.physic.computeForce(25 *forceParameter);//20
-                    paff.physic.computeForceDirection(currentAcceleration);
-                    paff.physic.applyForce();
+                    paff.physic.body.setLinearDamping(5);
+                }
+                else  if (paff.evtManager.isAccelXLess(previousAcceleration)){
+                    paff.physic.body.setLinearDamping(5f);
                 }
 
                 previousAcceleration = currentAcceleration;
                 break;
 
             case WAITING:
-                //    Log.e("WAITING", "WAITING");
                 fallFlag = true;
                 break;
-                case JOINT:
+            case JOINT:
                     world.setGravity(0,0);
                     paff.physic.setDistanceJoint(collidedBubble);
-                    //paff.physic.nullifyResidualVelocity();
-                //    Log.e("JOINT", "JOINT");
-
                     gameState = GameState.ROTATE;
                 break;
-                default:
+            default:
                 break;
             }
 
         paff.physic.checkToroidalWorld();
+
+        /**
+         * Le bolle esplose o uscite fuori dallo schermo vengono riaggiunte al Pool
+         */
         for (int i = 0; i < activeBubbles.size(); i++){
             if (fallFlag)
                 activeBubbles.get(i).physic.fallSmoothly();
@@ -141,11 +172,20 @@ public class PhysicWorld {
         }
 
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
+
+        /**
+         * Incrementa la velocità del gioco ogni GlobalConstants.SPEEDUP_TIME secondi
+         */
         if ( (System.nanoTime()/1000000000.0f)-timeOfSpeedIncrement-totalPausedTime > GlobalConstants.SPEEDUP_TIME){
             timeOfSpeedIncrement = (System.nanoTime()/1000000000.0f);
             gameSpeed += 0.01f;
         }
     }
+
+    /**
+     * Verifica se un GameObject è uscito fuori dai limiti del mondo fisico
+     * @param  b GameObject su cui è effettuata la verifica
+     */
     public boolean markAsRemovableFallenBubble(GameObject b){
         boolean removable = (b.physic.getPosY() - b.physic.getRadius()  >= GlobalConstants.Physics.Y_MAX  );
 
@@ -163,6 +203,10 @@ public class PhysicWorld {
         return removable;
     }
 
+    /**
+     * Verifica se un GameObject ha terminato la sua vita
+     * @param  b GameObject su cui è effettuata la verifica
+     */
     public boolean markAsExplodedBubble(GameObject b) {
         b.physic.elapsedTime = ((System.nanoTime()-b.physic.startTime)/1000000000.0f) - b.physic.totalPausedTime;
         boolean removable= ( b.physic.elapsedTime >= b.physic.expirationTime);
@@ -180,16 +224,22 @@ public class PhysicWorld {
         return removable;
     }
 
-    public synchronized void setGravity(float x, float y) {
-        world.setGravity(x, y);
-    }
-
     @Override
     public void finalize() {
         world.delete();
     }
 
-
+    /**
+     * Gestisce le collisioni:
+     * <ul>
+     *     <li>Esegue il suono di collisione</li>
+     *     <li>Calcola lo score</li>
+     *     <li>Imposta lo stato del mondo fisico a JOINT, in modo da avviare al prossimo world step
+     *         le operazioni per la creazione del joint tra due GameObject</li>
+     * </ul>
+     * @param  ba componente fisica del primo GameObject su cui si verifica la collisione
+     * @param  bb componente fisica del secondo GameObject su cui si verifica la collisione
+     */
     public void collisionDetected(Physic ba, Physic bb) {
         if( paff.physic.joint == null) {
             if (!ba.equals(paff.physic))
@@ -203,16 +253,27 @@ public class PhysicWorld {
             gameState = GameState.JOINT;
         }
     }
+
+    /**
+     * Incrementa il punteggio
+     */
     private void computeScore(){
-            scoreToAdd += Math.abs((collidedBubble.getPosY()+GlobalConstants.Physics.Y_MAX)-(paffPreviousPosition+GlobalConstants.Physics.Y_MAX))+Camera.getVerticalSpace();
-
-
+        scoreToAdd += Math.abs((collidedBubble.getPosY()+GlobalConstants.Physics.Y_MAX)-(paffPreviousPosition+GlobalConstants.Physics.Y_MAX))+Camera.getVerticalSpace();
     }
-    private Pool initPool(PhysicWorld w, Input i){
+
+    /**
+     * Metoodo che inizializza il  Pool di bolle
+     * @param  i gestore degli eventi
+     */
+    private Pool<GameObject> initPool(Input i){
         final Random generator = new Random();
         final PhysicWorld container = this;
         final Input in = i;
 
+        /**
+         * Classe Anonima che estende PoolObjectFactory, in particolare fa override del metoodo
+         * createObject, per creare bolle in una posizione di riposo fuori campo rispetto al mondo fisico
+         */
         Pool.PoolObjectFactory<GameObject> factory = new Pool.PoolObjectFactory<GameObject>() {
             @Override
             public GameObject createObject() {
@@ -226,6 +287,11 @@ public class PhysicWorld {
             }
         };
 
+        /**
+         * Classe anonima per la creazione di un Pool di GameObject.
+         * In particolare ridefinisce i metodi newObject e free per eseguire
+         * alcune operazioni di inizializzazione sugli oggetti
+         */
         return new Pool<GameObject>(factory, 15){
 
             private Vec2 restPosition = new Vec2(0,30.0f);
@@ -316,15 +382,9 @@ public class PhysicWorld {
                             x = (float)(highestBubble.physic.getPosX() - partial);
                             if (x + GlobalConstants.BUBBLE_BASIC_RADIUS + 2.0f > GlobalConstants.Physics.X_MAX ||  x - GlobalConstants.BUBBLE_BASIC_RADIUS - 2.0f < GlobalConstants.Physics.X_MIN)
                                 x = (float) (highestBubble.physic.getPosX() + partial);
-                       //     Log.e("RANDOM POSITION"," NOT GOOD");
-                        }else{
-                        //    Log.e("RANDOM POSITION"," GOOD");
-
                         }
                         respawn.setY(y);
                         respawn.setX(x);
-                        //respawn.setX(generator.nextFloat()*11.0f - (GlobalConstants.Physics.X_MAX - GlobalConstants.BUBBLE_BASIC_RADIUS - 2.0f));00000000000000
-                        //respawn.setY(GlobalConstants.Physics.Y_MIN - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.2f);
                         break;
                 }
                 bubbleCounter++;
