@@ -53,7 +53,10 @@ public class PhysicWorld {
     List<GameObject>  activeBubbles = new ArrayList<>();
 
     boolean fallFlag = true;
+    boolean newhighscore = false;
+
     Box physicalSize;
+  
     /**
      * Costruttore della classe:
      * <ul>
@@ -93,12 +96,14 @@ public class PhysicWorld {
         if( GlobalConstants.BUBBLE_NUMBER > activeBubbles.size()){
             activeBubbles.add(bubblesPool.newObject());
         }
-
-        /**
+         /**
          * Verifica la condizione di game over --> paff è uscito dallo schermo.
          */
-        if(paff.physic.getPosY()-paff.physic.getRadius()-0.2f > GlobalConstants.Physics.Y_MAX  )
+        if(paff.physic.getPosY()-paff.physic.getRadius()-0.2f > GlobalConstants.Physics.Y_MAX  ) {
             gameState = GameState.GAME_OVER;
+            if(!newhighscore)
+                Assets.fall_gameover.play();
+        }
 
         paff.physic.body.setLinearDamping(0f);
 
