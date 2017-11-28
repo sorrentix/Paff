@@ -67,14 +67,16 @@ public class Physic implements Component{
         BodyDef bdef = new BodyDef();
         bdef.setPosition(physicPosition);
         bdef.setType(bodyType);
+        //bdef.setFixedRotation(true);
         this.body = world.world.createBody(bdef);
         this.body.setSleepingAllowed(false);
         this.body.setUserData(this);
         this.body.setBullet(true);
+        this.body.setLinearDamping(0);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.setShape(shape);
-        fixtureDef.setFriction(0.1f);
+        fixtureDef.setFriction(1);
         fixtureDef.setDensity(density);
         this.body.createFixture(fixtureDef);
 

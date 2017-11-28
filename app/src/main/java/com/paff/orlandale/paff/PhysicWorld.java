@@ -83,7 +83,7 @@ public class PhysicWorld {
         }
         if(paff.physic.getPosY()-paff.physic.getRadius()-0.2f > GlobalConstants.Physics.Y_MAX  )
             gameState = GameState.GAME_OVER;
-
+        paff.physic.body.setLinearDamping(0f);
         switch (gameState) {
             case SHOT:
               //  Log.e("SPARA", "SPARA");
@@ -103,11 +103,20 @@ public class PhysicWorld {
                 paff.physic.computeForceDirection(currentAcceleration);
                 paff.physic.applyForce();
                 if(paff.evtManager.isAccelXOpposite(previousAcceleration)) {
+//                    Log.e("ACCELL","entrato OPPOSITE");
                     //paff.physic.computeForceDirection(currentAcceleration);
                     //paff.physic.applyTotalForce();
-                    paff.physic.computeForce(25 *forceParameter);//20
-                    paff.physic.computeForceDirection(currentAcceleration);
-                    paff.physic.applyForce();
+//                    paff.physic.computeForce(20);// *forceParameter);//20
+//                    paff.physic.computeForceDirection(currentAcceleration);
+//                    paff.physic.applyForce();
+                    paff.physic.body.setLinearDamping(5);
+                }
+                else  if (paff.evtManager.isAccelXLess(previousAcceleration)){
+                    paff.physic.body.setLinearDamping(5f);
+                //    Log.e("ACCELL","entrato LESS");
+                //    paff.physic.computeForce(20);// *forceParameter);//20
+                //    paff.physic.computeForceDirection(-currentAcceleration);
+                //    paff.physic.applyForce();
                 }
 
                 previousAcceleration = currentAcceleration;

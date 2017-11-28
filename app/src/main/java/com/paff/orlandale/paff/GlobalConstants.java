@@ -5,11 +5,13 @@ import com.google.fpl.liquidfun.Vec2;
 /**
  * Created by Yoshi on 17/11/2017.
  */
-
+/**
+ * Convinience class usata per conservare tutte le costanti del progetto
+ */
 public class GlobalConstants {
     public static final int FRAME_BUFFER_WIDTH = 1080;
     public static final int FRAME_BUFFER_HEIGHT = 1920;
-    public static final float FPS = 1.0f/60.0f;//1.0f/60.0f;
+    public static final float FPS = 1.0f/60.0f;
 
     public static final float VOLUME = 1.0f;
 

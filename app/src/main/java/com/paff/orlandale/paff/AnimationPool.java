@@ -6,6 +6,11 @@ import java.util.Map;
 /**
  * Created by Yoshi on 10/11/2017.
  */
+
+/**
+ * Classe che consente di gestire un pool di animazioni.
+ * La singola animazione è recuperabile tramite un id univoco
+ */
 public class AnimationPool {
     Map<Integer, Animation> animations;
     public int animationToExecute = -1;
@@ -18,8 +23,8 @@ public class AnimationPool {
         animations.put(a.getID(), a);
     }
 
-    public static interface onAnimationCompleteListener{
-        public  abstract void onAnimationComplete(Animation a);
+    public interface onAnimationCompleteListener{
+        void onAnimationComplete(Animation a);
     }
 
     public Animation getAnimationByID(int id){
