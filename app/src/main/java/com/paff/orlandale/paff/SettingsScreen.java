@@ -33,17 +33,17 @@ public class SettingsScreen extends Screen {
 
         Input i = game.getInput();
         i.clearTouchEvents();
-        soundsBtn   = setButton( new Position(600, 800),
+        soundsBtn   = setButton( new Position(600, 700),
                                  Settings.sounds ? Assets.btn_on : Assets.btn_off,
                                  Assets.bubblexplosion, i);
-        musicBtn    = setButton( new Position(600, 1200),
+        musicBtn    = setButton( new Position(600, 1100),
                                  Settings.music ? Assets.btn_on : Assets.btn_off,
                                  Assets.bubblexplosion, i);
-        logo        = setSimpleImage(new Position(262, 160), Assets.logo);
+        logo        = setSimpleImage(new Position(262, 60), Assets.logo);
         background  = setSimpleImage(new Position(0, 0), Assets.menu_background);
-        soundText   = setSimpleImage(new Position( 100, 900), Assets.sounds_text);
-        musicText   = setSimpleImage(new Position( 100, 1300), Assets.music_text);
-        credits     = setSimpleImage(new Position(40,1550),Assets.credits);
+        soundText   = setSimpleImage(new Position( 100, 800), Assets.sounds_text);
+        musicText   = setSimpleImage(new Position( 100, 1200), Assets.music_text);
+        credits     = setSimpleImage(new Position(40,1450),Assets.credits);
 
         g = game.getGraphics();
         a = game.getAudio();

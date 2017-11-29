@@ -24,6 +24,7 @@ public class Assets {
     public static Sound highscore_gameover;
     public static Sound newhighscore;
     public static Sound fall_gameover;
+    public static Sound speedup;
     /*GRAFICHE*/
     public static Pixmap logo;
     public static Pixmap menu_background;
@@ -51,6 +52,7 @@ public class Assets {
     public static Pixmap count1;
     public static Pixmap countJump;
     public static Pixmap credits;
+    public static Pixmap speedup_image;
 
     //Font
     public static Typeface font;

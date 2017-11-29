@@ -94,6 +94,7 @@ class SplashScreen extends Screen {
         Assets.count2 = g.newPixmap("count2.png",Graphics.PixmapFormat.ARGB4444);
         Assets.count1 = g.newPixmap("count1.png",Graphics.PixmapFormat.ARGB4444);
         Assets.countJump = g.newPixmap("countjump.png",Graphics.PixmapFormat.ARGB4444);
+        Assets.speedup_image = g.newPixmap("speedup_image.png",Graphics.PixmapFormat.ARGB4444);
         Assets.scoreText = g.newPixmap("scoretext.png",Graphics.PixmapFormat.ARGB4444);
         Assets.credits = g.newPixmap("credits_nomi.png", Graphics.PixmapFormat.ARGB4444);
         //Font
@@ -108,14 +109,28 @@ class SplashScreen extends Screen {
         Assets.newhighscore = a.newSound("newhighscore.ogg");
         Assets.highscore_gameover = a.newSound("hs_gameover.ogg");
         Assets.fall_gameover = a.newSound("gameover_fall.ogg");
-        Assets.flagReady = true;
-        state = GameState.COMPLETE_ANIMATION;
+        Assets.speedup = a.newSound("doublespeed.ogg");
+
+
 
           //Animations
         Pixmap countDown3[]    = new Pixmap[60];
         Pixmap countDown2[]    = new Pixmap[60];
         Pixmap countDown1[]    = new Pixmap[60];
         Pixmap countDownJump[] = new Pixmap[60];
+        Pixmap speedUp[]       = new Pixmap[60];
+
+        Rect speedUpStartingRect = new Rect(250,10,250 + Assets.speedup_image.getWidth(),10 + Assets.speedup_image.getHeight());
+        Rect speedUpPositions[] = new Rect[60];
+
+        for(int i=0; i < speedUpPositions.length; i++) {
+            if (i==0)
+                speedUpPositions[i] = new Rect(speedUpStartingRect.left,speedUpStartingRect.top,speedUpStartingRect.right,speedUpStartingRect.bottom);
+            else
+                speedUpPositions[i] = new Rect(speedUpPositions[i-1].left + 2,speedUpPositions[i-1].top + 1 ,speedUpPositions[i-1].right - 2,speedUpPositions[i-1].bottom - 1 );
+
+            speedUp[i] = Assets.speedup_image;
+        }
 
         Rect countDown3StartingRect = new Rect(140, 560, 140 + Assets.count3.getWidth(), 560 + Assets.count3.getHeight());
         Rect countDown3Positions[] = new Rect[60];
@@ -135,6 +150,7 @@ class SplashScreen extends Screen {
         Animation countDown2Animation    = new Animation(g, countDown2, new Rect(0,0,Assets.count2.getWidth(), Assets.count2.getHeight()), countDown3Positions,2);
         Animation countDown1Animation    = new Animation(g, countDown1, new Rect(0,0,Assets.count1.getWidth(), Assets.count1.getHeight()), countDown3Positions,3);
         Animation countDownJumpAnimation = new Animation(g, countDownJump, new Rect(0,0,Assets.countJump.getWidth(), Assets.countJump.getHeight()), countDown3Positions,4);
+        Animation speedUpAnimation       = new Animation(g, speedUp, new Rect(0,0,Assets.speedup_image.getWidth(),Assets.speedup_image.getHeight()),speedUpPositions,10);
 
         countDown3Animation.addListener(new AnimationPool.onAnimationCompleteListener() {
             @Override
@@ -177,10 +193,16 @@ class SplashScreen extends Screen {
         });
         animationPool.loadAnimation(countDownJumpAnimation);
 
+        speedUpAnimation.addListener(new AnimationPool.onAnimationCompleteListener() {
+            @Override
+            public void onAnimationComplete(Animation a) {
+                animationPool.animationToExecute=-2;
+            }
+        });
+        animationPool.loadAnimation(speedUpAnimation);
 
-        //Sounds
-        Assets.bubblexplosion = a.newSound("bubblexplosion.ogg");
-        Assets.gamesoundtheme = a.newMusic("gamesoundtheme.ogg");
+
+
         Assets.flagReady = true;
         state = GameState.COMPLETE_ANIMATION;
 

@@ -1,5 +1,6 @@
 package com.paff.orlandale.paff;
 
+import com.badlogic.androidgames.framework.Game;
 import com.badlogic.androidgames.framework.Input;
 import com.badlogic.androidgames.framework.Pool;
 import com.badlogic.androidgames.framework.Screen;
@@ -36,7 +37,7 @@ public class PhysicWorld {
     private PaffContactListener paffContactListener;
 
     public float timeOfSpeedIncrement  = System.nanoTime()/1000000000.0f;
-    public float gameSpeed = 0.02f;
+    public float gameSpeed = GlobalConstants.INITIAL_GAMESPEED;
 
     public float pausedTime = 0;
     public float totalPausedTime = 0;
@@ -48,8 +49,11 @@ public class PhysicWorld {
     Pool<GameObject>  bubblesPool;
     List<GameObject>  activeBubbles = new ArrayList<>();
 
+    AnimationPool animationPool;
+
     boolean fallFlag = true;
     boolean newhighscore = false;
+    boolean speedUp =false;
 
     Box physicalSize;
   
@@ -62,11 +66,11 @@ public class PhysicWorld {
      *     <li>Inizializza il contact listener</li>
      * </ul>
      * @param  physicalSize  dimensioni del mondo fisico
-     * @param  input  gestore degli input dell'utente (usato per la gestione dell'acceleromentro)
+     * @param  game  istanza di una classe che implementa l'interfaccia Game
      */
-    public PhysicWorld(Box physicalSize, Input input) {
+    public PhysicWorld(Box physicalSize,Game game) {
         this.physicalSize = physicalSize;
-        this.input = input;
+        this.input = game.getInput();
         this.world = new World(GlobalConstants.GRAVITY.getX(), GlobalConstants.GRAVITY.getY());
         paff = Screen.setBubble(this,GlobalConstants.PAFF_RADIUS,new Vec2(6.0f, 2.8f - GlobalConstants.BUBBLE_BASIC_RADIUS - 0.05f),BodyType.dynamicBody, input,-1);
         paffPreviousPosition = paff.physic.getPosY();
@@ -74,7 +78,7 @@ public class PhysicWorld {
         for( int i = 0; i < GlobalConstants.BUBBLE_NUMBER; i++){
             activeBubbles.add(bubblesPool.newObject());
         }
-
+        animationPool = game.getAnimationPool();
         paffContactListener = new PaffContactListener(this);
         world.setContactListener(paffContactListener);
 
@@ -92,9 +96,10 @@ public class PhysicWorld {
         if( GlobalConstants.BUBBLE_NUMBER > activeBubbles.size()){
             activeBubbles.add(bubblesPool.newObject());
         }
-         /**
-         * Verifica la condizione di game over --> paff è uscito dallo schermo.
-         */
+        fallFlag = true;
+        /**
+        * Verifica la condizione di game over --> paff è uscito dallo schermo.
+        */
         if(paff.physic.getPosY()-paff.physic.getRadius()-0.2f > GlobalConstants.Physics.Y_MAX  ) {
             gameState = GameState.GAME_OVER;
             if(!newhighscore)
@@ -171,9 +176,15 @@ public class PhysicWorld {
         /**
          * Incrementa la velocità del gioco ogni GlobalConstants.SPEEDUP_TIME secondi
          */
-        if ( (System.nanoTime()/1000000000.0f)-timeOfSpeedIncrement-totalPausedTime > GlobalConstants.SPEEDUP_TIME){
+        if ( (System.nanoTime()/1000000000.0f)-timeOfSpeedIncrement-totalPausedTime > GlobalConstants.SPEEDUP_TIME && gameSpeed < 0.15f){
             timeOfSpeedIncrement = (System.nanoTime()/1000000000.0f);
-            gameSpeed += 0.01f;
+            gameSpeed += 0.03f;
+
+            if(!speedUp && gameSpeed >= 5*GlobalConstants.INITIAL_GAMESPEED){
+                speedUp=true;
+                gameSpeed += 0.02f;
+                Assets.speedup.play();
+            }
         }
     }
 
@@ -248,7 +259,11 @@ public class PhysicWorld {
      * Incrementa il punteggio
      */
     private void computeScore(){
-        scoreToAdd += Math.abs((collidedBubble.getPosY()+GlobalConstants.Physics.Y_MAX)-(paffPreviousPosition+GlobalConstants.Physics.Y_MAX))+Camera.getVerticalSpace();
+        if(!speedUp)
+            scoreToAdd += Math.abs((collidedBubble.getPosY()+GlobalConstants.Physics.Y_MAX)-(paffPreviousPosition+GlobalConstants.Physics.Y_MAX))+Camera.getVerticalSpace();
+        else
+            scoreToAdd += 2*(Math.abs((collidedBubble.getPosY()+GlobalConstants.Physics.Y_MAX)-(paffPreviousPosition+GlobalConstants.Physics.Y_MAX))+Camera.getVerticalSpace());
+
     }
 
     /**

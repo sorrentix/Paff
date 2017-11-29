@@ -52,7 +52,7 @@ public class GameScreen extends Screen {
         input.clearTouchEvents();
         animationPool = game.getAnimationPool();
         Input i = game.getInput();
-        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,input);
+        physicWorld = new PhysicWorld(PhysicToPixel.physicalSize,game);
         paff       = physicWorld.paff;
         bubbles    = physicWorld.activeBubbles;
 
@@ -211,6 +211,8 @@ public class GameScreen extends Screen {
           graphics.drawGameObject(backgrounds[i]);
         }
 
+
+
         for (int i = 0; i < bubbles.size(); i++) {
 
             /**
@@ -252,13 +254,18 @@ public class GameScreen extends Screen {
          * Se l'highscore è stato battuto viene inserito colorato di verde e viene riprodotto un suono
          */
         else {
-            if(!physicWorld.newhighscore) {
+            if(!physicWorld.newhighscore && (Integer.parseInt(score.text.toWrite)) >=4 ) {
                 Assets.newhighscore.play();
                 physicWorld.newhighscore = true;
             }
             highScore.text.toWrite=score.text.toWrite;
             ((PaffGraphics) graphics).drawText(highScore, GlobalConstants.Colors.GREEN,80);
         }
+
+        if(physicWorld.speedUp && animationPool.animationToExecute != -2)
+            animationPool.getAnimationByID(10).executeAnimation();
+
+
         /**
          * In base allo stato di gioco vengono disegnate delle entità con determinate proprietà.
          */
