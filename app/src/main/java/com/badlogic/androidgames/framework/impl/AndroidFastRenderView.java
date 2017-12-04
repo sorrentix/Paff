@@ -47,8 +47,6 @@ public class AndroidFastRenderView extends SurfaceView implements Runnable {
 
             canvas.scale(1.0f/game.getScaleFactor(),1.0f/game.getScaleFactor());
 
-            canvas.drawARGB(150,0,200,0);
-
             canvas.drawBitmap(framebuffer,-game.getOffset(),0,null);
             holder.unlockCanvasAndPost(canvas);
             while ((System.nanoTime()-startTime) / 1000000000.0f < GlobalConstants.FPS/*x50 fps 0.02f*/ ){

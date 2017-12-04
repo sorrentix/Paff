@@ -18,6 +18,7 @@ public class GlobalConstants {
     public static final Vec2 GRAVITY = new Vec2(0,9.81f);
     public static final float PAFF_RADIUS = 0.5f;
     public static final float BUBBLE_BASIC_RADIUS = 0.95f;
+    public static final float PERLIN_CONST = (float)Math.sqrt(0.25);
     public static final float BUBBLE_VARIATION_RADIUS = 0.5f;
     public static final int BUBBLE_NUMBER = 12;
 

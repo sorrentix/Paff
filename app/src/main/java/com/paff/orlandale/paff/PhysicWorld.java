@@ -286,7 +286,7 @@ public class PhysicWorld {
                 radius += GlobalConstants.BUBBLE_BASIC_RADIUS;
                 Vec2 startingPosition = new Vec2(0,14.0f);
                 float expiration = generator.nextFloat()*15.0f+5.0f;
-                GameObject bubble = Screen.setBubble(container,radius, startingPosition,BodyType.staticBody, in,expiration);
+                GameObject bubble = Screen.setBubble(container,radius, startingPosition,BodyType.kinematicBody, in,expiration);
                 bubble.physic.body.setSleepingAllowed(true);
                 return bubble;
             }
