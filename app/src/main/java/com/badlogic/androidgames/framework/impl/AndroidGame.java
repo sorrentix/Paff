@@ -83,7 +83,7 @@ public abstract class AndroidGame extends Activity implements Game {
 
 
         Bitmap frameBuffer = Bitmap.createBitmap(GlobalConstants.FRAME_BUFFER_WIDTH,
-                GlobalConstants.FRAME_BUFFER_HEIGHT, Config.RGB_565);
+                GlobalConstants.FRAME_BUFFER_HEIGHT, Config.ARGB_4444);
 
         float scaleFactorX = (float)GlobalConstants.FRAME_BUFFER_WIDTH / (float)screenWidth;
         float scaleFactorY = (float)GlobalConstants.FRAME_BUFFER_HEIGHT / (float)screenHeight;

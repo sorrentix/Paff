@@ -42,12 +42,12 @@ public class AndroidFastRenderView extends SurfaceView implements Runnable {
 
             game.getCurrentScreen().update(deltaTime);
             game.getCurrentScreen().present(deltaTime);
-            //fpsCounter.logFrame();
+            fpsCounter.logFrame();
             Canvas canvas = holder.lockCanvas();
-
+            canvas.save();
             canvas.scale(1.0f/game.getScaleFactor(),1.0f/game.getScaleFactor());
-
             canvas.drawBitmap(framebuffer,-game.getOffset(),0,null);
+            canvas.restore();
             holder.unlockCanvasAndPost(canvas);
             while ((System.nanoTime()-startTime) / 1000000000.0f < GlobalConstants.FPS/*x50 fps 0.02f*/ ){
                 //wait to make a new render
